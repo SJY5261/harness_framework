@@ -46,6 +46,15 @@
   - 나는 보조로, 대화량 기준 추정으로 "절반쯤 온 듯" 알림을 줄 수 있으나 부정확함을 명시한다.
   - [한계] 모델은 세션을 스스로 `/clear` 할 수 없고 50%를 정확히 자동 감지하지 못한다. 마지막 `/clear`는 사용자 동작이며, 그 직전까지(HANDOFF 갱신, 재개용 한 줄 명령 제시)는 자동으로 준비한다.
 
+## 인코딩 규칙 (Windows cp949 환경 — 위반 시 반복 장애)
+이 환경은 Windows 한국어 로케일(ANSI 코드페이지 cp949)이다. 인코딩을 명시하지 않은 텍스트 입출력은 cp949로 처리되어, UTF-8 한글·특수문자(`—`, `✓`, 이모지)에서 UnicodeDecodeError/UnicodeEncodeError가 발생한다. (실제 사례: execute.py가 CLAUDE.md 읽기·git 출력 디코드·print에서 3회 연속 크래시)
+
+- **Python**: `open()`, `Path.read_text()/write_text()`, `subprocess.run(text=True)`에 **항상 `encoding="utf-8"` 명시** (외부 프로세스 출력은 `errors="replace"` 권장). 새 스크립트는 시작부에 `sys.stdout.reconfigure(encoding="utf-8", errors="replace")` (stderr 동일) 추가. 실행 시 `PYTHONUTF8=1` 병행 권장.
+- **PowerShell 5.1**: 파일 쓰기 시 `-Encoding utf8` 명시 (기본값은 UTF-16/ANSI).
+- **배치(.bat)**: 첫 부분에 `chcp 65001` 포함.
+- **커밋 메시지·로그 포맷 문자열**: 비ASCII 특수문자(`—`, `✓`, `↻` 등) 사용 금지. ASCII(`-`, `OK`, `retry`)로 대체. 이유: cp949 콘솔로 출력될 수 있다.
+- **파일 생성**: 소스·문서 파일은 UTF-8(BOM 없음)로 저장한다.
+
 ## 개발 프로세스
 - 커밋 메시지는 conventional commits 형식을 따른다 (feat:, fix:, refactor:, chore:).
 - 사실과 추론을 구분한다. 모르는 것은 모른다고 말하고, 추론이 필요한 경우 "추론:" 으로 명시한다.

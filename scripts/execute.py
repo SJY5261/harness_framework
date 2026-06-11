@@ -21,6 +21,11 @@ from typing import Optional
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Windows 한국어 로케일(cp949) 콘솔에서 한글·특수문자 출력 크래시 방지
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 
 @contextlib.contextmanager
 def progress_indicator(label: str):

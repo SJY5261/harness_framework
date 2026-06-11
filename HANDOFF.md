@@ -2,6 +2,11 @@
 
 _최종 갱신: 2026-06-11_
 
+## [2026-06-11] code-cache step 1 완료 (cache-evict)
+- **완료**: `SystemServiceImpl.commonCodeModifyGrid()`에 @CacheEvict 추가 — value는 getSessionCodeList의 @Cacheable과 문자 단위 동일(`com:tomes:service:impl:SystemServiceImpl:getSessionCodeList`), `allEntries=true`, `cacheManager="everyHour"` 명시(@Primary가 every5Seconds라 생략 불가). 본문 로직 무변경(어노테이션 5줄만 추가).
+- **검증**: `gradlew build -q` 통과(경고는 기존 코드의 deprecated/unchecked 노트). 커밋: %클라우드 Sun-Pro 5e8b025, &하네스 feat-code-cache a8ef166(index.json step1=completed).
+- **다음 단계**: step 2 client-memoize(body-script.js 두 함수 메모이즈 + console.error('1') 제거). 완료 후 서버 재시작 + 화면 확인.
+
 ## [2026-06-11] code-cache step 0 완료 (server-cache)
 - **완료**: `InnodaleServiceImpl.getList()`에 위임 분기 추가 — queryId가 `systemMapper.selectSessionCodeList`이고 LOGIN_SYSTEM_ID가 있으면 주입된 `SystemService.getSessionCodeList()`(기존 Redis @Cacheable, everyHour) 호출. 없으면 기존 DAO 경로 유지(멀티테넌트 안전). 순환 의존성 없음 확인(SystemServiceImpl은 DAO만 주입).
 - **검증**: `gradlew build -q` 통과. 커밋: %클라우드 Sun-Pro 454d822, &하네스 feat-code-cache a701100(index.json step0=completed).

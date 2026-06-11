@@ -16,7 +16,7 @@
       "status": "completed",
       "started_at": "2026-06-11T13:14:41+0900",
       "summary": "SystemServiceImpl.commonCodeModifyGrid()에 @CacheEvict(value=getSessionCodeList 캐시, allEntries=true, cacheManager=everyHour) 추가 — 공통코드 저장 시 Redis 캐시 전체 무효화, 본문 로직 무변경 (E:\\Tomes-Cloud\\src\\main\\java\\com\\tomes\\service\\impl\\SystemServiceImpl.java)",
-      "completed_at": "2026-06-11T13:16:13+0900"
+      "completed_at": "2026-06-11T13:17:59+0900"
     },
     {
       "step": 2,

@@ -7,12 +7,16 @@
       "name": "server-cache",
       "status": "completed",
       "started_at": "2026-06-11T13:10:27+0900",
-      "summary": "InnodaleServiceImpl.getList()에 selectSessionCodeList 위임 분기 추가 — SystemService 주입 후 기존 Redis @Cacheable(getSessionCodeList) 재사용, LOGIN_SYSTEM_ID 없으면 기존 경로 유지 (E:\\Tomes-Cloud\\src\\main\\java\\com\\tomes\\service\\impl\\InnodaleServiceImpl.java)"
+      "summary": "InnodaleServiceImpl.getList()에 selectSessionCodeList 위임 분기 추가 — SystemService 주입 후 기존 Redis @Cacheable(getSessionCodeList) 재사용, LOGIN_SYSTEM_ID 없으면 기존 경로 유지 (E:\\Tomes-Cloud\\src\\main\\java\\com\\tomes\\service\\impl\\InnodaleServiceImpl.java)",
+      "completed_at": "2026-06-11T13:13:21+0900"
     },
     {
       "step": 1,
       "name": "cache-evict",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-06-11T13:14:41+0900",
+      "summary": "SystemServiceImpl.commonCodeModifyGrid()에 @CacheEvict(value=getSessionCodeList 캐시, allEntries=true, cacheManager=everyHour) 추가 — 공통코드 저장 시 Redis 캐시 전체 무효화, 본문 로직 무변경 (E:\\Tomes-Cloud\\src\\main\\java\\com\\tomes\\service\\impl\\SystemServiceImpl.java)",
+      "completed_at": "2026-06-11T13:16:13+0900"
     },
     {
       "step": 2,

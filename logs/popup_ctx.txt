@@ -1,0 +1,89 @@
+=== L2260 주변 ===
+   L2253:             if(!flag) {
+   L2254:                 let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
+   L2255:                 let M_REQUEST_COMP_CD = $("#item_order_register_popup").find("#M_REQUEST_COMP_CD").val();
+   L2256:                 let MATERIAL_ORDER_NUM = $("#item_order_register_popup").find("#item_order_register_material_order_num").val();
+   L2257:                 if (fnIsEmpty(M_REQUEST_COMP_CD) || fnIsEmpty(ORDER_USER_ID)) {
+   L2258:                     fnAlert(null, '작성자와 발주사업자는 필수 입력 입니다.');
+   L2259:                     return;
+>> L2260:                 }
+   L2261:                 let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+   L2262:                 if (data.length > 0 && data[0].ERROR_REORDER_YN == 'Y') {
+   L2263:                     $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListInspectNum");
+   L2264:                 } else {
+   L2265:                     $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
+   L2266:                 }
+   L2267:                 let targetData = [];
+   L2268:                 for (let tempI = 0, totalRecords = data.length; tempI < totalRecords; tempI++) {
+
+=== L2370 주변 ===
+   L2363:                 concatSeq += "'" + controlSeq + "" + controlDetailSeq + "',";
+   L2364:                 orderStatus.add(itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).M_
+   L2365:                 orderNum.add(itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATER
+   L2366:             }
+   L2367: 
+   L2368:             concatSeq = concatSeq.substr(0, concatSeq.length - 1);
+   L2369: 
+>> L2370:             if (target === 'button') {
+   L2371:                 if (itemOrderRegisterSelectedRowIndex.length === 1 && orderNum.values().next().value) {
+   L2372:                     // 단일 행 선택 + 소재주문번호 있을 시 cell과 동일하게 처리
+   L2373:                     $('#item_order_register_popup_form #queryId').val('selectItemOrderRegisterPopListNum');
+   L2374:                     $('#item_order_register_popup_form #CONCAT_SEQ').val('');
+   L2375:                     $('#item_order_register_popup_form #CONCAT_INSPECT_SEQ').val('');
+   L2376:                     $('#item_order_register_popup_form #MATERIAL_ORDER_NUM').val(orderNum.values().next().value);
+   L2377:                 } else {
+   L2378:                     // 임시저장상태 (다중 선택 또는 소재주문번호 없을 시 기존 로직)
+
+=== L2530 주변 ===
+   L2523:             ref_key += "'" + material_order_seq + "',";
+   L2524: 
+   L2525:         }
+   L2526: 
+   L2527:         table += '</table>';
+   L2528:         return table;
+   L2529:     }
+>> L2530: 
+   L2531:     function makeInnerTable() {
+   L2532:         const MATERIAL_ORDER_NUM = $('#item_order_register_material_order_num').val();
+   L2533:         const parameter = {
+   L2534:             'queryId': 'material.selectItemOrderRegisterPopTable2',
+   L2535:             'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
+   L2536:         };
+   L2537:         const parameters = {'url': '/json-list', 'data': parameter};
+   L2538:         let table = '';
+
+=== L3030 주변 ===
+   L3023:                 },
+   L3024:                 postRender: function(ui) {
+   L3025:                     let grid = this,
+   L3026:                         $cell = grid.getCell(ui);
+   L3027:                     let rowData = ui.rowData;
+   L3028:                     let concatInspectSeq = '';
+   L3029:                     let inspectSeqSet = new Set();
+>> L3030:                     if (rowData.INSPECT_TYPE && rowData.INSPECT_SEQ) {
+   L3031:                         inspectSeqSet.add("'" + rowData.INSPECT_TYPE + "-" + rowData.INSPECT_SEQ + "'");
+   L3032:                     }
+   L3033:                     concatInspectSeq = Array.from(inspectSeqSet).join(',');
+   L3034:                     if($cell.hasClass("underlinePoint")){
+   L3035:                         $cell.bind("click", function (event) {
+   L3036:                             let target_material_order_num = event.target.innerText;
+   L3037:                             $('#item_order_register_popup_form #queryId').val('selectItemOrderRegisterPopListInspectNum');
+   L3038:                             $('#item_order_register_popup_form #CONCAT_SEQ').val('');
+
+=== L3290 주변 ===
+   L3283:     for (let item of selection) {
+   L3284:         const controlSeq = item.rowData.CONTROL_SEQ;
+   L3285:         const controlDetailSeq = item.rowData.CONTROL_DETAIL_SEQ;
+   L3286:         seqSet.add("'" + controlSeq + "" + controlDetailSeq + "'");
+   L3287: 
+   L3288:         const inspectType = item.rowData.INSPECT_TYPE;
+   L3289:         const inspectSeq = item.rowData.INSPECT_SEQ;
+>> L3290:         inspectSeqSet.add("'" + inspectType + "-" + inspectSeq + "'");
+   L3291:     }
+   L3292:     concatSeq = Array.from(seqSet).join(',');
+   L3293:     concatInspectSeq = Array.from(inspectSeqSet).join(',');
+   L3294: 
+   L3295:     $('#item_order_register_popup_form #queryId').val('material.selectItemOrderRegisterPopListInspectSeq');
+   L3296:     $('#item_order_register_popup_form #CONCAT_SEQ').val(concatSeq);
+   L3297:     $('#item_order_register_popup_form #CONCAT_INSPECT_SEQ').val(concatInspectSeq);
+   L3298:     $('#item_order_register_popup_form #MATERIAL_ORDER_NUM').val('');

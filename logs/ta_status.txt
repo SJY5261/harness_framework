@@ -1,0 +1,33 @@
+=== agent_results 최근 파일 ===
+
+=== agent_tools.log 마지막 30줄 ===
+[15:29:12] tc_evaluate(js=() => {
+  const modal = document.querySelector('.alertify.aj)
+[15:29:12] tc_evaluate(js=() => {
+  const modal = document.querySelector('.a)  → result=False
+[15:29:12] tc_click(selector=#btnEstimateUnitPriceCalculate)
+[15:29:12] tc_click(selector=#btnEstimateUnitPriceCalculate)  → OK
+[15:29:12] tc_evaluate(js=() => new Promise(r => { const start = Date.now(); const tic)
+[15:29:14] tc_evaluate(js=() => new Promise(r => { const start = Date.now();)  → result=a_loaded:http://smd.localhost:8081/estimateUnitPriceCalculate
+[15:29:14] tc_evaluate(js=() => new Promise(r => { const start = Date.now(); const tic)
+[15:29:17] tc_evaluate(js=() => new Promise(r => { const start = Date.now();)  → result=row_clicked
+[15:29:17] tc_evaluate(js=() => { const p = window.__lastPopupA; if (!p) return 'fail:)
+[15:29:17] tc_evaluate(js=() => { const p = window.__lastPopupA; if (!p) ret)  → result=b_clicked
+[15:29:17] tc_evaluate(js=() => new Promise(r => { const start = Date.now(); const tic)
+[15:29:20] tc_evaluate(js=() => new Promise(r => { const start = Date.now();)  → result=b_loaded:headerLen=413
+[15:29:22] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastPopupB; con)
+[15:29:24] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastP)  → result=filters_loosened_off
+[15:29:24] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd = pb.docume)
+[15:29:24] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd =)  → result={"count_off":23,"distinct_count":5,"suppliers":["톰스정밀","A가공","DMT","기쁨철강","B테크"],"pairs":[{"cd":"SMD
+[15:29:24] tc_evaluate(js=() => { const b = window.__biz095_baseline; if (!b) return ')
+[15:29:24] tc_evaluate(js=() => { const b = window.__biz095_baseline; if (!b)  → result=baseline_ok:count=23,pairs=[{"cd":"SMD-1002","nm":"톰스정밀"},{"cd":"SMD-1011","nm":"A가공"}]
+[15:29:24] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastPopupB; con)
+[15:29:28] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastP)  → result=refresh_a_done:SMD-1002/톰스정밀
+[15:29:28] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd = pb.docume)
+[15:29:28] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd =)  → result=pass_a:on=7,off=23,target={"cd":"SMD-1002","nm":"톰스정밀"}
+[15:29:28] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastPopupB; con)
+[15:29:32] tc_evaluate(js=() => new Promise(r => { const pb = window.__lastP)  → result=refresh_b_done:SMD-1011/A가공
+[15:29:32] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd = pb.docume)
+[15:29:32] tc_evaluate(js=() => { const pb = window.__lastPopupB; const pd =)  → result=pass_b:rows=9,target={"cd":"SMD-1011","nm":"A가공"}
+[15:29:32] tc_evaluate(js=() => { const dlgs = Array.from(document.querySelectorAll('.)
+[15:29:32] tc_evaluate(js=() => { const dlgs = Array.from(document.querySele)  → result=

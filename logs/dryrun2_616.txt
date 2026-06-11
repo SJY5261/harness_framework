@@ -1,0 +1,71 @@
+﻿=== �����׽�Ʈ �ڵ�ȭ [DRY-RUN] ===
+  �ε�� ���̽�: 22��
+
+[Row 616] CD-FT-CTL-211 | ���ְ��� > ������ | ����ȣ
+  -> ���: ? | [DRY-RUN] INSIDE_STOCK_NUM=JS-0001 (selector: input[name="INSIDE_STOCK_NUM"])
+
+[Row 617] CD-FT-CTL-212 | ���ְ��� > ������ | ����ó
+  -> ���: ? | ������ TC (skip): func='����ó'
+
+[Row 618] CD-FT-CTL-213 | ���ְ��� > ������ | �����
+  -> ���: ? | ������ TC (skip): func='�����'
+
+[Row 619] CD-FT-CTL-214 | ���ְ��� > ������ | ǰ��
+  -> ���: ? | [DRY-RUN] SEL_ITEM_NM=LM PART (selector: input[name="SEL_ITEM_NM"])
+
+[Row 620] CD-FT-CTL-215 | ���ְ��� > ������ | ��������
+  -> ���: ? | [DRY-RUN] MATERIAL_DETAIL=S20C (selector: select[name="MATERIAL_DETAIL"])
+
+[Row 621] CD-FT-CTL-216 | ���ְ��� > ������ | ���
+  -> ���: ? | ������ TC (skip): func='���'
+
+[Row 622] CD-FT-CTL-217 | ���ְ��� > ������ | â��
+  -> ���: ? | ������ TC (skip): func='â��'
+
+[Row 623] CD-FT-CTL-218 | ���ְ��� > ������ | ��ġ
+  -> ���: ? | ������ TC (skip): func='��ġ'
+
+[Row 624] CD-FT-CTL-219 | ���ְ��� > ������ | �԰�
+  -> ���: ? | ������ TC (skip): func='�԰�'
+
+[Row 625] CD-FT-CTL-220 | ���ְ��� > ������ | W
+  -> ���: ? | ������ TC (skip): func='W'
+
+[Row 626] CD-FT-CTL-221 | ���ְ��� > ������ | H
+  -> ���: ? | ������ TC (skip): func='H'
+
+[Row 627] CD-FT-CTL-222 | ���ְ��� > ������ | T
+  -> ���: ? | ������ TC (skip): func='T'
+
+[Row 628] CD-FT-CTL-223 | ���ְ��� > ������ | D
+  -> ���: ? | ������ TC (skip): func='D'
+
+[Row 629] CD-FT-CTL-224 | ���ְ��� > ������ | L
+  -> ���: ? | ������ TC (skip): func='L'
+
+[Row 630] CD-FT-CTL-225 | ���ְ��� > ������ | ���ڵ� �̹���
+  -> ���: ? | ������ TC (skip): func='���ڵ� �̹���'
+
+[Row 631] CD-FT-CTL-226 | ���ְ��� > ������ | ��ġ���ڵ�
+  -> ���: ? | ������ TC (skip): func='��ġ���ڵ�'
+
+[Row 632] CD-FT-CTL-227 | ���ְ��� > ������ | Excel ���� �ٿ�ε�
+  -> ���: ? | ������ TC (skip): func='Excel ���� �ٿ�ε�'
+
+[Row 633] CD-FT-CTL-228 | ���ְ��� > ������ | �˻�
+  -> ���: ? | [DRY-RUN] �˻� ��ư Ŭ��
+
+[Row 634] CD-FT-CTL-229 | ���ְ��� > ������ | ������
+  -> ���: ? | ������ TC (skip): func='������'
+
+[Row 635] CD-FT-CTL-230 | ���ְ��� > ������ | Enter Your Keyword
+  -> ���: ? | ������ TC (skip): func='Enter Your Keyword'
+
+[Row 636] CD-FT-CTL-231 | ���ְ��� > ������ | Fix
+  -> ���: ? | ������ TC (skip): func='Fix'
+
+[Row 637] CD-FT-CTL-232 | ���ְ��� > ������ | �۾����û���
+  -> ���: ? | ������ TC (skip): func='�۾����û���'
+
+=== �Ϸ� ===
+  O: 0�� / X: 0�� / skip: 22��

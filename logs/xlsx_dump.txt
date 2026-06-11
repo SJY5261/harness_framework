@@ -1,0 +1,715 @@
+========== SHEET: TBL_CODE1 영향 범위 (rows=113 cols=8) ==========
+No. | 파일명 | 파일 경로 (sqlMaps 기준) | 라인 번호 | 사용 유형 | HIGH_CD (코드 그룹) | 관련 메뉴 | 비고
+1 | alarm.xml | sqlMaps/alarm.xml | 219 | SELECT | - | 알람 관리 | 코드명 조회
+2 | alarm.xml | sqlMaps/alarm.xml | 275 | SELECT | - | 알람 관리 | 코드명+정렬번호 조회
+3 | data_source.xml | sqlMaps/data_source.xml | 196 | JOIN | - | 공통 > 거래처 드롭다운 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+4 | data_source.xml | sqlMaps/data_source.xml | 218 | JOIN | - | 공통 > 거래처 드롭다운 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+5 | data_source.xml | sqlMaps/data_source.xml | 252 | SELECT | - | 공통 > 코드 드롭다운 | 전체 코드 드롭다운 조회
+6 | data_source.xml | sqlMaps/data_source.xml | 374 | SELECT | - | 시스템 관리 > 그리드 페이지 ID 관리 | selectGridPageIdListAdmin
+7 | drawing.xml | sqlMaps/drawing.xml | 21 | SELECT | - | 도면 관리 | 코드 드롭다운 조회
+8 | drawing.xml | sqlMaps/drawing.xml | 43 | SELECT | - | 도면 관리 | 코드 드롭다운 조회
+9 | drawing.xml | sqlMaps/drawing.xml | 54 | SELECT | - | 도면 관리 | 코드 드롭다운 조회
+10 | drawing.xml | sqlMaps/drawing.xml | 114 | SELECT(서브쿼리) | S12 | 도면 관리 > 검사 | INSPECT_GRADE_NOTE 조회
+11 | drawing.xml | sqlMaps/drawing.xml | 297 | SELECT(서브쿼리) | S12 | 도면 관리 > 검사 | INSPECT_GRADE_NOTE 조회
+12 | drawing.xml | sqlMaps/drawing.xml | 483 | JOIN | E07 | 도면 관리 > POP | POP_POSITION 코드 조인
+13 | drawing.xml | sqlMaps/drawing.xml | 955 | SELECT(서브쿼리) | S12 | 도면 관리 > 검사 | Q_INSPECT_GRADE_NOTE 조회
+14 | common.xml | sqlMaps/common.xml | 268 | SELECT | E03 | 공통 > 프린터 조회 | IP 기반 프린터 자동 매핑
+15 | common.xml | sqlMaps/common.xml | 275 | SELECT | E03 | 공통 > 프린터 조회 | 사용자 지정 프린터 조회
+16 | common.xml | sqlMaps/common.xml | 288 | SELECT | E03 | 공통 > 프린터 목록 | 전체 프린터 목록 조회
+17 | common.xml | sqlMaps/common.xml | 416 | SELECT | - | 공통 > 코드 조회 | ABBR_NM 포함 코드 조회
+18 | common.xml | sqlMaps/common.xml | 442 | SELECT(서브쿼리) | - | 공통 > 참조코드 조회 | selectRefCodeInfo
+19 | estimate.xml | sqlMaps/estimate.xml | 1830 | SELECT | 1096 | 견적 관리 | 계산 ETC 인수 목록 조회
+20 | estmateCalculate.xml | sqlMaps/estmateCalculate.xml | 183 | SELECT | - | 견적 계산 | 코드 드롭다운 조회
+21 | excel.xml | sqlMaps/excel.xml | 454 | SELECT(서브쿼리) | S12 | Excel 출력 | INSPECT_GRADE 합/불 조회
+22 | inspection.xml | sqlMaps/inspection.xml | 42 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+23 | inspection.xml | sqlMaps/inspection.xml | 234 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+24 | inspection.xml | sqlMaps/inspection.xml | 571 | SELECT(서브쿼리) | E07 | 검사 관리 > POP | POP 위치명 ABBR_NM 조회
+25 | inspection.xml | sqlMaps/inspection.xml | 622 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+26 | inspection.xml | sqlMaps/inspection.xml | 681 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+27 | inspection.xml | sqlMaps/inspection.xml | 722 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+28 | inspection.xml | sqlMaps/inspection.xml | 839 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+29 | inspection.xml | sqlMaps/inspection.xml | 2210 | SELECT(서브쿼리) | S12 | 검사 관리 | Q_INSPECT_GRADE_NOTE
+30 | machine.xml | sqlMaps/machine.xml | 20 | SELECT(서브쿼리) | E05 | 설비 관리 | FACTORY_NM 조회 (REF_CD → E08)
+31 | machine.xml | sqlMaps/machine.xml | 306 | JOIN | E05 | 설비 관리 | 공장 구역 코드 조인
+32 | machine.xml | sqlMaps/machine.xml | 531 | JOIN | E05 | 설비 관리 > MCT 계획 | MCT_PROCESS_PLAN ETC1 조인
+33 | machine.xml | sqlMaps/machine.xml | 532 | JOIN | E05 | 설비 관리 > MCT 계획 | 공장 구역 코드 LEFT JOIN
+34 | machine.xml | sqlMaps/machine.xml | 1600 | JOIN | E05 | 설비 관리 | WORK_FACTORY REF_CD 조인
+35 | material.xml | sqlMaps/material.xml | 2297 | SELECT | D02, D01 | 소재 관리 > 내부 재고 | selectInsideStockAbbrNm - D02/D01 자기 조인
+36 | order.xml | sqlMaps/order.xml | 3173 | JOIN | D02 | 주문 관리 | 소재 종류 코드 LEFT OUTER JOIN
+37 | orderCalculate.xml | sqlMaps/orderCalculate.xml | 303 | SELECT | - | 주문 계산 | 코드 드롭다운 조회
+38 | orderSameArchive.xml | sqlMaps/orderSameArchive.xml | 149 | SELECT(서브쿼리) | S12 | 주문 이력 관리 | INSPECT_GRADE_NOTE 조회
+39 | pop.xml | sqlMaps/pop.xml | 612 | JOIN | - | POP 관리 > 거래처 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+40 | pop.xml | sqlMaps/pop.xml | 662 | JOIN | - | POP 관리 > 거래처 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+41 | pop.xml | sqlMaps/pop.xml | 716 | SELECT(서브쿼리) | E07 | POP 관리 | POP_POSITION_NM ABBR_NM 조회
+42 | quality.xml | sqlMaps/quality.xml | 184 | SELECT | - | 품질 관리 > 공정 테이블 | selectQualityProcessTable
+43 | report.xml | sqlMaps/report.xml | 1149 | SELECT(서브쿼리) | S12 | 리포트 | INSPECT_GRADE_NOTE 조회
+44 | report.xml | sqlMaps/report.xml | 1771 | SELECT | D02 | 리포트 > 수익 분석 | 소재 종류 기준 피벗
+45 | report.xml | sqlMaps/report.xml | 2609 | SELECT(서브쿼리) | E12, E13 | 리포트 > 불량 분석 | BAD_TYPE REF_CD 조회
+46 | report.xml | sqlMaps/report.xml | 2659 | SELECT(서브쿼리) | E12, E13 | 리포트 > 불량 분석 | BAD_TYPE REF_CD 조회
+47 | system.xml | sqlMaps/system.xml | 236 | SELECT | - | 시스템 관리 > 코드 관리 | 코드 목록 조회 (KR/EN)
+48 | system.xml | sqlMaps/system.xml | 506 | SELECT | - | 시스템 관리 > 코드 관리 | 코드 상세 조회
+49 | system.xml | sqlMaps/system.xml | 516 | INSERT | - | 시스템 관리 > 코드 관리 | insertCommonCode - 코드 등록
+50 | system.xml | sqlMaps/system.xml | 558 | UPDATE | - | 시스템 관리 > 코드 관리 | updateCommonCode - 코드 수정
+51 | system.xml | sqlMaps/system.xml | 659 | JOIN | - | 시스템 관리 > 코드 관리 | TBL_CODE_LANG1 INNER JOIN
+52 | system.xml | sqlMaps/system.xml | 735 | JOIN | - | 시스템 관리 > 거래처 관리 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+53 | system.xml | sqlMaps/system.xml | 786 | JOIN | - | 시스템 관리 > 거래처 관리 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+54 | system.xml | sqlMaps/system.xml | 829 | JOIN | - | 시스템 관리 > 거래처 관리 | TBL_COMPANY_TYPE + TBL_CODE1 조인
+55 | system.xml | sqlMaps/system.xml | 1127 | JOIN | - | 시스템 관리 | CROSS JOIN (캘린더 + 코드)
+56 | system.xml | sqlMaps/system.xml | 2011 | INSERT | - | 시스템 관리 > 코드 관리 (Admin) | insertCommonCodeAdmin - 코드 등록
+57 | system.xml | sqlMaps/system.xml | 2073 | UPDATE | - | 시스템 관리 > 코드 관리 (Admin) | updateCommonCodeAdmin - 코드 수정
+58 | system.xml | sqlMaps/system.xml | 2146 | SELECT | - | 시스템 관리 > 코드 관리 (Admin) | 코드 목록 조회 (KR/EN/적용여부)
+59 | system.xml | sqlMaps/system.xml | 2324 | INSERT | - | 시스템 관리 > 코드 관리 (시스템용) | insertCommonCodeForSystem
+60 | system.xml | sqlMaps/system.xml | 2607 | DELETE | - | 시스템 관리 > 코드 관리 (Admin) | deleteCommonCodeAdmin - 코드 삭제
+61 | system.xml | sqlMaps/system.xml | 2634 | SELECT | - | 시스템 관리 > 코드 관리 | HIGH_CD 목록 조회
+62 | system.xml | sqlMaps/system.xml | 3048 | JOIN | E21 | 시스템 관리 | E21 코드 LEFT JOIN
+63 | system.xml | sqlMaps/system.xml | 3093 | JOIN | E21 | 시스템 관리 | E21 코드 LEFT JOIN
+64 | tomes.xml | sqlMaps/tomes.xml | 323 | SELECT(서브쿼리) | 1041 | 외주 관리 | VTP010 NOTE 조회 (담당자 ID)
+65 | tv.xml | sqlMaps/tv.xml | 252 | SELECT | E07 | TV 현황판 | POP 위치별 대기 수량
+66 | tv.xml | sqlMaps/tv.xml | 255 | SELECT(서브쿼리) | E07 | TV 현황판 | POP_POSITION → REF_CD(FACTORY_AREA)
+67 | tv.xml | sqlMaps/tv.xml | 283 | SELECT(서브쿼리) | E07 | TV 현황판 | 공장 구역 필터
+68 | v1/drawing.xml | sqlMaps/v1/drawing.xml | 19 | JOIN | E07 | 도면 관리 (REST v1) | INNER JOIN - POP 위치 필터
+69 | v1/excel.xml | sqlMaps/v1/excel.xml | 25 | SELECT(서브쿼리) | S12 | Excel 출력 (REST v1) | SYSTEM_ID별 INSPECT_GRADE NOTE
+70 | v1/excel.xml | sqlMaps/v1/excel.xml | 26 | SELECT(서브쿼리) | S12 | Excel 출력 (REST v1) | BASIC SYSTEM_ID INSPECT_GRADE NOTE
+71 | v1/inspection.xml | sqlMaps/v1/inspection.xml | 645 | SELECT(서브쿼리) | S12 | 검사 관리 (REST v1) | Q_INSPECT_GRADE_NOTE
+72 | v1/inspection.xml | sqlMaps/v1/inspection.xml | 1202 | JOIN | S12 | 검사 관리 (REST v1) | GRADE_NOTE_S - 시스템ID별 NOTE
+73 | v1/inspection.xml | sqlMaps/v1/inspection.xml | 1203 | JOIN | S12 | 검사 관리 (REST v1) | GRADE_NOTE_B - BASIC NOTE
+74 | v1/inspection.xml | sqlMaps/v1/inspection.xml | 1289 | SELECT(서브쿼리) | S12 | 검사 관리 (REST v1) | Q_INSPECT_GRADE_NOTE
+75 | v1/machine.xml | sqlMaps/v1/machine.xml | 83 | JOIN | E05 | 설비 관리 (REST v1) | TC_FAC_S - 시스템ID별 공장 구역
+76 | v1/machine.xml | sqlMaps/v1/machine.xml | 84 | JOIN | E05 | 설비 관리 (REST v1) | TC_FAC_B - BASIC 공장 구역
+77 | v1/order.xml | sqlMaps/v1/order.xml | 854 | JOIN | S34 | 주문 관리 (REST v1) > 주문 목록 | ORDER_STATUS 코드
+78 | v1/order.xml | sqlMaps/v1/order.xml | 856 | JOIN | E01 | 주문 관리 (REST v1) > 주문 목록 | MAIN_INSPECTION 코드
+79 | v1/order.xml | sqlMaps/v1/order.xml | 858 | JOIN | D01 | 주문 관리 (REST v1) > 주문 목록 | MATERIAL_DETAIL 코드
+80 | v1/order.xml | sqlMaps/v1/order.xml | 1070 | JOIN | S11 | 주문 관리 (REST v1) > 확정 목록 | CONTROL_STATUS 코드
+81 | v1/order.xml | sqlMaps/v1/order.xml | 1072 | JOIN | E01 | 주문 관리 (REST v1) > 확정 목록 | MAIN_INSPECTION 코드
+82 | v1/order.xml | sqlMaps/v1/order.xml | 1074 | JOIN | E09 | 주문 관리 (REST v1) > 확정 목록 | PRICE_CONFIRM 코드
+83 | v1/order.xml | sqlMaps/v1/order.xml | 1076 | JOIN | S10 | 주문 관리 (REST v1) > 확정 목록 | WORK_TYPE 코드
+84 | v1/order.xml | sqlMaps/v1/order.xml | 1078 | JOIN | D01 | 주문 관리 (REST v1) > 확정 목록 | MATERIAL_DETAIL 코드
+85 | v1/order.xml | sqlMaps/v1/order.xml | 1080 | JOIN | D02 | 주문 관리 (REST v1) > 확정 목록 | MATERIAL_TYPE 코드
+86 | v1/order.xml | sqlMaps/v1/order.xml | 1082 | JOIN | S55 | 주문 관리 (REST v1) > 확정 목록 | MATERIAL_KIND 코드
+87 | v1/order.xml | sqlMaps/v1/order.xml | 1084 | JOIN | D03 | 주문 관리 (REST v1) > 확정 목록 | SURFACE_TREAT 코드
+88 | v1/order.xml | sqlMaps/v1/order.xml | 1086 | JOIN | D04 | 주문 관리 (REST v1) > 확정 목록 | SURFACE_TREAT_DETAIL 코드
+89 | v1/order.xml | sqlMaps/v1/order.xml | 1088 | JOIN | E08 | 주문 관리 (REST v1) > 확정 목록 | WORK_FACTORY 코드
+90 | v1/order.xml | sqlMaps/v1/order.xml | 1090 | JOIN | 1058 | 주문 관리 (REST v1) > 확정 목록 | MATERIAL_FINISH_GRIND 코드
+91 | v1/order.xml | sqlMaps/v1/order.xml | 1092 | JOIN | 1058 | 주문 관리 (REST v1) > 확정 목록 | MATERIAL_FINISH_HEAT 코드
+92 | v1/order.xml | sqlMaps/v1/order.xml | 1094 | JOIN | S53 | 주문 관리 (REST v1) > 확정 목록 | PART_STATUS 코드
+93 | v1/order.xml | sqlMaps/v1/order.xml | 2522 | JOIN | S11 | 주문 관리 (REST v1) > 확정완료 목록 | CONTROL_STATUS 코드
+94 | v1/order.xml | sqlMaps/v1/order.xml | 2524 | JOIN | E01 | 주문 관리 (REST v1) > 확정완료 목록 | MAIN_INSPECTION 코드
+95 | v1/order.xml | sqlMaps/v1/order.xml | 2526 | JOIN | E09 | 주문 관리 (REST v1) > 확정완료 목록 | PRICE_CONFIRM 코드
+96 | v1/order.xml | sqlMaps/v1/order.xml | 2528 | JOIN | S10 | 주문 관리 (REST v1) > 확정완료 목록 | WORK_TYPE 코드
+97 | v1/order.xml | sqlMaps/v1/order.xml | 2530 | JOIN | D01 | 주문 관리 (REST v1) > 확정완료 목록 | MATERIAL_DETAIL 코드
+98 | v1/order.xml | sqlMaps/v1/order.xml | 2532 | JOIN | D02 | 주문 관리 (REST v1) > 확정완료 목록 | MATERIAL_TYPE 코드
+99 | v1/order.xml | sqlMaps/v1/order.xml | 2534 | JOIN | S55 | 주문 관리 (REST v1) > 확정완료 목록 | MATERIAL_KIND 코드
+100 | v1/order.xml | sqlMaps/v1/order.xml | 2536 | JOIN | D03 | 주문 관리 (REST v1) > 확정완료 목록 | SURFACE_TREAT 코드
+101 | v1/order.xml | sqlMaps/v1/order.xml | 2538 | JOIN | D04 | 주문 관리 (REST v1) > 확정완료 목록 | SURFACE_TREAT_DETAIL 코드
+102 | v1/order.xml | sqlMaps/v1/order.xml | 2540 | JOIN | E08 | 주문 관리 (REST v1) > 확정완료 목록 | WORK_FACTORY 코드
+103 | v1/order.xml | sqlMaps/v1/order.xml | 2542 | JOIN | 1058 | 주문 관리 (REST v1) > 확정완료 목록 | MATERIAL_FINISH_GRIND 코드
+104 | v1/order.xml | sqlMaps/v1/order.xml | 2544 | JOIN | 1058 | 주문 관리 (REST v1) > 확정완료 목록 | MATERIAL_FINISH_HEAT 코드
+105 | v1/order.xml | sqlMaps/v1/order.xml | 2546 | JOIN | S53 | 주문 관리 (REST v1) > 확정완료 목록 | PART_STATUS 코드
+106 | v1/order.xml | sqlMaps/v1/order.xml | 2551 | JOIN | E07 | 주문 관리 (REST v1) > 확정완료 목록 | POP_POSITION 코드
+107 | v1/order.xml | sqlMaps/v1/order.xml | 2553 | JOIN | S33 | 주문 관리 (REST v1) > 확정완료 목록 | OUT_FINISH_STATUS 코드
+108 | v1/report.xml | sqlMaps/v1/report.xml | 151 | SELECT | D02 | 리포트 (REST v1) > 수익 분석 | 소재 종류 기준 피벗
+109 | v1/tv.xml | sqlMaps/v1/tv.xml | 135 | SELECT | E07 | TV 현황판 (REST v1) | POP 위치별 대기 수량
+110 | v1/tv.xml | sqlMaps/v1/tv.xml | 155 | JOIN | E07 | TV 현황판 (REST v1) | K_S - 시스템ID 공장 구역
+111 | v1/tv.xml | sqlMaps/v1/tv.xml | 157 | JOIN | E07 | TV 현황판 (REST v1) | K_B - BASIC 공장 구역
+112 | v1/tv.xml | sqlMaps/v1/tv.xml | 178 | SELECT(서브쿼리) | E07 | TV 현황판 (REST v1) | 공장 구역 필터
+========== SHEET: 범례 (rows=7 cols=2) ==========
+사용 유형 | 설명
+SELECT | FROM TBL_CODE1 직접 조회
+SELECT(서브쿼리) | 인라인 서브쿼리로 TBL_CODE1 조회
+JOIN | 다른 테이블과 JOIN 시 TBL_CODE1 참조
+INSERT | TBL_CODE1에 데이터 등록
+UPDATE | TBL_CODE1 데이터 수정
+DELETE | TBL_CODE1 데이터 삭제
+========== SHEET: 파일별 요약 (rows=33 cols=3) ==========
+파일명 | 사용 횟수 | 관련 메뉴
+v1/order.xml | 31 | 주문 관리 (REST v1) > 주문 목록, 주문 관리 (REST v1) > 확정 목록, 주문 관리 (REST v1) > 확정완료 목록
+system.xml | 17 | 시스템 관리, 시스템 관리 > 거래처 관리, 시스템 관리 > 코드 관리, 시스템 관리 > 코드 관리 (Admin), 시스템 관리 > 코드 관리 (시스템용)
+inspection.xml | 8 | 검사 관리, 검사 관리 > POP
+drawing.xml | 7 | 도면 관리, 도면 관리 > POP, 도면 관리 > 검사
+common.xml | 5 | 공통 > 참조코드 조회, 공통 > 코드 조회, 공통 > 프린터 목록, 공통 > 프린터 조회
+machine.xml | 5 | 설비 관리, 설비 관리 > MCT 계획
+data_source.xml | 4 | 공통 > 거래처 드롭다운, 공통 > 코드 드롭다운, 시스템 관리 > 그리드 페이지 ID 관리
+report.xml | 4 | 리포트, 리포트 > 불량 분석, 리포트 > 수익 분석
+v1/inspection.xml | 4 | 검사 관리 (REST v1)
+v1/tv.xml | 4 | TV 현황판 (REST v1)
+pop.xml | 3 | POP 관리, POP 관리 > 거래처
+tv.xml | 3 | TV 현황판
+alarm.xml | 2 | 알람 관리
+v1/excel.xml | 2 | Excel 출력 (REST v1)
+v1/machine.xml | 2 | 설비 관리 (REST v1)
+estimate.xml | 1 | 견적 관리
+estmateCalculate.xml | 1 | 견적 계산
+excel.xml | 1 | Excel 출력
+material.xml | 1 | 소재 관리 > 내부 재고
+order.xml | 1 | 주문 관리
+orderCalculate.xml | 1 | 주문 계산
+orderSameArchive.xml | 1 | 주문 이력 관리
+quality.xml | 1 | 품질 관리 > 공정 테이블
+tomes.xml | 1 | 외주 관리
+v1/drawing.xml | 1 | 도면 관리 (REST v1)
+v1/report.xml | 1 | 리포트 (REST v1) > 수익 분석
+TBL_CODE_GROUP1 — 총 11개 쿼리 (system.xml 단독) | 11 | 
+관련 파일 | system.xml | 
+TBL_CODE_LANG1 — 81개 쿼리블록 / 원본 546라인 | 81 | 
+관련 파일 | alarm, common, data_source, drawing, estmateCalculate, inspection, orderCalculate, quality, system + v1(estimate, excel, inspection, machine, main, material, order, orderSameArchive, out, process, report, tv) | 
+========== SHEET: TBL_CODE_GROUP1 영향 범위 (rows=12 cols=7) ==========
+No. | 파일명 | 라인 번호 | HIGH_CD | 사용 유형 | 관련 메뉴 | 비고
+1 | system.xml | 456 | - | SELECT | 시스템 관리 > 코드 그룹 관리 | selectCommonGroupCode — 코드 그룹 목록 조회
+2 | system.xml | 475 | - | INSERT | 시스템 관리 > 코드 그룹 관리 | insertCommonGroupCode — 코드 그룹 등록
+3 | system.xml | 480 | - | UPDATE | 시스템 관리 > 코드 그룹 관리 | updateCommonGroupCode — 코드 그룹 수정
+4 | system.xml | 600 | - | SELECT | 시스템 관리 > 코드 그룹 관리 | selectSystemEditYN — 수정 가능 여부 확인
+5 | system.xml | 1979 | - | INSERT | 시스템 관리 > 코드 그룹 관리 (Admin) | insertCommonGroupCodeAdmin — 코드 그룹 등록
+6 | system.xml | 1984 | - | UPDATE | 시스템 관리 > 코드 그룹 관리 (Admin) | updateCommonGroupCodeAdmin — 코드 그룹 수정
+7 | system.xml | 1994 | - | INSERT | 시스템 관리 > 코드 그룹 관리 (Admin) | insertCommonCodeGroupAdmin — 코드 그룹 복사 등록
+8 | system.xml | 2121 | - | SELECT | 시스템 관리 > 코드 그룹 관리 (Admin) | 코드 그룹 목록 조회 (적용여부 포함)
+9 | system.xml | 2311 | - | INSERT | 시스템 관리 > 코드 그룹 관리 (시스템용) | insertCommonCodeGroupForSystem
+10 | system.xml | 2602 | - | DELETE | 시스템 관리 > 코드 그룹 관리 (Admin) | deleteCommonCodeGroupAdmin — 코드 그룹 삭제
+11 | system.xml | 2626 | - | SELECT | 시스템 관리 > 코드 그룹 관리 | HIGH_CD 목록 조회
+========== SHEET: TBL_CODE_LANG1 영향 범위 (rows=547 cols=9) ==========
+No. | 파일명 | 파일 경로 (sqlMaps 기준) | 라인 번호 | 사용 유형 | HIGH_CD | 관련 메뉴 | Query ID | 라인 내용 (요약)
+1 | alarm.xml | alarm.xml | 220 | JOIN | S66 | 알람 관리 |  | INNER JOIN TBL_CODE_LANG1 Y ON X.HIGH_CD = Y.HIGH_CD
+2 | alarm.xml | alarm.xml | 276 | JOIN | E05 | 알람 관리 |  | INNER JOIN TBL_CODE_LANG1 Y ON X.HIGH_CD = Y.HIGH_CD
+3 | common.xml | common.xml | 47 | SELECT | S02 | 공통 > 코드 조회 | updateFile | CASE WHEN EXISTS(SELECT * FROM TBL_CODE_LANG1 WHERE HIGH_CD = 'S02' AND SYSTEM_ID = 'BASIC' AND CODE_NM = UPPER(#{FILE_E
+4 | common.xml | common.xml | 48 | SELECT | S02 | 공통 > 코드 조회 | updateFile | WHEN EXISTS(SELECT * FROM TBL_CODE_LANG1 WHERE HIGH_CD = 'S03' AND SYSTEM_ID = 'BASIC' AND CODE_NM = UPPER(#{FILE_EXT}))
+5 | common.xml | common.xml | 417 | JOIN | - | 공통 > 코드 조회 | selectCodeList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+6 | data_source.xml | data_source.xml | 253 | JOIN | E08 | 공통 > 코드 드롭다운 | getFctList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.SYSTEM_ID IN('BASIC', #{LOGIN_SYSTE
+7 | data_source.xml | data_source.xml | 375 | JOIN | S67 | 공통 > 코드 드롭다운 | selectGridPageIdListAdmin | INNER JOIN TBL_CODE_LANG1 B ON A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR' AND B.SYSTEM_ID IN ('BASIC', #{SEL_SYSTEM_ID} 
+8 | drawing.xml | drawing.xml | 22 | JOIN | E05 | 도면 관리 | selectDrawingAreaList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+9 | drawing.xml | drawing.xml | 44 | JOIN | E04 | 도면 관리 | selectDrawingWorkerGroupList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+10 | drawing.xml | drawing.xml | 55 | JOIN | E10 | 도면 관리 | selectDrawingErrorReasonList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+11 | estmateCalculate.xml | estmateCalculate.xml | 184 | JOIN | 1096 | 견적 계산 | selectEtcLevelDetailCodeList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+12 | inspection.xml | inspection.xml | 2517 | JOIN | - | 검사 관리 | insertLayerInfo | INNER JOIN TBL_CODE_LANG1 Y ON X.LAYER_AREA_NAME = Y.CODE_CD AND Y.LANG_CD = 'KR' AND Y.SYSTEM_ID IN ('BASIC', #{LOGIN_S
+13 | orderCalculate.xml | orderCalculate.xml | 304 | JOIN | 1096 | 주문 계산 | selectEtcLevelDetailCodeList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_L
+14 | quality.xml | quality.xml | 185 | JOIN | - | 품질 관리 | selectQualityProcessTable | INNER JOIN TBL_CODE_LANG1 B ON A.CODE_CD = B.CODE_CD AND A.HIGH_CD = B.HIGH_CD AND B.LANG_CD = 'KR' AND A.SYSTEM_ID = B.
+15 | system.xml | system.xml | 237 | JOIN | - | 시스템 관리 > 코드 관리 | selectSessionCodeList | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR' AND B.SYSTEM_ID = A.
+16 | system.xml | system.xml | 238 | JOIN | - | 시스템 관리 > 코드 관리 | selectSessionCodeList | INNER JOIN TBL_CODE_LANG1 C ON A.HIGH_CD = C.HIGH_CD AND A.CODE_CD = C.CODE_CD AND C.LANG_CD = 'KR' AND C.SYSTEM_ID = A.
+17 | system.xml | system.xml | 493 | SELECT | - | 시스템 관리 > 코드 관리 | selectCommonCodeList | (SELECT CODE_NM FROM TBL_CODE_LANG1 WHERE HIGH_CD = A.HIGH_CD AND CODE_CD = A.CODE_CD AND LANG_CD = 'KR' AND SYSTEM_ID =
+18 | system.xml | system.xml | 494 | SELECT | - | 시스템 관리 > 코드 관리 | selectCommonCodeList | (SELECT CODE_NM FROM TBL_CODE_LANG1 WHERE HIGH_CD = A.HIGH_CD AND CODE_CD = A.CODE_CD AND LANG_CD = 'EN' AND SYSTEM_ID =
+19 | system.xml | system.xml | 540 | INSERT | - | 시스템 관리 > 코드 관리 | insertCommonLangCode | INSERT INTO TBL_CODE_LANG1 (
+20 | system.xml | system.xml | 578 | INSERT | - | 시스템 관리 > 코드 관리 | updateCommonLangCode | INSERT INTO TBL_CODE_LANG1 (
+21 | system.xml | system.xml | 658 | SELECT | - | 시스템 관리 > 코드 관리 | selectCommonLangList | FROM TBL_CODE_LANG1 A
+22 | system.xml | system.xml | 2035 | INSERT | - | 시스템 관리 > 코드 관리 | insertCommonLangCodeAdminKr | INSERT INTO TBL_CODE_LANG1 (
+23 | system.xml | system.xml | 2054 | INSERT | - | 시스템 관리 > 코드 관리 | insertCommonLangCodeAdminEn | INSERT INTO TBL_CODE_LANG1 (
+24 | system.xml | system.xml | 2093 | UPDATE | - | 시스템 관리 > 코드 관리 | updateCommonLangCodeAdminKr | UPDATE TBL_CODE_LANG1
+25 | system.xml | system.xml | 2104 | UPDATE | - | 시스템 관리 > 코드 관리 | updateCommonLangCodeAdminEn | UPDATE TBL_CODE_LANG1
+26 | system.xml | system.xml | 2147 | JOIN | - | 시스템 관리 > 코드 관리 |  | INNER JOIN TBL_CODE_LANG1 B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = 'KR' AND A.SYSTEM_ID = B.
+27 | system.xml | system.xml | 2148 | JOIN | - | 시스템 관리 > 코드 관리 |  | INNER JOIN TBL_CODE_LANG1 C ON A.HIGH_CD = C.HIGH_CD AND A.CODE_CD = C.CODE_CD AND C.LANG_CD = 'EN' AND A.SYSTEM_ID = C.
+28 | system.xml | system.xml | 2347 | INSERT | - | 시스템 관리 > 코드 관리 | insertCommonCodeLangForSystem | INSERT INTO TBL_CODE_LANG1 (
+29 | system.xml | system.xml | 2613 | DELETE | - | 시스템 관리 > 코드 관리 | deleteCommonCodeLangAdmin | DELETE FROM TBL_CODE_LANG1
+30 | system.xml | system.xml | 3049 | JOIN | E21 | 시스템 관리 > 코드 관리 |  | INNER JOIN TBL_CODE_LANG1 L ON T.HIGH_CD = L.HIGH_CD AND T.CODE_CD = L.CODE_CD AND L.LANG_CD = 'KR' AND L.SYSTEM_ID = T.
+31 | system.xml | system.xml | 3094 | JOIN | E21 | 시스템 관리 > 코드 관리 |  | INNER JOIN TBL_CODE_LANG1 L ON T.HIGH_CD = L.HIGH_CD AND T.CODE_CD = L.CODE_CD AND L.LANG_CD = 'KR' AND L.SYSTEM_ID = T.
+32 | estimate.xml | v1/estimate.xml | 161 | JOIN | S59 | 견적 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S59_S ON CL_S59_S.HIGH_CD = 'S59' AND CL_S59_S.CODE_CD = A.EST_STATUS
+33 | estimate.xml | v1/estimate.xml | 163 | JOIN | S59 | 견적 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S59_B ON CL_S59_B.HIGH_CD = 'S59' AND CL_S59_B.CODE_CD = A.EST_STATUS
+34 | excel.xml | v1/excel.xml | 30 | SELECT | S12 | Excel 출력 (REST v1) |  | (SELECT CODE_NM FROM TBL_CODE_LANG1 CL1 WHERE CL1.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL1.HIGH_CD='S12' AND CL1.CODE_CD=MAX
+35 | excel.xml | v1/excel.xml | 31 | SELECT | S12 | Excel 출력 (REST v1) |  | (SELECT CODE_NM FROM TBL_CODE_LANG1 CL2 WHERE CL2.SYSTEM_ID='BASIC' AND CL2.HIGH_CD='S12' AND CL2.CODE_CD=MAX(XI.INSPECT
+36 | excel.xml | v1/excel.xml | 56 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D03_S.CODE_CD=B.SURFACE_TREAT AND CL_D
+37 | excel.xml | v1/excel.xml | 57 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.SYSTEM_ID='BASIC' AND CL_D03_B.CODE_CD=B.SURFACE_TREAT AND CL_D03_B.HIGH_C
+38 | excel.xml | v1/excel.xml | 58 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D04_S.CODE_CD=B.SURFACE_TREAT_DETAIL A
+39 | excel.xml | v1/excel.xml | 59 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.SYSTEM_ID='BASIC' AND CL_D04_B.CODE_CD=B.SURFACE_TREAT_DETAIL AND CL_D04_B
+40 | excel.xml | v1/excel.xml | 60 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55_S.CODE_CD=B.MATERIAL_KIND AND CL_S
+41 | excel.xml | v1/excel.xml | 61 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID='BASIC' AND CL_S55_B.CODE_CD=B.MATERIAL_KIND AND CL_S55_B.HIGH_C
+42 | excel.xml | v1/excel.xml | 62 | JOIN | D03 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD=B.MATERIAL_TYPE AND CL_D
+43 | excel.xml | v1/excel.xml | 63 | JOIN | D04 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID='BASIC' AND CL_D02_B.CODE_CD=B.MATERIAL_TYPE AND CL_D02_B.HIGH_C
+44 | excel.xml | v1/excel.xml | 64 | JOIN | D04 | Excel 출력 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD=B.MATERIAL_DETAIL AND CL
+45 | excel.xml | v1/excel.xml | 65 | JOIN | S55 | Excel 출력 (REST v1) | selectInspectResultValueListExcelV1 | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.CODE_CD=B.MATERIAL_DETAIL AND CL_D01_B.HIGH
+46 | inspection.xml | v1/inspection.xml | 70 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S
+47 | inspection.xml | v1/inspection.xml | 72 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B
+48 | inspection.xml | v1/inspection.xml | 74 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S
+49 | inspection.xml | v1/inspection.xml | 76 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B
+50 | inspection.xml | v1/inspection.xml | 78 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S
+51 | inspection.xml | v1/inspection.xml | 80 | JOIN | D01 | 검사 관리 (REST v1) | selectOutgoingReturnCompleteListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_D03_B
+52 | inspection.xml | v1/inspection.xml | 301 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S
+53 | inspection.xml | v1/inspection.xml | 306 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B
+54 | inspection.xml | v1/inspection.xml | 489 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}
+55 | inspection.xml | v1/inspection.xml | 493 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC'
+56 | inspection.xml | v1/inspection.xml | 497 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_E08_S ON CL_E08_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}
+57 | inspection.xml | v1/inspection.xml | 501 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_E08_B ON CL_E08_B.SYSTEM_ID = 'BASIC'
+58 | inspection.xml | v1/inspection.xml | 505 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}
+59 | inspection.xml | v1/inspection.xml | 509 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1              CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC'
+60 | inspection.xml | v1/inspection.xml | 642 | SELECT | S12 | 검사 관리 (REST v1) |  | (SELECT CL.CODE_NM FROM TBL_CODE_LANG1 CL WHERE CL.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL.CODE_CD=M.CODE_CD AND CL.HIGH_CD=
+61 | inspection.xml | v1/inspection.xml | 643 | SELECT | S12 | 검사 관리 (REST v1) |  | (SELECT CL.CODE_NM FROM TBL_CODE_LANG1 CL WHERE CL.SYSTEM_ID='BASIC' AND CL.CODE_CD=M.CODE_CD AND CL.HIGH_CD='S12' AND C
+62 | inspection.xml | v1/inspection.xml | 878 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E08_S.CODE_CD=D.WORK_FACTORY AND CL_E0
+63 | inspection.xml | v1/inspection.xml | 879 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID='BASIC' AND CL_E08_B.CODE_CD=D.WORK_FACTORY AND CL_E08_B.HIGH_CD
+64 | inspection.xml | v1/inspection.xml | 885 | JOIN | S11 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S11_S.CODE_CD=X.CONTROL_STATUS AND CL_
+65 | inspection.xml | v1/inspection.xml | 886 | JOIN | S11 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.SYSTEM_ID='BASIC' AND CL_S11_B.CODE_CD=X.CONTROL_STATUS AND CL_S11_B.HIGH_
+66 | inspection.xml | v1/inspection.xml | 889 | JOIN | S11 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD=X.WORK_TYPE AND CL_S10_S
+67 | inspection.xml | v1/inspection.xml | 890 | JOIN | S11 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID='BASIC' AND CL_S10_B.CODE_CD=X.WORK_TYPE AND CL_S10_B.HIGH_CD='S
+68 | inspection.xml | v1/inspection.xml | 891 | JOIN | S11 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD=X.MATERIAL_DETAIL AND CL
+69 | inspection.xml | v1/inspection.xml | 892 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.CODE_CD=X.MATERIAL_DETAIL AND CL_D01_B.HIGH
+70 | inspection.xml | v1/inspection.xml | 893 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D03_S.CODE_CD=X.SURFACE_TREAT AND CL_D
+71 | inspection.xml | v1/inspection.xml | 894 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.SYSTEM_ID='BASIC' AND CL_D03_B.CODE_CD=X.SURFACE_TREAT AND CL_D03_B.HIGH_C
+72 | inspection.xml | v1/inspection.xml | 895 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D04_S.CODE_CD=X.SURFACE_TREAT_DETAIL A
+73 | inspection.xml | v1/inspection.xml | 896 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.SYSTEM_ID='BASIC' AND CL_D04_B.CODE_CD=X.SURFACE_TREAT_DETAIL AND CL_D04_B
+74 | inspection.xml | v1/inspection.xml | 897 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E12_S.CODE_CD=Z.INSPECT_RESULT AND CL_
+75 | inspection.xml | v1/inspection.xml | 898 | JOIN | D03 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID='BASIC' AND CL_E12_B.CODE_CD=Z.INSPECT_RESULT AND CL_E12_B.HIGH_
+76 | inspection.xml | v1/inspection.xml | 899 | JOIN | D03 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E13_S.CODE_CD=Z.INSPECT_RESULT AND CL_
+77 | inspection.xml | v1/inspection.xml | 900 | JOIN | D04 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID='BASIC' AND CL_E13_B.CODE_CD=Z.INSPECT_RESULT AND CL_E13_B.HIGH_
+78 | inspection.xml | v1/inspection.xml | 901 | JOIN | D04 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_S ON CL_E14_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E14_S.CODE_CD=Z.INSPECT_RESULT AND CL_
+79 | inspection.xml | v1/inspection.xml | 902 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_B ON CL_E14_B.SYSTEM_ID='BASIC' AND CL_E14_B.CODE_CD=Z.INSPECT_RESULT AND CL_E14_B.HIGH_
+80 | inspection.xml | v1/inspection.xml | 903 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_S ON CL_S07_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S07_S.CODE_CD=Z.ERROR_ACTION AND CL_S0
+81 | inspection.xml | v1/inspection.xml | 904 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_B ON CL_S07_B.SYSTEM_ID='BASIC' AND CL_S07_B.CODE_CD=Z.ERROR_ACTION AND CL_S07_B.HIGH_CD
+82 | inspection.xml | v1/inspection.xml | 905 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S12_S.CODE_CD=Z.INSPECT_GRADE AND CL_S
+83 | inspection.xml | v1/inspection.xml | 906 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID='BASIC' AND CL_S12_B.CODE_CD=Z.INSPECT_GRADE AND CL_S12_B.HIGH_C
+84 | inspection.xml | v1/inspection.xml | 1052 | JOIN | D02 | 검사 관리 (REST v1) | selectInspectionHistoryListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD = 'D02' AND CL_D02_S.C
+85 | inspection.xml | v1/inspection.xml | 1053 | JOIN | D02 | 검사 관리 (REST v1) | selectInspectionHistoryListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.HIGH_CD = 'D02' AND CL_D02_B.CODE_CD = D.
+86 | inspection.xml | v1/inspection.xml | 1177 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_S ON CL_E01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E01_S.CODE_CD = A.MAIN_INSPECTION AN
+87 | inspection.xml | v1/inspection.xml | 1178 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_B ON CL_E01_B.SYSTEM_ID = 'BASIC' AND CL_E01_B.CODE_CD = A.MAIN_INSPECTION AND CL_E01_B.
+88 | inspection.xml | v1/inspection.xml | 1179 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD = B.WORK_TYPE AND CL_S
+89 | inspection.xml | v1/inspection.xml | 1180 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.CODE_CD = B.WORK_TYPE AND CL_S10_B.HIGH_C
+90 | inspection.xml | v1/inspection.xml | 1181 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E08_S.CODE_CD = B.WORK_FACTORY AND C
+91 | inspection.xml | v1/inspection.xml | 1182 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID = 'BASIC' AND CL_E08_B.CODE_CD = B.WORK_FACTORY AND CL_E08_B.HIG
+92 | inspection.xml | v1/inspection.xml | 1183 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD = B.MATERIAL_DETAIL AN
+93 | inspection.xml | v1/inspection.xml | 1184 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.CODE_CD = B.MATERIAL_DETAIL AND CL_D01_B.
+94 | inspection.xml | v1/inspection.xml | 1185 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S20_S ON CL_S20_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S20_S.CODE_CD = D.INSPECT_METHOD AND
+95 | inspection.xml | v1/inspection.xml | 1186 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S20_B ON CL_S20_B.SYSTEM_ID = 'BASIC' AND CL_S20_B.CODE_CD = D.INSPECT_METHOD AND CL_S20_B.H
+96 | inspection.xml | v1/inspection.xml | 1187 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S12_S.CODE_CD = D.INSPECT_GRADE AND 
+97 | inspection.xml | v1/inspection.xml | 1188 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID = 'BASIC' AND CL_S12_B.CODE_CD = D.INSPECT_GRADE AND CL_S12_B.HI
+98 | inspection.xml | v1/inspection.xml | 1189 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E12_S.CODE_CD = D.INSPECT_RESULT AND
+99 | inspection.xml | v1/inspection.xml | 1190 | JOIN | S20 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID = 'BASIC' AND CL_E12_B.CODE_CD = D.INSPECT_RESULT AND CL_E12_B.H
+100 | inspection.xml | v1/inspection.xml | 1191 | JOIN | S20 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E13_S.CODE_CD = D.INSPECT_RESULT AND
+101 | inspection.xml | v1/inspection.xml | 1192 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID = 'BASIC' AND CL_E13_B.CODE_CD = D.INSPECT_RESULT AND CL_E13_B.H
+102 | inspection.xml | v1/inspection.xml | 1193 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_S ON CL_E14_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E14_S.CODE_CD = D.INSPECT_RESULT AND
+103 | inspection.xml | v1/inspection.xml | 1194 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_B ON CL_E14_B.SYSTEM_ID = 'BASIC' AND CL_E14_B.CODE_CD = D.INSPECT_RESULT AND CL_E14_B.H
+104 | inspection.xml | v1/inspection.xml | 1195 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S04_S.CODE_CD = D.ERROR_PROCESS AND 
+105 | inspection.xml | v1/inspection.xml | 1196 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC' AND CL_S04_B.CODE_CD = D.ERROR_PROCESS AND CL_S04_B.HI
+106 | inspection.xml | v1/inspection.xml | 1197 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_S ON CL_E15_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E15_S.CODE_CD = D.ERROR_REASON AND C
+107 | inspection.xml | v1/inspection.xml | 1198 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_B ON CL_E15_B.SYSTEM_ID = 'BASIC' AND CL_E15_B.CODE_CD = D.ERROR_REASON AND CL_E15_B.HIG
+108 | inspection.xml | v1/inspection.xml | 1199 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_S ON CL_S07_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S07_S.CODE_CD = D.ERROR_ACTION AND C
+109 | inspection.xml | v1/inspection.xml | 1200 | JOIN | S04 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_B ON CL_S07_B.SYSTEM_ID = 'BASIC' AND CL_S07_B.CODE_CD = D.ERROR_ACTION AND CL_S07_B.HIG
+110 | inspection.xml | v1/inspection.xml | 1408 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_S ON CL_E01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E01_S.CODE_CD = A.MAIN_INSPECTION AN
+111 | inspection.xml | v1/inspection.xml | 1409 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_B ON CL_E01_B.SYSTEM_ID = 'BASIC' AND CL_E01_B.CODE_CD = A.MAIN_INSPECTION AND CL_E01_B.
+112 | inspection.xml | v1/inspection.xml | 1410 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD = B.MATERIAL_DETAIL AN
+113 | inspection.xml | v1/inspection.xml | 1411 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.CODE_CD = B.MATERIAL_DETAIL AND CL_D01_B.
+114 | inspection.xml | v1/inspection.xml | 1412 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD = B.WORK_TYPE AND CL_S
+115 | inspection.xml | v1/inspection.xml | 1413 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.CODE_CD = B.WORK_TYPE AND CL_S10_B.HIGH_C
+116 | inspection.xml | v1/inspection.xml | 1414 | JOIN | E01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E08_S.CODE_CD = B.WORK_FACTORY AND C
+117 | inspection.xml | v1/inspection.xml | 1415 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID = 'BASIC' AND CL_E08_B.CODE_CD = B.WORK_FACTORY AND CL_E08_B.HIG
+118 | inspection.xml | v1/inspection.xml | 1416 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD = B.MATERIAL_TYPE AND 
+119 | inspection.xml | v1/inspection.xml | 1417 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.CODE_CD = B.MATERIAL_TYPE AND CL_D02_B.HI
+120 | inspection.xml | v1/inspection.xml | 1418 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S20_S ON CL_S20_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S20_S.CODE_CD = Z.INSPECT_METHOD AND
+121 | inspection.xml | v1/inspection.xml | 1419 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S20_B ON CL_S20_B.SYSTEM_ID = 'BASIC' AND CL_S20_B.CODE_CD = Z.INSPECT_METHOD AND CL_S20_B.H
+122 | inspection.xml | v1/inspection.xml | 1420 | JOIN | E08 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S12_S.CODE_CD = Z.INSPECT_GRADE AND 
+123 | inspection.xml | v1/inspection.xml | 1421 | JOIN | D02 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID = 'BASIC' AND CL_S12_B.CODE_CD = Z.INSPECT_GRADE AND CL_S12_B.HI
+124 | inspection.xml | v1/inspection.xml | 1422 | JOIN | D02 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E12_S.CODE_CD = Z.INSPECT_RESULT AND
+125 | inspection.xml | v1/inspection.xml | 1423 | JOIN | S20 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID = 'BASIC' AND CL_E12_B.CODE_CD = Z.INSPECT_RESULT AND CL_E12_B.H
+126 | inspection.xml | v1/inspection.xml | 1424 | JOIN | S20 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E13_S.CODE_CD = Z.INSPECT_RESULT AND
+127 | inspection.xml | v1/inspection.xml | 1425 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID = 'BASIC' AND CL_E13_B.CODE_CD = Z.INSPECT_RESULT AND CL_E13_B.H
+128 | inspection.xml | v1/inspection.xml | 1426 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_S ON CL_E14_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E14_S.CODE_CD = Z.INSPECT_RESULT AND
+129 | inspection.xml | v1/inspection.xml | 1427 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E14_B ON CL_E14_B.SYSTEM_ID = 'BASIC' AND CL_E14_B.CODE_CD = Z.INSPECT_RESULT AND CL_E14_B.H
+130 | inspection.xml | v1/inspection.xml | 1428 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S04_S.CODE_CD = Z.ERROR_PROCESS AND 
+131 | inspection.xml | v1/inspection.xml | 1429 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC' AND CL_S04_B.CODE_CD = Z.ERROR_PROCESS AND CL_S04_B.HI
+132 | inspection.xml | v1/inspection.xml | 1430 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_S ON CL_E15_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E15_S.CODE_CD = Z.ERROR_REASON AND C
+133 | inspection.xml | v1/inspection.xml | 1431 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_B ON CL_E15_B.SYSTEM_ID = 'BASIC' AND CL_E15_B.CODE_CD = Z.ERROR_REASON AND CL_E15_B.HIG
+134 | inspection.xml | v1/inspection.xml | 1432 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_S ON CL_S07_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S07_S.CODE_CD = Z.ERROR_ACTION AND C
+135 | inspection.xml | v1/inspection.xml | 1433 | JOIN | S04 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S07_B ON CL_S07_B.SYSTEM_ID = 'BASIC' AND CL_S07_B.CODE_CD = Z.ERROR_ACTION AND CL_S07_B.HIG
+136 | inspection.xml | v1/inspection.xml | 1706 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S10_S.HIGH_CD='S10' AND CL_S10_S.CODE_
+137 | inspection.xml | v1/inspection.xml | 1707 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID='BASIC'            AND CL_S10_B.HIGH_CD='S10' AND CL_S10_B.CODE_
+138 | inspection.xml | v1/inspection.xml | 1708 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD='D02' AND CL_D02_S.CODE_
+139 | inspection.xml | v1/inspection.xml | 1709 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID='BASIC'            AND CL_D02_B.HIGH_CD='D02' AND CL_D02_B.CODE_
+140 | inspection.xml | v1/inspection.xml | 1710 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.HIGH_CD='D01' AND CL_D01_S.CODE_
+141 | inspection.xml | v1/inspection.xml | 1711 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC'            AND CL_D01_B.HIGH_CD='D01' AND CL_D01_B.CODE_
+142 | inspection.xml | v1/inspection.xml | 1712 | JOIN | S10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S12_S.HIGH_CD='S12' AND CL_S12_S.CODE_
+143 | inspection.xml | v1/inspection.xml | 1713 | JOIN | D02 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID='BASIC'            AND CL_S12_B.HIGH_CD='S12' AND CL_S12_B.CODE_
+144 | inspection.xml | v1/inspection.xml | 1714 | JOIN | D02 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E12_S.HIGH_CD='E12' AND CL_E12_S.CODE_
+145 | inspection.xml | v1/inspection.xml | 1715 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID='BASIC'            AND CL_E12_B.HIGH_CD='E12' AND CL_E12_B.CODE_
+146 | inspection.xml | v1/inspection.xml | 1716 | JOIN | D01 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E13_S.HIGH_CD='E13' AND CL_E13_S.CODE_
+147 | inspection.xml | v1/inspection.xml | 1717 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID='BASIC'            AND CL_E13_B.HIGH_CD='E13' AND CL_E13_B.CODE_
+148 | inspection.xml | v1/inspection.xml | 1718 | JOIN | S12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E10_S ON CL_E10_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E10_S.HIGH_CD='E10' AND CL_E10_S.CODE_
+149 | inspection.xml | v1/inspection.xml | 1719 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E10_B ON CL_E10_B.SYSTEM_ID='BASIC'            AND CL_E10_B.HIGH_CD='E10' AND CL_E10_B.CODE_
+150 | inspection.xml | v1/inspection.xml | 1720 | JOIN | E12 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_S ON CL_E15_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E15_S.HIGH_CD='E15' AND CL_E15_S.CODE_
+151 | inspection.xml | v1/inspection.xml | 1721 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_B ON CL_E15_B.SYSTEM_ID='BASIC'            AND CL_E15_B.HIGH_CD='E15' AND CL_E15_B.CODE_
+152 | inspection.xml | v1/inspection.xml | 1722 | JOIN | E13 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_S ON CL_E05_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E05_S.HIGH_CD='E05' AND CL_E05_S.CODE_
+153 | inspection.xml | v1/inspection.xml | 1723 | JOIN | E10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_B ON CL_E05_B.SYSTEM_ID='BASIC'            AND CL_E05_B.HIGH_CD='E05' AND CL_E05_B.CODE_
+154 | inspection.xml | v1/inspection.xml | 1724 | JOIN | E10 | 검사 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S04_S.HIGH_CD='S04' AND CL_S04_S.CODE_
+155 | inspection.xml | v1/inspection.xml | 1725 | JOIN | E15 | 검사 관리 (REST v1) | selectErrorHistoryListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID='BASIC'            AND CL_S04_B.HIGH_CD='S04' AND CL_S04_B.CODE_
+156 | machine.xml | v1/machine.xml | 73 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_S04_S.HIGH_CD='S04' AND CL_S04_S.COD
+157 | machine.xml | v1/machine.xml | 74 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID='BASIC' AND CL_S04_B.HIGH_CD='S04' AND CL_S04_B.CODE_CD=A.PROCES
+158 | machine.xml | v1/machine.xml | 75 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D11_S ON CL_D11_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_D11_S.HIGH_CD='D11' AND CL_D11_S.COD
+159 | machine.xml | v1/machine.xml | 76 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D11_B ON CL_D11_B.SYSTEM_ID='BASIC' AND CL_D11_B.HIGH_CD='D11' AND CL_D11_B.CODE_CD=A.EQUIP_
+160 | machine.xml | v1/machine.xml | 77 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E17_S ON CL_E17_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_E17_S.HIGH_CD='E17' AND CL_E17_S.COD
+161 | machine.xml | v1/machine.xml | 78 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E17_B ON CL_E17_B.SYSTEM_ID='BASIC' AND CL_E17_B.HIGH_CD='E17' AND CL_E17_B.CODE_CD=A.EQUIP_
+162 | machine.xml | v1/machine.xml | 79 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S65_S ON CL_S65_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_S65_S.HIGH_CD='S65' AND CL_S65_S.COD
+163 | machine.xml | v1/machine.xml | 80 | JOIN | D11 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S65_B ON CL_S65_B.SYSTEM_ID='BASIC' AND CL_S65_B.HIGH_CD='S65' AND CL_S65_B.CODE_CD=A.RESELL
+164 | machine.xml | v1/machine.xml | 81 | JOIN | D11 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_S ON CL_E05_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_E05_S.HIGH_CD='E05' AND CL_E05_S.COD
+165 | machine.xml | v1/machine.xml | 82 | JOIN | E17 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_B ON CL_E05_B.SYSTEM_ID='BASIC' AND CL_E05_B.HIGH_CD='E05' AND CL_E05_B.CODE_CD=A.FACTOR
+166 | machine.xml | v1/machine.xml | 85 | JOIN | S65 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID}   AND CL_E08_S.HIGH_CD='E08' AND CL_E08_S.COD
+167 | machine.xml | v1/machine.xml | 86 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID='BASIC' AND CL_E08_B.HIGH_CD='E08' AND CL_E08_B.CODE_CD=COALESCE
+168 | machine.xml | v1/machine.xml | 278 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_S ON CL_E05_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_E05_S.CODE_CD = D.FACTORY_AREA    A
+169 | machine.xml | v1/machine.xml | 279 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E05_B ON CL_E05_B.SYSTEM_ID = 'BASIC'             AND CL_E05_B.CODE_CD = D.FACTORY_AREA    A
+170 | machine.xml | v1/machine.xml | 280 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_S04_S.CODE_CD = D.PROCESS_TYPE    A
+171 | machine.xml | v1/machine.xml | 281 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC'             AND CL_S04_B.CODE_CD = D.PROCESS_TYPE    A
+172 | machine.xml | v1/machine.xml | 282 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_S ON CL_E15_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_E15_S.CODE_CD = E.ERROR_REASON    A
+173 | machine.xml | v1/machine.xml | 283 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_B ON CL_E15_B.SYSTEM_ID = 'BASIC'             AND CL_E15_B.CODE_CD = E.ERROR_REASON    A
+174 | machine.xml | v1/machine.xml | 284 | JOIN | E05 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_S10_S.CODE_CD = C.WORK_TYPE       A
+175 | machine.xml | v1/machine.xml | 285 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC'             AND CL_S10_B.CODE_CD = C.WORK_TYPE       A
+176 | machine.xml | v1/machine.xml | 286 | JOIN | S04 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_D02_S.CODE_CD = C.MATERIAL_TYPE   A
+177 | machine.xml | v1/machine.xml | 287 | JOIN | E15 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC'             AND CL_D02_B.CODE_CD = C.MATERIAL_TYPE   A
+178 | machine.xml | v1/machine.xml | 288 | JOIN | E15 | 설비 관리 (REST v1) | selectNcPerformanceHistoryListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}  AND CL_D01_S.CODE_CD = C.MATERIAL_DETAIL  
+179 | machine.xml | v1/machine.xml | 289 | JOIN | S10 | 설비 관리 (REST v1) | selectNcPerformanceHistoryListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC'             AND CL_D01_B.CODE_CD = C.MATERIAL_DETAIL  
+180 | machine.xml | v1/machine.xml | 580 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_S ON CL_E01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E01_S.CODE_CD = B.MAIN_INSPECTION AN
+181 | machine.xml | v1/machine.xml | 581 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_B ON CL_E01_B.SYSTEM_ID = 'BASIC' AND CL_E01_B.CODE_CD = B.MAIN_INSPECTION AND CL_E01_B.
+182 | machine.xml | v1/machine.xml | 582 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD = A.WORK_TYPE AND CL_S
+183 | machine.xml | v1/machine.xml | 583 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.CODE_CD = A.WORK_TYPE AND CL_S10_B.HIGH_C
+184 | machine.xml | v1/machine.xml | 584 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD = A.MATERIAL_DETAIL AN
+185 | machine.xml | v1/machine.xml | 585 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.CODE_CD = A.MATERIAL_DETAIL AND CL_D01_B.
+186 | machine.xml | v1/machine.xml | 586 | JOIN | E01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S62_S ON CL_S62_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S62_S.CODE_CD = A.MCT_WORK_TYPE AND 
+187 | machine.xml | v1/machine.xml | 587 | JOIN | S10 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S62_B ON CL_S62_B.SYSTEM_ID = 'BASIC' AND CL_S62_B.CODE_CD = A.MCT_WORK_TYPE AND CL_S62_B.HI
+188 | machine.xml | v1/machine.xml | 588 | JOIN | S10 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S27_S ON CL_S27_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S27_S.CODE_CD = D.WORK_DIRECTION AND
+189 | machine.xml | v1/machine.xml | 589 | JOIN | D01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S27_B ON CL_S27_B.SYSTEM_ID = 'BASIC' AND CL_S27_B.CODE_CD = D.WORK_DIRECTION AND CL_S27_B.H
+190 | machine.xml | v1/machine.xml | 590 | JOIN | D01 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S12_S.CODE_CD = E.INSPECT_GRADE AND 
+191 | machine.xml | v1/machine.xml | 591 | JOIN | S62 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID = 'BASIC' AND CL_S12_B.CODE_CD = E.INSPECT_GRADE AND CL_S12_B.HI
+192 | machine.xml | v1/machine.xml | 592 | JOIN | S62 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E12_S.CODE_CD = E.INSPECT_RESULT AND
+193 | machine.xml | v1/machine.xml | 593 | JOIN | S27 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID = 'BASIC' AND CL_E12_B.CODE_CD = E.INSPECT_RESULT AND CL_E12_B.H
+194 | machine.xml | v1/machine.xml | 594 | JOIN | S27 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E13_S.CODE_CD = E.INSPECT_RESULT AND
+195 | machine.xml | v1/machine.xml | 595 | JOIN | S12 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID = 'BASIC' AND CL_E13_B.CODE_CD = E.INSPECT_RESULT AND CL_E13_B.H
+196 | machine.xml | v1/machine.xml | 596 | JOIN | S12 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_S ON CL_E15_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E15_S.CODE_CD = E.ERROR_REASON AND C
+197 | machine.xml | v1/machine.xml | 597 | JOIN | E12 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E15_B ON CL_E15_B.SYSTEM_ID = 'BASIC' AND CL_E15_B.CODE_CD = E.ERROR_REASON AND CL_E15_B.HIG
+198 | machine.xml | v1/machine.xml | 598 | JOIN | E12 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E08_S.CODE_CD = A.WORK_FACTORY AND C
+199 | machine.xml | v1/machine.xml | 599 | JOIN | E13 | 설비 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID = 'BASIC' AND CL_E08_B.CODE_CD = A.WORK_FACTORY AND CL_E08_B.HIG
+200 | machine.xml | v1/machine.xml | 600 | JOIN | E13 | 설비 관리 (REST v1) | selectResultManageListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S04_S.CODE_CD = F_EQ.PROCESS_TYPE AN
+201 | machine.xml | v1/machine.xml | 601 | JOIN | E15 | 설비 관리 (REST v1) | selectResultManageListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC' AND CL_S04_B.CODE_CD = F_EQ.PROCESS_TYPE AND CL_S04_B.
+202 | main.xml | v1/main.xml | 279 | JOIN | S04 | 메인 대시보드 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04 ON CL_S04.HIGH_CD = 'S04' AND CL_S04.CODE_CD = X.PROCESS_TYPE
+203 | main.xml | v1/main.xml | 281 | JOIN | S04 | 메인 대시보드 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = X.MATERIAL_DETAIL
+204 | main.xml | v1/main.xml | 283 | JOIN | S04 | 메인 대시보드 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.HIGH_CD = 'D02' AND CL_D02.CODE_CD = X.MATERIAL_TYPE
+205 | main.xml | v1/main.xml | 287 | JOIN | D02 | 메인 대시보드 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_LAST ON CL_S12_LAST.HIGH_CD = 'S12' AND CL_S12_LAST.CODE_CD = INS_LAST_ROW.INSPECT_GRADE
+206 | main.xml | v1/main.xml | 289 | JOIN | S12 | 메인 대시보드 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_RET ON CL_S12_RET.HIGH_CD = 'S12' AND CL_S12_RET.CODE_CD = INS_RET_ROW.INSPECT_GRADE
+207 | material.xml | v1/material.xml | 218 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.HIGH_CD = 'D02' AND CL_D02_S.CODE_CD = A.MATERIAL_TYPE AND CL_D02_S.LANG_C
+208 | material.xml | v1/material.xml | 219 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.HIGH_CD = 'D02' AND CL_D02_B.CODE_CD = A.MATERIAL_TYPE AND CL_D02_B.LANG_C
+209 | material.xml | v1/material.xml | 220 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.HIGH_CD = 'D01' AND CL_D01_S.CODE_CD = A.MATERIAL_DETAIL AND CL_D01_S.LANG
+210 | material.xml | v1/material.xml | 221 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.HIGH_CD = 'D01' AND CL_D01_B.CODE_CD = A.MATERIAL_DETAIL AND CL_D01_B.LANG
+211 | material.xml | v1/material.xml | 222 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.HIGH_CD = 'S55' AND CL_S55_S.CODE_CD = A.MATERIAL_KIND AND CL_S55_S.LANG_C
+212 | material.xml | v1/material.xml | 223 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.HIGH_CD = 'S55' AND CL_S55_B.CODE_CD = A.MATERIAL_KIND AND CL_S55_B.LANG_C
+213 | material.xml | v1/material.xml | 224 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_S ON CL_E06_S.HIGH_CD = 'E06' AND CL_E06_S.CODE_CD = A.WAREHOUSE_CD AND CL_E06_S.LANG_CD
+214 | material.xml | v1/material.xml | 225 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_B ON CL_E06_B.HIGH_CD = 'E06' AND CL_E06_B.CODE_CD = A.WAREHOUSE_CD AND CL_E06_B.LANG_CD
+215 | material.xml | v1/material.xml | 277 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_S ON CL_E06_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E06_S.CODE_CD=A.WAREHOUSE_CD AND CL_E0
+216 | material.xml | v1/material.xml | 278 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_B ON CL_E06_B.SYSTEM_ID='BASIC' AND CL_E06_B.CODE_CD=A.WAREHOUSE_CD AND CL_E06_B.HIGH_CD
+217 | material.xml | v1/material.xml | 279 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD=A.MATERIAL_TYPE AND CL_D
+218 | material.xml | v1/material.xml | 280 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID='BASIC' AND CL_D02_B.CODE_CD=A.MATERIAL_TYPE AND CL_D02_B.HIGH_C
+219 | material.xml | v1/material.xml | 281 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD=A.MATERIAL_DETAIL AND CL
+220 | material.xml | v1/material.xml | 282 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.CODE_CD=A.MATERIAL_DETAIL AND CL_D01_B.HIGH
+221 | material.xml | v1/material.xml | 283 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55_S.CODE_CD=A.MATERIAL_KIND AND CL_S
+222 | material.xml | v1/material.xml | 284 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID='BASIC' AND CL_S55_B.CODE_CD=A.MATERIAL_KIND AND CL_S55_B.HIGH_C
+223 | material.xml | v1/material.xml | 588 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S11_S.CODE_CD=A2.CONTROL_STATUS AND CL
+224 | material.xml | v1/material.xml | 589 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.SYSTEM_ID='BASIC' AND CL_S11_B.CODE_CD=A2.CONTROL_STATUS AND CL_S11_B.HIGH
+225 | material.xml | v1/material.xml | 590 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02F_S ON CL_D02F_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02F_S.CODE_CD=F2.MATERIAL_TYPE AND 
+226 | material.xml | v1/material.xml | 591 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02F_B ON CL_D02F_B.SYSTEM_ID='BASIC' AND CL_D02F_B.CODE_CD=F2.MATERIAL_TYPE AND CL_D02F_B.H
+227 | material.xml | v1/material.xml | 592 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01F_S ON CL_D01F_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01F_S.CODE_CD=F2.MATERIAL_DETAIL AN
+228 | material.xml | v1/material.xml | 593 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01F_B ON CL_D01F_B.SYSTEM_ID='BASIC' AND CL_D01F_B.CODE_CD=F2.MATERIAL_DETAIL AND CL_D01F_B
+229 | material.xml | v1/material.xml | 594 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01B_S ON CL_D01B_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01B_S.CODE_CD=B2.MATERIAL_DETAIL AN
+230 | material.xml | v1/material.xml | 595 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01B_B ON CL_D01B_B.SYSTEM_ID='BASIC' AND CL_D01B_B.CODE_CD=B2.MATERIAL_DETAIL AND CL_D01B_B
+231 | material.xml | v1/material.xml | 596 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55F_S ON CL_S55F_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55F_S.CODE_CD=F2.MATERIAL_KIND AND 
+232 | material.xml | v1/material.xml | 597 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55F_B ON CL_S55F_B.SYSTEM_ID='BASIC' AND CL_S55F_B.CODE_CD=F2.MATERIAL_KIND AND CL_S55F_B.H
+233 | material.xml | v1/material.xml | 598 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55B_S ON CL_S55B_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55B_S.CODE_CD=B2.MATERIAL_KIND AND 
+234 | material.xml | v1/material.xml | 599 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55B_B ON CL_S55B_B.SYSTEM_ID='BASIC' AND CL_S55B_B.CODE_CD=B2.MATERIAL_KIND AND CL_S55B_B.H
+235 | material.xml | v1/material.xml | 600 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S54_S ON CL_S54_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S54_S.CODE_CD=F2.ORDER_STATUS AND CL_S
+236 | material.xml | v1/material.xml | 601 | JOIN | S55 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S54_B ON CL_S54_B.SYSTEM_ID='BASIC' AND CL_S54_B.CODE_CD=F2.ORDER_STATUS AND CL_S54_B.HIGH_C
+237 | material.xml | v1/material.xml | 847 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD = F.MATERIAL_TYPE AND 
+238 | material.xml | v1/material.xml | 848 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.CODE_CD = F.MATERIAL_TYPE AND CL_D02_B.HI
+239 | material.xml | v1/material.xml | 849 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01F_S ON CL_D01F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01F_S.CODE_CD = F.MATERIAL_DETAIL
+240 | material.xml | v1/material.xml | 850 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01F_B ON CL_D01F_B.SYSTEM_ID = 'BASIC' AND CL_D01F_B.CODE_CD = F.MATERIAL_DETAIL AND CL_D01
+241 | material.xml | v1/material.xml | 851 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01B_S ON CL_D01B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01B_S.CODE_CD = B.MATERIAL_DETAIL
+242 | material.xml | v1/material.xml | 852 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01B_B ON CL_D01B_B.SYSTEM_ID = 'BASIC' AND CL_D01B_B.CODE_CD = B.MATERIAL_DETAIL AND CL_D01
+243 | material.xml | v1/material.xml | 853 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55F_S ON CL_S55F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55F_S.CODE_CD = F.MATERIAL_KIND A
+244 | material.xml | v1/material.xml | 854 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55F_B ON CL_S55F_B.SYSTEM_ID = 'BASIC' AND CL_S55F_B.CODE_CD = F.MATERIAL_KIND AND CL_S55F_
+245 | material.xml | v1/material.xml | 855 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55B_S ON CL_S55B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55B_S.CODE_CD = B.MATERIAL_KIND A
+246 | material.xml | v1/material.xml | 856 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55B_B ON CL_S55B_B.SYSTEM_ID = 'BASIC' AND CL_S55B_B.CODE_CD = B.MATERIAL_KIND AND CL_S55B_
+247 | material.xml | v1/material.xml | 889 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_D02_S ON CL2_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL2_D02_S.CODE_CD = F.MATERIAL_TYPE A
+248 | material.xml | v1/material.xml | 890 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_D02_B ON CL2_D02_B.SYSTEM_ID = 'BASIC' AND CL2_D02_B.CODE_CD = F.MATERIAL_TYPE AND CL2_D02_
+249 | material.xml | v1/material.xml | 891 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_D01_S ON CL2_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL2_D01_S.CODE_CD = F.MATERIAL_DETAIL
+250 | material.xml | v1/material.xml | 892 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_D01_B ON CL2_D01_B.SYSTEM_ID = 'BASIC' AND CL2_D01_B.CODE_CD = F.MATERIAL_DETAIL AND CL2_D0
+251 | material.xml | v1/material.xml | 893 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_S55_S ON CL2_S55_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL2_S55_S.CODE_CD = F.MATERIAL_KIND A
+252 | material.xml | v1/material.xml | 894 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL2_S55_B ON CL2_S55_B.SYSTEM_ID = 'BASIC' AND CL2_S55_B.CODE_CD = F.MATERIAL_KIND AND CL2_S55_
+253 | material.xml | v1/material.xml | 1012 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_D02_S
+254 | material.xml | v1/material.xml | 1015 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_D02_B
+255 | material.xml | v1/material.xml | 1018 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_D01_S
+256 | material.xml | v1/material.xml | 1021 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_D01_B
+257 | material.xml | v1/material.xml | 1024 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_E06_S
+258 | material.xml | v1/material.xml | 1027 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_E06_B
+259 | material.xml | v1/material.xml | 1049 | JOIN | S36 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_S36_S
+260 | material.xml | v1/material.xml | 1052 | JOIN | S36 | 소재 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CL_S36_B
+261 | material.xml | v1/material.xml | 1242 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S11_S.CODE_CD = A.CONTROL_STATUS AND
+262 | material.xml | v1/material.xml | 1243 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.SYSTEM_ID = 'BASIC' AND CL_S11_B.CODE_CD = A.CONTROL_STATUS AND CL_S11_B.H
+263 | material.xml | v1/material.xml | 1244 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_PS_S ON CL_PS_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_PS_S.CODE_CD = B.PART_STATUS AND CL_PS
+264 | material.xml | v1/material.xml | 1245 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_PS_B ON CL_PS_B.SYSTEM_ID = 'BASIC' AND CL_PS_B.CODE_CD = B.PART_STATUS AND CL_PS_B.HIGH_CD 
+265 | material.xml | v1/material.xml | 1246 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_F_S ON CL_D01_F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_F_S.CODE_CD = F.MATERIAL_DET
+266 | material.xml | v1/material.xml | 1247 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_F_B ON CL_D01_F_B.SYSTEM_ID = 'BASIC' AND CL_D01_F_B.CODE_CD = F.MATERIAL_DETAIL AND CL_
+267 | material.xml | v1/material.xml | 1248 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B_S ON CL_D01_B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_B_S.CODE_CD = B.MATERIAL_DET
+268 | material.xml | v1/material.xml | 1249 | JOIN | S53 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B_B ON CL_D01_B_B.SYSTEM_ID = 'BASIC' AND CL_D01_B_B.CODE_CD = B.MATERIAL_DETAIL AND CL_
+269 | material.xml | v1/material.xml | 1250 | JOIN | S53 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD = F.MATERIAL_TYPE AND 
+270 | material.xml | v1/material.xml | 1251 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.CODE_CD = F.MATERIAL_TYPE AND CL_D02_B.HI
+271 | material.xml | v1/material.xml | 1252 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_F_S ON CL_S55_F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_F_S.CODE_CD = F.MATERIAL_KIN
+272 | material.xml | v1/material.xml | 1253 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_F_B ON CL_S55_F_B.SYSTEM_ID = 'BASIC' AND CL_S55_F_B.CODE_CD = F.MATERIAL_KIND AND CL_S5
+273 | material.xml | v1/material.xml | 1254 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B_S ON CL_S55_B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_B_S.CODE_CD = B.MATERIAL_KIN
+274 | material.xml | v1/material.xml | 1255 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B_B ON CL_S55_B_B.SYSTEM_ID = 'BASIC' AND CL_S55_B_B.CODE_CD = B.MATERIAL_KIND AND CL_S5
+275 | material.xml | v1/material.xml | 1383 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D02_FS ON CL_D02_FS.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_FS.HIGH_CD = 'D02' AND CL_D02
+276 | material.xml | v1/material.xml | 1384 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D02_FB ON CL_D02_FB.SYSTEM_ID = 'BASIC'            AND CL_D02_FB.HIGH_CD = 'D02' AND CL_D02
+277 | material.xml | v1/material.xml | 1385 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D01_FS ON CL_D01_FS.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_FS.HIGH_CD = 'D01' AND CL_D01
+278 | material.xml | v1/material.xml | 1386 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D01_FB ON CL_D01_FB.SYSTEM_ID = 'BASIC'            AND CL_D01_FB.HIGH_CD = 'D01' AND CL_D01
+279 | material.xml | v1/material.xml | 1387 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D01_BS ON CL_D01_BS.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_BS.HIGH_CD = 'D01' AND CL_D01
+280 | material.xml | v1/material.xml | 1388 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_D01_BB ON CL_D01_BB.SYSTEM_ID = 'BASIC'            AND CL_D01_BB.HIGH_CD = 'D01' AND CL_D01
+281 | material.xml | v1/material.xml | 1389 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_S55_FS ON CL_S55_FS.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_FS.HIGH_CD = 'S55' AND CL_S55
+282 | material.xml | v1/material.xml | 1390 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT  JOIN TBL_CODE_LANG1 CL_S55_FB ON CL_S55_FB.SYSTEM_ID = 'BASIC'            AND CL_S55_FB.HIGH_CD = 'S55' AND CL_S55
+283 | material.xml | v1/material.xml | 1391 | JOIN | D01 | 소재 관리 (REST v1) | selectItemOrderRegisterPopListInspectSeqV1 | LEFT  JOIN TBL_CODE_LANG1 CL_S55_BS ON CL_S55_BS.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_BS.HIGH_CD = 'S55' AND CL_S55
+284 | material.xml | v1/material.xml | 1392 | JOIN | D01 | 소재 관리 (REST v1) | selectItemOrderRegisterPopListInspectSeqV1 | LEFT  JOIN TBL_CODE_LANG1 CL_S55_BB ON CL_S55_BB.SYSTEM_ID = 'BASIC'            AND CL_S55_BB.HIGH_CD = 'S55' AND CL_S55
+285 | material.xml | v1/material.xml | 1492 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S11_S.HIGH_CD = 'S11' AND CL_S11_S.C
+286 | material.xml | v1/material.xml | 1493 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.SYSTEM_ID = 'BASIC' AND CL_S11_B.HIGH_CD = 'S11' AND CL_S11_B.CODE_CD = A.
+287 | material.xml | v1/material.xml | 1494 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD = 'D02' AND CL_D02_S.C
+288 | material.xml | v1/material.xml | 1495 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.HIGH_CD = 'D02' AND CL_D02_B.CODE_CD = F.
+289 | material.xml | v1/material.xml | 1496 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_F_S ON CL_D01_F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_F_S.HIGH_CD = 'D01' AND CL_D
+290 | material.xml | v1/material.xml | 1497 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_F_B ON CL_D01_F_B.SYSTEM_ID = 'BASIC' AND CL_D01_F_B.HIGH_CD = 'D01' AND CL_D01_F_B.CODE
+291 | material.xml | v1/material.xml | 1498 | JOIN | S11 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B_S ON CL_D01_B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_B_S.HIGH_CD = 'D01' AND CL_D
+292 | material.xml | v1/material.xml | 1499 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B_B ON CL_D01_B_B.SYSTEM_ID = 'BASIC' AND CL_D01_B_B.HIGH_CD = 'D01' AND CL_D01_B_B.CODE
+293 | material.xml | v1/material.xml | 1500 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_F_S ON CL_S55_F_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_F_S.HIGH_CD = 'S55' AND CL_S
+294 | material.xml | v1/material.xml | 1501 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_F_B ON CL_S55_F_B.SYSTEM_ID = 'BASIC' AND CL_S55_F_B.HIGH_CD = 'S55' AND CL_S55_F_B.CODE
+295 | material.xml | v1/material.xml | 1502 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B_S ON CL_S55_B_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_B_S.HIGH_CD = 'S55' AND CL_S
+296 | material.xml | v1/material.xml | 1503 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B_B ON CL_S55_B_B.SYSTEM_ID = 'BASIC' AND CL_S55_B_B.HIGH_CD = 'S55' AND CL_S55_B_B.CODE
+297 | material.xml | v1/material.xml | 1634 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_S ON CL_E06_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E06_S.HIGH_CD='E06' AND CL_E06_S.CODE_
+298 | material.xml | v1/material.xml | 1635 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_B ON CL_E06_B.SYSTEM_ID='BASIC' AND CL_E06_B.HIGH_CD='E06' AND CL_E06_B.CODE_CD=A.WAREHO
+299 | material.xml | v1/material.xml | 1636 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD='D02' AND CL_D02_S.CODE_
+300 | material.xml | v1/material.xml | 1637 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID='BASIC' AND CL_D02_B.HIGH_CD='D02' AND CL_D02_B.CODE_CD=A.MATERI
+301 | material.xml | v1/material.xml | 1638 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.HIGH_CD='D01' AND CL_D01_S.CODE_
+302 | material.xml | v1/material.xml | 1639 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.HIGH_CD='D01' AND CL_D01_B.CODE_CD=A.MATERI
+303 | material.xml | v1/material.xml | 1640 | JOIN | E06 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55_S.HIGH_CD='S55' AND CL_S55_S.CODE_
+304 | material.xml | v1/material.xml | 1641 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID='BASIC' AND CL_S55_B.HIGH_CD='S55' AND CL_S55_B.CODE_CD=A.MATERI
+305 | material.xml | v1/material.xml | 1642 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S18_IN_S ON CL_S18_IN_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S18_IN_S.HIGH_CD='S18' AND CL_S1
+306 | material.xml | v1/material.xml | 1643 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S18_IN_B ON CL_S18_IN_B.SYSTEM_ID='BASIC' AND CL_S18_IN_B.HIGH_CD='S18' AND CL_S18_IN_B.CODE
+307 | material.xml | v1/material.xml | 1644 | JOIN | D01 | 소재 관리 (REST v1) | selectInWarehouseManageOutListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_S18_OUT_S ON CL_S18_OUT_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S18_OUT_S.HIGH_CD='S18' AND CL
+308 | material.xml | v1/material.xml | 1645 | JOIN | S55 | 소재 관리 (REST v1) | selectInWarehouseManageOutListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_S18_OUT_B ON CL_S18_OUT_B.SYSTEM_ID='BASIC' AND CL_S18_OUT_B.HIGH_CD='S18' AND CL_S18_OUT_B.
+309 | material.xml | v1/material.xml | 1759 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S
+310 | material.xml | v1/material.xml | 1761 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B
+311 | material.xml | v1/material.xml | 1763 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S
+312 | material.xml | v1/material.xml | 1765 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B
+313 | material.xml | v1/material.xml | 1767 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S
+314 | material.xml | v1/material.xml | 1769 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B
+315 | material.xml | v1/material.xml | 1771 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_S
+316 | material.xml | v1/material.xml | 1773 | JOIN | S55 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_B
+317 | material.xml | v1/material.xml | 1858 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_S10_S.HIGH_CD = 'S10' AND CL_S10_S
+318 | material.xml | v1/material.xml | 1859 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC'  AND CL_S10_B.HIGH_CD = 'S10' AND CL_S10_B.CODE_CD = C
+319 | material.xml | v1/material.xml | 1860 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_D01_S.HIGH_CD = 'D01' AND CL_D01_S
+320 | material.xml | v1/material.xml | 1861 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC'  AND CL_D01_B.HIGH_CD = 'D01' AND CL_D01_B.CODE_CD = C
+321 | material.xml | v1/material.xml | 1862 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_S ON CL_S12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_S12_S.HIGH_CD = 'S12' AND CL_S12_S
+322 | material.xml | v1/material.xml | 1863 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12_B ON CL_S12_B.SYSTEM_ID = 'BASIC'  AND CL_S12_B.HIGH_CD = 'S12' AND CL_S12_B.CODE_CD = A
+323 | material.xml | v1/material.xml | 1864 | JOIN | S10 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_S ON CL_E12_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_E12_S.HIGH_CD = 'E12' AND CL_E12_S
+324 | material.xml | v1/material.xml | 1865 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E12_B ON CL_E12_B.SYSTEM_ID = 'BASIC'  AND CL_E12_B.HIGH_CD = 'E12' AND CL_E12_B.CODE_CD = A
+325 | material.xml | v1/material.xml | 1866 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_S ON CL_E13_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_E13_S.HIGH_CD = 'E13' AND CL_E13_S
+326 | material.xml | v1/material.xml | 1867 | JOIN | S12 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E13_B ON CL_E13_B.SYSTEM_ID = 'BASIC'  AND CL_E13_B.HIGH_CD = 'E13' AND CL_E13_B.CODE_CD = A
+327 | material.xml | v1/material.xml | 1868 | JOIN | S12 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E10_S ON CL_E10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_E10_S.HIGH_CD = 'E10' AND CL_E10_S
+328 | material.xml | v1/material.xml | 1869 | JOIN | E12 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E10_B ON CL_E10_B.SYSTEM_ID = 'BASIC'  AND CL_E10_B.HIGH_CD = 'E10' AND CL_E10_B.CODE_CD = A
+329 | material.xml | v1/material.xml | 1870 | JOIN | E12 | 소재 관리 (REST v1) | selectInWarehouseManageListV1 | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_S04_S.HIGH_CD = 'S04' AND CL_S04_S
+330 | material.xml | v1/material.xml | 1871 | JOIN | E13 | 소재 관리 (REST v1) | selectInWarehouseManageListV1 | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC'  AND CL_S04_B.HIGH_CD = 'S04' AND CL_S04_B.CODE_CD = A
+331 | material.xml | v1/material.xml | 1974 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S
+332 | material.xml | v1/material.xml | 1976 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B
+333 | material.xml | v1/material.xml | 1978 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S
+334 | material.xml | v1/material.xml | 1980 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B
+335 | material.xml | v1/material.xml | 1982 | JOIN | D02 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S
+336 | material.xml | v1/material.xml | 1984 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B
+337 | material.xml | v1/material.xml | 1986 | JOIN | D01 | 소재 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E06_S
+338 | material.xml | v1/material.xml | 1988 | JOIN | S55 | 소재 관리 (REST v1) | selectInWarehouseManageListV1Count | LEFT JOIN TBL_CODE_LANG1 CL_E06_B
+339 | order.xml | v1/order.xml | 76 | JOIN | E01 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+340 | order.xml | v1/order.xml | 81 | JOIN | E01 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+341 | order.xml | v1/order.xml | 85 | JOIN | S11 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+342 | order.xml | v1/order.xml | 101 | JOIN | S10 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+343 | order.xml | v1/order.xml | 105 | JOIN | S10 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+344 | order.xml | v1/order.xml | 116 | JOIN | D02 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+345 | order.xml | v1/order.xml | 118 | JOIN | D02 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+346 | order.xml | v1/order.xml | 120 | JOIN | D02 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+347 | order.xml | v1/order.xml | 122 | JOIN | D01 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+348 | order.xml | v1/order.xml | 124 | JOIN | S55 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+349 | order.xml | v1/order.xml | 128 | JOIN | D04 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+350 | order.xml | v1/order.xml | 130 | JOIN | 1058 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+351 | order.xml | v1/order.xml | 163 | JOIN | S53 | 주문 관리 (REST v1) |  | THEN (SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TBL_
+352 | order.xml | v1/order.xml | 164 | JOIN | S53 | 주문 관리 (REST v1) |  | ELSE (SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TBL_
+353 | order.xml | v1/order.xml | 365 | JOIN | S09 | 주문 관리 (REST v1) |  | IFNULL((SELECT CASE WHEN #{LOGIN_LOCALE} = 'EN' THEN CL_EN.CODE_NM ELSE CL_KR.CODE_NM END FROM TBL_CODE1 TC LEFT JOIN TB
+354 | order.xml | v1/order.xml | 855 | JOIN | S34 | 주문 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CD_STATUS ON CD_STATUS.HIGH_CD = CD_STATUS_C.HIGH_CD AND CD_STATUS.CODE_CD = CD_STATUS_C.
+355 | order.xml | v1/order.xml | 857 | JOIN | S34 | 주문 관리 (REST v1) |  | LEFT OUTER JOIN TBL_CODE_LANG1 CD_INSPECT ON CD_INSPECT.HIGH_CD = CD_INSPECT_C.HIGH_CD AND CD_INSPECT.CODE_CD = CD_INSPE
+356 | order.xml | v1/order.xml | 859 | JOIN | S34 | 주문 관리 (REST v1) | selectOrderManageListV1Count | LEFT OUTER JOIN TBL_CODE_LANG1 CD_MAT_DTL ON CD_MAT_DTL.HIGH_CD = CD_MAT_DTL_C.HIGH_CD AND CD_MAT_DTL.CODE_CD = CD_MAT_D
+357 | order.xml | v1/order.xml | 965 | JOIN | - | 주문 관리 (REST v1) | selectConfirmOrderListV1 | <!-- V1: SF_ 함수 → TBL_CODE1+TBL_CODE_LANG1 JOIN + CASE WHEN 인라인, 2.7초→0.3초 (SF_FUNCTION_TO_JOIN 패턴) -->
+358 | order.xml | v1/order.xml | 1069 | JOIN | S11 | 주문 관리 (REST v1) |  | /* SF_GET_CODE_NM: TBL_CODE1 → TBL_CODE_LANG1 */
+359 | order.xml | v1/order.xml | 1071 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11 ON CL_S11.HIGH_CD=CD_S11.HIGH_CD AND CL_S11.CODE_CD=CD_S11.CODE_CD AND CL_S11.LANG_CD=IF
+360 | order.xml | v1/order.xml | 1073 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01 ON CL_E01.HIGH_CD=CD_E01.HIGH_CD AND CL_E01.CODE_CD=CD_E01.CODE_CD AND CL_E01.LANG_CD=IF
+361 | order.xml | v1/order.xml | 1075 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09 ON CL_E09.HIGH_CD=CD_E09.HIGH_CD AND CL_E09.CODE_CD=CD_E09.CODE_CD AND CL_E09.LANG_CD=IF
+362 | order.xml | v1/order.xml | 1077 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD=CD_S10.HIGH_CD AND CL_S10.CODE_CD=CD_S10.CODE_CD AND CL_S10.LANG_CD=IF
+363 | order.xml | v1/order.xml | 1079 | JOIN | E09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD=CD_D01.HIGH_CD AND CL_D01.CODE_CD=CD_D01.CODE_CD AND CL_D01.LANG_CD=IF
+364 | order.xml | v1/order.xml | 1081 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.HIGH_CD=CD_D02.HIGH_CD AND CL_D02.CODE_CD=CD_D02.CODE_CD AND CL_D02.LANG_CD=IF
+365 | order.xml | v1/order.xml | 1083 | JOIN | D01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55 ON CL_S55.HIGH_CD=CD_S55.HIGH_CD AND CL_S55.CODE_CD=CD_S55.CODE_CD AND CL_S55.LANG_CD=IF
+366 | order.xml | v1/order.xml | 1085 | JOIN | D02 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03 ON CL_D03.HIGH_CD=CD_D03.HIGH_CD AND CL_D03.CODE_CD=CD_D03.CODE_CD AND CL_D03.LANG_CD=IF
+367 | order.xml | v1/order.xml | 1087 | JOIN | S55 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04 ON CL_D04.HIGH_CD=CD_D04.HIGH_CD AND CL_D04.CODE_CD=CD_D04.CODE_CD AND CL_D04.LANG_CD=IF
+368 | order.xml | v1/order.xml | 1089 | JOIN | D03 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08 ON CL_E08.HIGH_CD=CD_E08.HIGH_CD AND CL_E08.CODE_CD=CD_E08.CODE_CD AND CL_E08.LANG_CD=IF
+369 | order.xml | v1/order.xml | 1091 | JOIN | D04 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G ON CL_1058G.HIGH_CD=CD_1058G.HIGH_CD AND CL_1058G.CODE_CD=CD_1058G.CODE_CD AND CL_1058
+370 | order.xml | v1/order.xml | 1093 | JOIN | E08 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H ON CL_1058H.HIGH_CD=CD_1058H.HIGH_CD AND CL_1058H.CODE_CD=CD_1058H.CODE_CD AND CL_1058
+371 | order.xml | v1/order.xml | 1095 | JOIN | 1058 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53 ON CL_S53.HIGH_CD=CD_S53.HIGH_CD AND CL_S53.CODE_CD=CD_S53.CODE_CD AND CL_S53.LANG_CD=IF
+372 | order.xml | v1/order.xml | 1374 | JOIN | D01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01
+373 | order.xml | v1/order.xml | 1733 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01 ON CL_E01.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_E01.CODE_CD = A.MAIN_INSPECT
+374 | order.xml | v1/order.xml | 1734 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11 ON CL_S11.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S11.CODE_CD = A.CONTROL_STAT
+375 | order.xml | v1/order.xml | 1735 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09 ON CL_E09.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_E09.CODE_CD = A.PRICE_CONFIR
+376 | order.xml | v1/order.xml | 1738 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S10.CODE_CD = B.WORK_TYPE AN
+377 | order.xml | v1/order.xml | 1739 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08 ON CL_E08.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_E08.CODE_CD = B.WORK_FACTORY
+378 | order.xml | v1/order.xml | 1740 | JOIN | E09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_D02.CODE_CD = B.MATERIAL_TYP
+379 | order.xml | v1/order.xml | 1741 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_D01.CODE_CD = B.MATERIAL_DET
+380 | order.xml | v1/order.xml | 1742 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55 ON CL_S55.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S55.CODE_CD = B.MATERIAL_KIN
+381 | order.xml | v1/order.xml | 1743 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03 ON CL_D03.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_D03.CODE_CD = B.SURFACE_TREA
+382 | order.xml | v1/order.xml | 1744 | JOIN | E08 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04 ON CL_D04.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_D04.CODE_CD = B.SURFACE_TREA
+383 | order.xml | v1/order.xml | 1745 | JOIN | D02 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G ON CL_1058G.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_1058G.CODE_CD = B.MATERI
+384 | order.xml | v1/order.xml | 1746 | JOIN | D01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H ON CL_1058H.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_1058H.CODE_CD = B.MATERI
+385 | order.xml | v1/order.xml | 1747 | JOIN | S55 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53 ON CL_S53.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S53.CODE_CD = B.PART_STATUS 
+386 | order.xml | v1/order.xml | 1748 | JOIN | D03 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S33 ON CL_S33.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S33.CODE_CD = A.OUT_FINISH_S
+387 | order.xml | v1/order.xml | 1846 | JOIN | S09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09 ON CL_S09.SYSTEM_ID IN ('BASIC', #{LOGIN_SYSTEM_ID}) AND CL_S09.CODE_CD = GH.OUTSIDE_STA
+388 | order.xml | v1/order.xml | 2144 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01 ON CL_E01.HIGH_CD = 'E01' AND CL_E01.CODE_CD = A.MAIN_INSPECTION AND CL_E01.LANG_CD = IF
+389 | order.xml | v1/order.xml | 2145 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11 ON CL_S11.HIGH_CD = 'S11' AND CL_S11.CODE_CD = A.CONTROL_STATUS AND CL_S11.LANG_CD = IF(
+390 | order.xml | v1/order.xml | 2146 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09 ON CL_E09.HIGH_CD = 'E09' AND CL_E09.CODE_CD = A.PRICE_CONFIRM AND CL_E09.LANG_CD = IF(#
+391 | order.xml | v1/order.xml | 2147 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD = 'S10' AND CL_S10.CODE_CD = B.WORK_TYPE AND CL_S10.LANG_CD = IF(#{LOG
+392 | order.xml | v1/order.xml | 2148 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08 ON CL_E08.HIGH_CD = 'E08' AND CL_E08.CODE_CD = B.WORK_FACTORY AND CL_E08.LANG_CD = IF(#{
+393 | order.xml | v1/order.xml | 2149 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.HIGH_CD = 'D02' AND CL_D02.CODE_CD = B.MATERIAL_TYPE AND CL_D02.LANG_CD = IF(#
+394 | order.xml | v1/order.xml | 2150 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = B.MATERIAL_DETAIL AND CL_D01.LANG_CD = IF
+395 | order.xml | v1/order.xml | 2151 | JOIN | E09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55 ON CL_S55.HIGH_CD = 'S55' AND CL_S55.CODE_CD = B.MATERIAL_KIND AND CL_S55.LANG_CD = IF(#
+396 | order.xml | v1/order.xml | 2152 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03 ON CL_D03.HIGH_CD = 'D03' AND CL_D03.CODE_CD = B.SURFACE_TREAT AND CL_D03.LANG_CD = IF(#
+397 | order.xml | v1/order.xml | 2153 | JOIN | E08 | 주문 관리 (REST v1) | selectMatchStockDrawingArchiveListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D04 ON CL_D04.HIGH_CD = 'D04' AND CL_D04.CODE_CD = B.SURFACE_TREAT_DETAIL AND CL_D04.LANG_CD
+398 | order.xml | v1/order.xml | 2154 | JOIN | D02 | 주문 관리 (REST v1) | selectMatchStockDrawingArchiveListV1 | LEFT JOIN TBL_CODE_LANG1 CL_1058G ON CL_1058G.HIGH_CD = '1058' AND CL_1058G.CODE_CD = B.MATERIAL_FINISH_GRIND AND CL_105
+399 | order.xml | v1/order.xml | 2155 | JOIN | D01 | 주문 관리 (REST v1) | selectMatchStockDrawingArchiveListV1 | LEFT JOIN TBL_CODE_LANG1 CL_1058H ON CL_1058H.HIGH_CD = '1058' AND CL_1058H.CODE_CD = B.MATERIAL_FINISH_HEAT AND CL_1058
+400 | order.xml | v1/order.xml | 2204 | JOIN | D01 | 주문 관리 (REST v1) | businessOverDangerListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = C.MATERIAL_DETAIL
+401 | order.xml | v1/order.xml | 2371 | JOIN | S12 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S12
+402 | order.xml | v1/order.xml | 2376 | JOIN | S12 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01 ON CL_E01.HIGH_CD = 'E01' AND CL_E01.CODE_CD = A.MAIN_INSPECTION AND CL_E01.LANG_CD = IF
+403 | order.xml | v1/order.xml | 2377 | JOIN | S12 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11 ON CL_S11.HIGH_CD = 'S11' AND CL_S11.CODE_CD = A.CONTROL_STATUS AND CL_S11.LANG_CD = IF(
+404 | order.xml | v1/order.xml | 2378 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09 ON CL_E09.HIGH_CD = 'E09' AND CL_E09.CODE_CD = A.PRICE_CONFIRM AND CL_E09.LANG_CD = IF(#
+405 | order.xml | v1/order.xml | 2379 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD = 'S10' AND CL_S10.CODE_CD = B.WORK_TYPE AND CL_S10.LANG_CD = IF(#{LOG
+406 | order.xml | v1/order.xml | 2380 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08 ON CL_E08.HIGH_CD = 'E08' AND CL_E08.CODE_CD = B.WORK_FACTORY AND CL_E08.LANG_CD = IF(#{
+407 | order.xml | v1/order.xml | 2381 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.HIGH_CD = 'D02' AND CL_D02.CODE_CD = B.MATERIAL_TYPE AND CL_D02.LANG_CD = IF(#
+408 | order.xml | v1/order.xml | 2382 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = B.MATERIAL_DETAIL AND CL_D01.LANG_CD = IF
+409 | order.xml | v1/order.xml | 2383 | JOIN | E09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55 ON CL_S55.HIGH_CD = 'S55' AND CL_S55.CODE_CD = B.MATERIAL_KIND AND CL_S55.LANG_CD = IF(#
+410 | order.xml | v1/order.xml | 2384 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03 ON CL_D03.HIGH_CD = 'D03' AND CL_D03.CODE_CD = B.SURFACE_TREAT AND CL_D03.LANG_CD = IF(#
+411 | order.xml | v1/order.xml | 2385 | JOIN | E08 | 주문 관리 (REST v1) | selectProcessConfirmListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D04 ON CL_D04.HIGH_CD = 'D04' AND CL_D04.CODE_CD = B.SURFACE_TREAT_DETAIL AND CL_D04.LANG_CD
+412 | order.xml | v1/order.xml | 2386 | JOIN | D02 | 주문 관리 (REST v1) | selectProcessConfirmListV1 | LEFT JOIN TBL_CODE_LANG1 CL_1058G ON CL_1058G.HIGH_CD = '1058' AND CL_1058G.CODE_CD = B.MATERIAL_FINISH_GRIND AND CL_105
+413 | order.xml | v1/order.xml | 2387 | JOIN | D01 | 주문 관리 (REST v1) | selectProcessConfirmListV1 | LEFT JOIN TBL_CODE_LANG1 CL_1058H ON CL_1058H.HIGH_CD = '1058' AND CL_1058H.CODE_CD = B.MATERIAL_FINISH_HEAT AND CL_1058
+414 | order.xml | v1/order.xml | 2521 | JOIN | S11 | 주문 관리 (REST v1) |  | /* SF_GET_CODE_NM → TBL_CODE1 + TBL_CODE_LANG1 LEFT JOIN */
+415 | order.xml | v1/order.xml | 2523 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11 ON CL_S11.HIGH_CD=CD_S11.HIGH_CD AND CL_S11.CODE_CD=CD_S11.CODE_CD AND CL_S11.LANG_CD=IF
+416 | order.xml | v1/order.xml | 2525 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01 ON CL_E01.HIGH_CD=CD_E01.HIGH_CD AND CL_E01.CODE_CD=CD_E01.CODE_CD AND CL_E01.LANG_CD=IF
+417 | order.xml | v1/order.xml | 2527 | JOIN | S11 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09 ON CL_E09.HIGH_CD=CD_E09.HIGH_CD AND CL_E09.CODE_CD=CD_E09.CODE_CD AND CL_E09.LANG_CD=IF
+418 | order.xml | v1/order.xml | 2529 | JOIN | E01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD=CD_S10.HIGH_CD AND CL_S10.CODE_CD=CD_S10.CODE_CD AND CL_S10.LANG_CD=IF
+419 | order.xml | v1/order.xml | 2531 | JOIN | E09 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD=CD_D01.HIGH_CD AND CL_D01.CODE_CD=CD_D01.CODE_CD AND CL_D01.LANG_CD=IF
+420 | order.xml | v1/order.xml | 2533 | JOIN | S10 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02 ON CL_D02.HIGH_CD=CD_D02.HIGH_CD AND CL_D02.CODE_CD=CD_D02.CODE_CD AND CL_D02.LANG_CD=IF
+421 | order.xml | v1/order.xml | 2535 | JOIN | D01 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55 ON CL_S55.HIGH_CD=CD_S55.HIGH_CD AND CL_S55.CODE_CD=CD_S55.CODE_CD AND CL_S55.LANG_CD=IF
+422 | order.xml | v1/order.xml | 2537 | JOIN | D02 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03 ON CL_D03.HIGH_CD=CD_D03.HIGH_CD AND CL_D03.CODE_CD=CD_D03.CODE_CD AND CL_D03.LANG_CD=IF
+423 | order.xml | v1/order.xml | 2539 | JOIN | S55 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04 ON CL_D04.HIGH_CD=CD_D04.HIGH_CD AND CL_D04.CODE_CD=CD_D04.CODE_CD AND CL_D04.LANG_CD=IF
+424 | order.xml | v1/order.xml | 2541 | JOIN | D03 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08 ON CL_E08.HIGH_CD=CD_E08.HIGH_CD AND CL_E08.CODE_CD=CD_E08.CODE_CD AND CL_E08.LANG_CD=IF
+425 | order.xml | v1/order.xml | 2543 | JOIN | D04 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G ON CL_1058G.HIGH_CD=CD_1058G.HIGH_CD AND CL_1058G.CODE_CD=CD_1058G.CODE_CD AND CL_1058
+426 | order.xml | v1/order.xml | 2545 | JOIN | E08 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H ON CL_1058H.HIGH_CD=CD_1058H.HIGH_CD AND CL_1058H.CODE_CD=CD_1058H.CODE_CD AND CL_1058
+427 | order.xml | v1/order.xml | 2547 | JOIN | 1058 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53 ON CL_S53.HIGH_CD=CD_S53.HIGH_CD AND CL_S53.CODE_CD=CD_S53.CODE_CD AND CL_S53.LANG_CD=IF
+428 | order.xml | v1/order.xml | 2552 | JOIN | E07 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E07 ON CL_E07.HIGH_CD=CD_E07.HIGH_CD AND CL_E07.CODE_CD=CD_E07.CODE_CD AND CL_E07.LANG_CD=IF
+429 | order.xml | v1/order.xml | 2554 | JOIN | E07 | 주문 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S33 ON CL_S33.HIGH_CD=CD_S33.HIGH_CD AND CL_S33.CODE_CD=CD_S33.CODE_CD AND CL_S33.LANG_CD=IF
+430 | orderSameArchive.xml | v1/orderSameArchive.xml | 138 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD = A.MATERIAL_DETAIL AN
+431 | orderSameArchive.xml | v1/orderSameArchive.xml | 139 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.CODE_CD = A.MATERIAL_DETAIL AND CL_D01_B.
+432 | orderSameArchive.xml | v1/orderSameArchive.xml | 140 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD = A.WORK_TYPE AND CL_S
+433 | orderSameArchive.xml | v1/orderSameArchive.xml | 141 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.CODE_CD = A.WORK_TYPE AND CL_S10_B.HIGH_C
+434 | orderSameArchive.xml | v1/orderSameArchive.xml | 142 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S55_S.CODE_CD = A.MATERIAL_KIND AND 
+435 | orderSameArchive.xml | v1/orderSameArchive.xml | 143 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID = 'BASIC' AND CL_S55_B.CODE_CD = A.MATERIAL_KIND AND CL_S55_B.HI
+436 | orderSameArchive.xml | v1/orderSameArchive.xml | 144 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D03_S.CODE_CD = A.SURFACE_TREAT AND 
+437 | orderSameArchive.xml | v1/orderSameArchive.xml | 145 | JOIN | S10 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.SYSTEM_ID = 'BASIC' AND CL_D03_B.CODE_CD = A.SURFACE_TREAT AND CL_D03_B.HI
+438 | orderSameArchive.xml | v1/orderSameArchive.xml | 146 | JOIN | S10 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D04_S.CODE_CD = A.SURFACE_TREAT_DETA
+439 | orderSameArchive.xml | v1/orderSameArchive.xml | 147 | JOIN | S55 | 주문 이력 관리 (REST v1) | selectEstArchiveDataListV1 | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.SYSTEM_ID = 'BASIC' AND CL_D04_B.CODE_CD = A.SURFACE_TREAT_DETAIL AND CL_D
+440 | orderSameArchive.xml | v1/orderSameArchive.xml | 225 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_D01_S.CODE_CD = A.MATERIAL_DETAIL 
+441 | orderSameArchive.xml | v1/orderSameArchive.xml | 226 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.CODE_CD = A.MATERIAL_DETAIL      AND CL_D
+442 | orderSameArchive.xml | v1/orderSameArchive.xml | 227 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_S10_S.CODE_CD = A.WORK_TYPE       
+443 | orderSameArchive.xml | v1/orderSameArchive.xml | 228 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.CODE_CD = A.WORK_TYPE            AND CL_S
+444 | orderSameArchive.xml | v1/orderSameArchive.xml | 229 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_S55_S.CODE_CD = A.MATERIAL_KIND   
+445 | orderSameArchive.xml | v1/orderSameArchive.xml | 230 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID = 'BASIC' AND CL_S55_B.CODE_CD = A.MATERIAL_KIND        AND CL_S
+446 | orderSameArchive.xml | v1/orderSameArchive.xml | 231 | JOIN | D01 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_D03_S.CODE_CD = A.SURFACE_TREAT   
+447 | orderSameArchive.xml | v1/orderSameArchive.xml | 232 | JOIN | S10 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.SYSTEM_ID = 'BASIC' AND CL_D03_B.CODE_CD = A.SURFACE_TREAT        AND CL_D
+448 | orderSameArchive.xml | v1/orderSameArchive.xml | 233 | JOIN | S10 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID}   AND CL_D04_S.CODE_CD = A.SURFACE_TREAT_DE
+449 | orderSameArchive.xml | v1/orderSameArchive.xml | 234 | JOIN | S55 | 주문 이력 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.SYSTEM_ID = 'BASIC' AND CL_D04_B.CODE_CD = A.SURFACE_TREAT_DETAIL AND CL_D
+450 | out.xml | v1/out.xml | 273 | JOIN | S50 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S50 ON CL_S50.HIGH_CD = 'S50' AND CL_S50.CODE_CD = X.OUTSIDE_EST_STATUS
+451 | out.xml | v1/out.xml | 275 | JOIN | S50 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD = 'S10' AND CL_S10.CODE_CD = X.WORK_TYPE
+452 | out.xml | v1/out.xml | 277 | JOIN | S50 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = X.MATERIAL_DETAIL
+453 | out.xml | v1/out.xml | 279 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_ST ON CL_ST.HIGH_CD IN ('D03', 'D04') AND CL_ST.CODE_CD = X.SURFACE_TREAT
+454 | out.xml | v1/out.xml | 281 | JOIN | D01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_STD ON CL_STD.HIGH_CD IN ('D03', 'D04') AND CL_STD.CODE_CD = X.SURFACE_TREAT_DETAIL
+455 | out.xml | v1/out.xml | 676 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_S ON CL_E01_S.HIGH_CD = 'E01' AND CL_E01_S.CODE_CD = A.MAIN_INSPECTION AND CL_E01_S.LANG
+456 | out.xml | v1/out.xml | 677 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_B ON CL_E01_B.HIGH_CD = 'E01' AND CL_E01_B.CODE_CD = A.MAIN_INSPECTION AND CL_E01_B.LANG
+457 | out.xml | v1/out.xml | 678 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.HIGH_CD = 'S11' AND CL_S11_S.CODE_CD = A.CONTROL_STATUS AND CL_S11_S.LANG_
+458 | out.xml | v1/out.xml | 679 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.HIGH_CD = 'S11' AND CL_S11_B.CODE_CD = A.CONTROL_STATUS AND CL_S11_B.LANG_
+459 | out.xml | v1/out.xml | 680 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09_S ON CL_E09_S.HIGH_CD = 'E09' AND CL_E09_S.CODE_CD = A.PRICE_CONFIRM AND CL_E09_S.LANG_C
+460 | out.xml | v1/out.xml | 681 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09_B ON CL_E09_B.HIGH_CD = 'E09' AND CL_E09_B.CODE_CD = A.PRICE_CONFIRM AND CL_E09_B.LANG_C
+461 | out.xml | v1/out.xml | 682 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.HIGH_CD = 'S10' AND CL_S10_S.CODE_CD = B.WORK_TYPE AND CL_S10_S.LANG_CD = 
+462 | out.xml | v1/out.xml | 683 | JOIN | S11 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.HIGH_CD = 'S10' AND CL_S10_B.CODE_CD = B.WORK_TYPE AND CL_S10_B.LANG_CD = 
+463 | out.xml | v1/out.xml | 684 | JOIN | S11 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.HIGH_CD = 'E08' AND CL_E08_S.CODE_CD = B.WORK_FACTORY AND CL_E08_S.LANG_CD
+464 | out.xml | v1/out.xml | 685 | JOIN | E09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.HIGH_CD = 'E08' AND CL_E08_B.CODE_CD = B.WORK_FACTORY AND CL_E08_B.LANG_CD
+465 | out.xml | v1/out.xml | 686 | JOIN | E09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.HIGH_CD = 'D02' AND CL_D02_S.CODE_CD = B.MATERIAL_TYPE AND CL_D02_S.LANG_C
+466 | out.xml | v1/out.xml | 687 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.HIGH_CD = 'D02' AND CL_D02_B.CODE_CD = B.MATERIAL_TYPE AND CL_D02_B.LANG_C
+467 | out.xml | v1/out.xml | 688 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.HIGH_CD = 'D01' AND CL_D01_S.CODE_CD = B.MATERIAL_DETAIL AND CL_D01_S.LANG
+468 | out.xml | v1/out.xml | 689 | JOIN | E08 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.HIGH_CD = 'D01' AND CL_D01_B.CODE_CD = B.MATERIAL_DETAIL AND CL_D01_B.LANG
+469 | out.xml | v1/out.xml | 690 | JOIN | E08 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.HIGH_CD = 'S55' AND CL_S55_S.CODE_CD = B.MATERIAL_KIND AND CL_S55_S.LANG_C
+470 | out.xml | v1/out.xml | 691 | JOIN | D02 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.HIGH_CD = 'S55' AND CL_S55_B.CODE_CD = B.MATERIAL_KIND AND CL_S55_B.LANG_C
+471 | out.xml | v1/out.xml | 692 | JOIN | D02 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.HIGH_CD = 'D03' AND CL_D03_S.CODE_CD = B.SURFACE_TREAT AND CL_D03_S.LANG_C
+472 | out.xml | v1/out.xml | 693 | JOIN | D01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.HIGH_CD = 'D03' AND CL_D03_B.CODE_CD = B.SURFACE_TREAT AND CL_D03_B.LANG_C
+473 | out.xml | v1/out.xml | 694 | JOIN | D01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.HIGH_CD = 'D04' AND CL_D04_S.CODE_CD = B.SURFACE_TREAT_DETAIL AND CL_D04_S
+474 | out.xml | v1/out.xml | 695 | JOIN | S55 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.HIGH_CD = 'D04' AND CL_D04_B.CODE_CD = B.SURFACE_TREAT_DETAIL AND CL_D04_B
+475 | out.xml | v1/out.xml | 696 | JOIN | S55 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G_S ON CL_1058G_S.HIGH_CD = '1058' AND CL_1058G_S.CODE_CD = B.MATERIAL_FINISH_GRIND AND 
+476 | out.xml | v1/out.xml | 697 | JOIN | D03 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G_B ON CL_1058G_B.HIGH_CD = '1058' AND CL_1058G_B.CODE_CD = B.MATERIAL_FINISH_GRIND AND 
+477 | out.xml | v1/out.xml | 698 | JOIN | D03 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H_S ON CL_1058H_S.HIGH_CD = '1058' AND CL_1058H_S.CODE_CD = B.MATERIAL_FINISH_HEAT AND C
+478 | out.xml | v1/out.xml | 699 | JOIN | D04 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H_B ON CL_1058H_B.HIGH_CD = '1058' AND CL_1058H_B.CODE_CD = B.MATERIAL_FINISH_HEAT AND C
+479 | out.xml | v1/out.xml | 700 | JOIN | D04 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09_S ON CL_S09_S.HIGH_CD = 'S09' AND CL_S09_S.CODE_CD = F.OUTSIDE_PART_STATUS AND CL_S09_S.
+480 | out.xml | v1/out.xml | 701 | JOIN | 1058 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09_B ON CL_S09_B.HIGH_CD = 'S09' AND CL_S09_B.CODE_CD = F.OUTSIDE_PART_STATUS AND CL_S09_B.
+481 | out.xml | v1/out.xml | 844 | JOIN | S09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09 ON CL_S09.HIGH_CD = 'S09' AND CL_S09.CODE_CD = A.OUTSIDE_REQUEST_TYPE
+482 | out.xml | v1/out.xml | 846 | JOIN | S09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10 ON CL_S10.HIGH_CD = 'S10' AND CL_S10.CODE_CD = A.WORK_TYPE
+483 | out.xml | v1/out.xml | 848 | JOIN | S09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01 ON CL_D01.HIGH_CD = 'D01' AND CL_D01.CODE_CD = A.MATERIAL_DETAIL
+484 | out.xml | v1/out.xml | 850 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_ST ON CL_ST.HIGH_CD IN ('D03', 'D04') AND CL_ST.CODE_CD = A.SURFACE_TREAT
+485 | out.xml | v1/out.xml | 852 | JOIN | D01 | 출고 관리 (REST v1) | selectOutsideOrderManageListV1 | LEFT JOIN TBL_CODE_LANG1 CL_STD ON CL_STD.HIGH_CD IN ('D03', 'D04') AND CL_STD.CODE_CD = A.SURFACE_TREAT_DETAIL
+486 | out.xml | v1/out.xml | 1182 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_S ON CL_E01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E01_S.HIGH_CD='E01' AND CL_E01_S.CODE_
+487 | out.xml | v1/out.xml | 1183 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E01_B ON CL_E01_B.SYSTEM_ID='BASIC' AND CL_E01_B.HIGH_CD='E01' AND CL_E01_B.CODE_CD=A.MAIN_I
+488 | out.xml | v1/out.xml | 1184 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_S ON CL_S11_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S11_S.HIGH_CD='S11' AND CL_S11_S.CODE_
+489 | out.xml | v1/out.xml | 1185 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S11_B ON CL_S11_B.SYSTEM_ID='BASIC' AND CL_S11_B.HIGH_CD='S11' AND CL_S11_B.CODE_CD=A.CONTRO
+490 | out.xml | v1/out.xml | 1186 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09_S ON CL_E09_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E09_S.HIGH_CD='E09' AND CL_E09_S.CODE_
+491 | out.xml | v1/out.xml | 1187 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E09_B ON CL_E09_B.SYSTEM_ID='BASIC' AND CL_E09_B.HIGH_CD='E09' AND CL_E09_B.CODE_CD=A.PRICE_
+492 | out.xml | v1/out.xml | 1188 | JOIN | E01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S10_S.HIGH_CD='S10' AND CL_S10_S.CODE_
+493 | out.xml | v1/out.xml | 1189 | JOIN | S11 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID='BASIC' AND CL_S10_B.HIGH_CD='S10' AND CL_S10_B.CODE_CD=B.WORK_T
+494 | out.xml | v1/out.xml | 1190 | JOIN | S11 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_S ON CL_E08_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E08_S.HIGH_CD='E08' AND CL_E08_S.CODE_
+495 | out.xml | v1/out.xml | 1191 | JOIN | E09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E08_B ON CL_E08_B.SYSTEM_ID='BASIC' AND CL_E08_B.HIGH_CD='E08' AND CL_E08_B.CODE_CD=B.WORK_F
+496 | out.xml | v1/out.xml | 1192 | JOIN | E09 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD='D02' AND CL_D02_S.CODE_
+497 | out.xml | v1/out.xml | 1193 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID='BASIC' AND CL_D02_B.HIGH_CD='D02' AND CL_D02_B.CODE_CD=B.MATERI
+498 | out.xml | v1/out.xml | 1194 | JOIN | S10 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.HIGH_CD='D01' AND CL_D01_S.CODE_
+499 | out.xml | v1/out.xml | 1195 | JOIN | E08 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.HIGH_CD='D01' AND CL_D01_B.CODE_CD=B.MATERI
+500 | out.xml | v1/out.xml | 1196 | JOIN | E08 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_S ON CL_S55_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S55_S.HIGH_CD='S55' AND CL_S55_S.CODE_
+501 | out.xml | v1/out.xml | 1197 | JOIN | D02 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S55_B ON CL_S55_B.SYSTEM_ID='BASIC' AND CL_S55_B.HIGH_CD='S55' AND CL_S55_B.CODE_CD=B.MATERI
+502 | out.xml | v1/out.xml | 1198 | JOIN | D02 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_S ON CL_D03_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D03_S.HIGH_CD='D03' AND CL_D03_S.CODE_
+503 | out.xml | v1/out.xml | 1199 | JOIN | D01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D03_B ON CL_D03_B.SYSTEM_ID='BASIC' AND CL_D03_B.HIGH_CD='D03' AND CL_D03_B.CODE_CD=B.SURFAC
+504 | out.xml | v1/out.xml | 1200 | JOIN | D01 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_S ON CL_D04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D04_S.HIGH_CD='D04' AND CL_D04_S.CODE_
+505 | out.xml | v1/out.xml | 1201 | JOIN | S55 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D04_B ON CL_D04_B.SYSTEM_ID='BASIC' AND CL_D04_B.HIGH_CD='D04' AND CL_D04_B.CODE_CD=B.SURFAC
+506 | out.xml | v1/out.xml | 1202 | JOIN | S55 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G_S ON CL_1058G_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_1058G_S.HIGH_CD='1058' AND CL_1058
+507 | out.xml | v1/out.xml | 1203 | JOIN | D03 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058G_B ON CL_1058G_B.SYSTEM_ID='BASIC' AND CL_1058G_B.HIGH_CD='1058' AND CL_1058G_B.CODE_CD
+508 | out.xml | v1/out.xml | 1204 | JOIN | D03 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H_S ON CL_1058H_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_1058H_S.HIGH_CD='1058' AND CL_1058
+509 | out.xml | v1/out.xml | 1205 | JOIN | D04 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1058H_B ON CL_1058H_B.SYSTEM_ID='BASIC' AND CL_1058H_B.HIGH_CD='1058' AND CL_1058H_B.CODE_CD
+510 | out.xml | v1/out.xml | 1206 | JOIN | D04 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09G_S ON CL_S09G_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S09G_S.HIGH_CD='S09' AND CL_S09G_S.C
+511 | out.xml | v1/out.xml | 1207 | JOIN | 1058 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09G_B ON CL_S09G_B.SYSTEM_ID='BASIC' AND CL_S09G_B.HIGH_CD='S09' AND CL_S09G_B.CODE_CD=G.OU
+512 | out.xml | v1/out.xml | 1208 | JOIN | 1058 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09F_S ON CL_S09F_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S09F_S.HIGH_CD='S09' AND CL_S09F_S.C
+513 | out.xml | v1/out.xml | 1209 | JOIN | 1058 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S09F_B ON CL_S09F_B.SYSTEM_ID='BASIC' AND CL_S09F_B.HIGH_CD='S09' AND CL_S09F_B.CODE_CD=F.OU
+514 | out.xml | v1/out.xml | 1220 | JOIN | S53 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53_S ON CL_S53_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S53_S.HIGH_CD='S53' AND CL_S53_S.CODE_
+515 | out.xml | v1/out.xml | 1221 | JOIN | S53 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53_B ON CL_S53_B.SYSTEM_ID='BASIC' AND CL_S53_B.HIGH_CD='S53' AND CL_S53_B.CODE_CD=B.PART_S
+516 | out.xml | v1/out.xml | 1222 | JOIN | S53 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S33_S ON CL_S33_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S33_S.HIGH_CD='S33' AND CL_S33_S.CODE_
+517 | out.xml | v1/out.xml | 1223 | JOIN | S53 | 출고 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S33_B ON CL_S33_B.SYSTEM_ID='BASIC' AND CL_S33_B.HIGH_CD='S33' AND CL_S33_B.CODE_CD=A.OUT_FI
+518 | process.xml | v1/process.xml | 198 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1013_S ON CL_1013_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_1013_S.CODE_CD=B.PART_STATUS AND CL_
+519 | process.xml | v1/process.xml | 199 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1013_B ON CL_1013_B.SYSTEM_ID='BASIC' AND CL_1013_B.CODE_CD=B.PART_STATUS AND CL_1013_B.HIGH
+520 | process.xml | v1/process.xml | 200 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D02_S.CODE_CD=B.MATERIAL_TYPE AND CL_D
+521 | process.xml | v1/process.xml | 201 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_D01_S.CODE_CD=B.MATERIAL_DETAIL AND CL
+522 | process.xml | v1/process.xml | 202 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID='BASIC' AND CL_D01_B.CODE_CD=B.MATERIAL_DETAIL AND CL_D01_B.HIGH
+523 | process.xml | v1/process.xml | 203 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S10_S.CODE_CD=B.WORK_TYPE AND CL_S10_S
+524 | process.xml | v1/process.xml | 204 | JOIN | 1013 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E07_S ON CL_E07_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_E07_S.CODE_CD=C.POP_POSITION AND CL_E0
+525 | process.xml | v1/process.xml | 205 | JOIN | D02 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_S04_S.CODE_CD=D.PROCESS_TYPE AND CL_S0
+526 | process.xml | v1/process.xml | 206 | JOIN | D01 | 공정 관리 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID='BASIC' AND CL_S04_B.CODE_CD=D.PROCESS_TYPE AND CL_S04_B.HIGH_CD
+527 | report.xml | v1/report.xml | 188 | JOIN | 1086 | 리포트 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1086_S ON CL_1086_S.SYSTEM_ID=#{LOGIN_SYSTEM_ID} AND CL_1086_S.HIGH_CD='1086' AND CL_1086_S.
+528 | report.xml | v1/report.xml | 189 | JOIN | 1086 | 리포트 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_1086_B ON CL_1086_B.SYSTEM_ID='BASIC' AND CL_1086_B.HIGH_CD='1086' AND CL_1086_B.CODE_CD='1'
+529 | tv.xml | v1/tv.xml | 117 | JOIN | D02 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_S ON CL_D02_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D02_S.HIGH_CD = 'D02' AND CL_D02_S.C
+530 | tv.xml | v1/tv.xml | 118 | JOIN | D02 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D02_B ON CL_D02_B.SYSTEM_ID = 'BASIC' AND CL_D02_B.HIGH_CD = 'D02' AND CL_D02_B.CODE_CD = PG
+531 | tv.xml | v1/tv.xml | 119 | JOIN | D02 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.HIGH_CD = 'S10' AND CL_S10_S.C
+532 | tv.xml | v1/tv.xml | 120 | JOIN | D02 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.HIGH_CD = 'S10' AND CL_S10_B.CODE_CD = PG
+533 | tv.xml | v1/tv.xml | 121 | JOIN | D02 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E07_S ON CL_E07_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E07_S.HIGH_CD = 'E07' AND CL_E07_S.C
+534 | tv.xml | v1/tv.xml | 122 | JOIN | D02 | TV 현황판 (REST v1) | selectTvMachineAreaWorkWaitTotalV1 | LEFT JOIN TBL_CODE_LANG1 CL_E07_B ON CL_E07_B.SYSTEM_ID = 'BASIC' AND CL_E07_B.HIGH_CD = 'E07' AND CL_E07_B.CODE_CD = PG
+535 | tv.xml | v1/tv.xml | 123 | JOIN | D02 | TV 현황판 (REST v1) | selectTvMachineAreaWorkWaitTotalV1 | LEFT JOIN TBL_CODE_LANG1 CL_S53_S ON CL_S53_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S53_S.HIGH_CD = 'S53' AND CL_S53_S.C
+536 | tv.xml | v1/tv.xml | 124 | JOIN | S10 | TV 현황판 (REST v1) | selectTvMachineAreaWorkWaitTotalV1 | LEFT JOIN TBL_CODE_LANG1 CL_S53_B ON CL_S53_B.SYSTEM_ID = 'BASIC' AND CL_S53_B.HIGH_CD = 'S53' AND CL_S53_B.CODE_CD = PG
+537 | tv.xml | v1/tv.xml | 262 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E07_S ON CL_E07_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_E07_S.HIGH_CD = 'E07' AND CL_E07_S.C
+538 | tv.xml | v1/tv.xml | 263 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_E07_B ON CL_E07_B.SYSTEM_ID = 'BASIC' AND CL_E07_B.HIGH_CD = 'E07' AND CL_E07_B.CODE_CD = A.
+539 | tv.xml | v1/tv.xml | 264 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53_S ON CL_S53_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S53_S.HIGH_CD = 'S53' AND CL_S53_S.C
+540 | tv.xml | v1/tv.xml | 265 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S53_B ON CL_S53_B.SYSTEM_ID = 'BASIC' AND CL_S53_B.HIGH_CD = 'S53' AND CL_S53_B.CODE_CD = C.
+541 | tv.xml | v1/tv.xml | 266 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_S ON CL_S10_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S10_S.HIGH_CD = 'S10' AND CL_S10_S.C
+542 | tv.xml | v1/tv.xml | 267 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S10_B ON CL_S10_B.SYSTEM_ID = 'BASIC' AND CL_S10_B.HIGH_CD = 'S10' AND CL_S10_B.CODE_CD = C.
+543 | tv.xml | v1/tv.xml | 268 | JOIN | E07 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_S ON CL_D01_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_D01_S.HIGH_CD = 'D01' AND CL_D01_S.C
+544 | tv.xml | v1/tv.xml | 269 | JOIN | S53 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_D01_B ON CL_D01_B.SYSTEM_ID = 'BASIC' AND CL_D01_B.HIGH_CD = 'D01' AND CL_D01_B.CODE_CD = C.
+545 | tv.xml | v1/tv.xml | 270 | JOIN | S53 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_S ON CL_S04_S.SYSTEM_ID = #{LOGIN_SYSTEM_ID} AND CL_S04_S.HIGH_CD = 'S04' AND CL_S04_S.C
+546 | tv.xml | v1/tv.xml | 271 | JOIN | S10 | TV 현황판 (REST v1) |  | LEFT JOIN TBL_CODE_LANG1 CL_S04_B ON CL_S04_B.SYSTEM_ID = 'BASIC' AND CL_S04_B.HIGH_CD = 'S04' AND CL_S04_B.CODE_CD = E.

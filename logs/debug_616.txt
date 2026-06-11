@@ -1,0 +1,12 @@
+﻿=== �����׽�Ʈ �ڵ�ȭ ===
+  �ε�� ���̽�: 1��
+
+[Row 616] CD-FT-CTL-211 | ���ְ��� > ������ | ����ȣ
+[DEBUG] depth2 items under "���ְ���": ['���ְ���', '������Ȳ', '������Ȳ', '���ݰ���']
+  -> ���: X | Locator.wait_for: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("li.depth1.on .depth2 l
+  -> ��Ʈ ��� �Ϸ�
+
+=== �Ϸ� ===
+  O: 0�� / X: 1�� / skip: 0��

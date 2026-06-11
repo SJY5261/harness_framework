@@ -1,0 +1,76 @@
+L70: // fnCommCodeDatasourceSelectBoxCreate($itemOrderRegisterSearchForm.find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", 
+L72: let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
+L90: fnCommCodeDatasourceSelectBoxCreate($itemOrderRegisterSearchForm.find("#M_COMP_CD"), 'sel', {"url":"/json-list", "data":
+L91: fnCommCodeDatasourceSelectBoxCreate($itemOrderRegisterSearchForm.find("#COMP_CD"), 'sel', {"url":"/json-list", "data": {
+L93: fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_popup").find("#ORDER_USER_ID"), 'sel', {"url":"/json-list", 
+L94: fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_popup").find("#M_REQUEST_COMP_CD"), 'sel', {"url":"/json-lis
+L178: editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S10')}
+L188: //options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyL
+L189: options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompany
+L262: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L266: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('D01') },
+L280: options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMateri
+L292: options: fnGetCommCodeGridSelectBox('E18'),
+L300: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L464: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L470: let data = fnGetCommCodeGridSelectBox('S55');
+L491: return fnGetCommCodeGridSelectBox('D01');
+L493: return fnGetCommCodeGridSelectBoxEtc('D01', rowData.MATERIAL_TYPE);
+L502: let data = fnGetCommCodeGridSelectBox('D01');
+L520: editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url"
+L526: let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMate
+L568: options: fnGetCommCodeGridSelectBox('E18'),
+L576: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L652: 'url': '/json-list',
+L731: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L737: let data = fnGetCommCodeGridSelectBox('S55');
+L758: return fnGetCommCodeGridSelectBox('D01');
+L760: return fnGetCommCodeGridSelectBoxEtc('D01', rowData.MATERIAL_TYPE);
+L769: let data = fnGetCommCodeGridSelectBox('D01');
+L787: editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url"
+L793: let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMate
+L835: options: fnGetCommCodeGridSelectBox('E18'),
+L843: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L919: 'url': '/json-list',
+L999: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L1005: let data = fnGetCommCodeGridSelectBox('S55');
+L1022: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('D01') },
+L1028: let data = fnGetCommCodeGridSelectBox('D01');
+L1046: editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url"
+L1052: let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMate
+L1094: options: fnGetCommCodeGridSelectBox('E18'),
+L1102: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L1154: 'url': '/json-list',
+L1233: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L1239: let data = fnGetCommCodeGridSelectBox('S55');
+L1256: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('D01') },
+L1262: let data = fnGetCommCodeGridSelectBox('D01');
+L1280: editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url"
+L1286: let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMate
+L1328: options: fnGetCommCodeGridSelectBox('E18'),
+L1336: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L1388: 'url': '/json-list',
+L1466: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('S55') },
+L1472: let data = fnGetCommCodeGridSelectBox('S55');
+L1489: editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('D01') },
+L1495: let data = fnGetCommCodeGridSelectBox('D01');
+L1517: options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMateri
+L1524: let data = fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMate
+L1557: options: fnGetCommCodeGridSelectBox('E18'),
+L1565: for (let i = 0, list = fnGetCommCodeGridSelectBox('E18'), LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
+L1619: url: "/paramQueryGridSelect",
+L1740: url: "/paramQueryGridSelect",
+L1808: url: '/paramQueryGridSelect',
+L2129: let parameters2 = {'url': '/json-list', 'data': paramData};
+L2137: paramData = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
+L2210: 'url': '/json-list',
+L2263: $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListInspectNum");
+L2265: $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
+L2373: $('#item_order_register_popup_form #queryId').val('selectItemOrderRegisterPopListNum');
+L2384: $('#item_order_register_popup_form #queryId').val('material.selectItemOrderRegisterPopListSeq');
+L2390: $('#item_order_register_popup_form #queryId').val('selectItemOrderRegisterPopListNum');
+L2399: $('#item_order_register_popup_form #queryId').val('material.selectItemOrderRegisterPopListSeq');
+L2537: const parameters = {'url': '/json-list', 'data': parameter};
+L3037: $('#item_order_register_popup_form #queryId').val('selectItemOrderRegisterPopListInspectNum');
+L3061: url: "/paramQueryGridSelect",
+L3295: $('#item_order_register_popup_form #queryId').val('material.selectItemOrderRegisterPopListInspectSeq');

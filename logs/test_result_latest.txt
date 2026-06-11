@@ -1,0 +1,37 @@
+=== TBL_CODE_LANG 蹂�寃� �쁺�뼢 �솕硫� �뀒�뒪�듃 v3 (2026-06-09 15:52:32) ===
+  DEL_YN=N �솢�꽦 硫붾돱 湲곗�� | 3�떒怨� �씠�긽 �옄�룞 �씤�꽣�옓�뀡 �룷�븿
+
+����긽 荑쇰━: v1/main.xml(5嫄�) + v1/material.xml(132嫄�) = 137嫄�
+
+[CD-MAIN-001] 硫붿씤 ����떆蹂대뱶 �옄�룞 濡쒕뱶 | selectProcessHistoryList-mainV1
+  -> O | 硫붿씤 ����떆蹂대뱶 濡쒕뱶 �셿猷� (濡쒓렇�씤 �떆 泥섎━�맖)
+
+[CD-MAT-001] �냼�옱愿�由� > �냼�옱 二쇰Ц�벑濡� | 紐⑸줉 寃��깋 | selectItemOrderRegisterListV1
+  -> O | 3嫄� 議고쉶 (104ms)
+
+[CD-MAT-002] �냼�옱愿�由� > �냼�옱 二쇰Ц�벑濡� | �긽�꽭洹몃━�뱶 refresh | selectItemOrderRegisterDetailV1
+  -> O | 0嫄� (荑쇰━ �떎�뻾 �꽦怨�, �뜲�씠�꽣 �뾾�쓬 95ms)
+
+[CD-MAT-003] �냼�옱愿�由� > �냼�옱 二쇰Ц�벑濡� | 遺��쟻�빀議고쉶 踰꾪듉 | selectDefectiveItemLookupListV1
+  -> O | 0嫄� (荑쇰━ �떎�뻾 �꽦怨�, �뜲�씠�꽣 �뾾�쓬 143ms)
+
+[CD-MAT-004] �냼�옱愿�由� > �냼�옱 二쇰Ц�벑濡� | �냼�옱二쇰Ц �뙘�뾽 | selectItemOrderRegisterPopList*
+  -> O | 0嫄� (荑쇰━ �떎�뻾 �꽦怨�, �뜲�씠�꽣 �뾾�쓬 136ms)
+
+[CD-MAT-005] �냼�옱愿�由� > 蹂댁쑀 �냼�옱 愿�由� | 紐⑸줉 寃��깋 | selectInWarehouseManageListV1
+  -> O | 1嫄� 議고쉶 (94ms)
+
+[CD-MAT-006] �냼�옱愿�由� > 蹂댁쑀 �냼�옱 愿�由� | �긽�꽭洹몃━�뱶 refresh | selectInWarehouseManageListDetailV1
+  -> O | 0嫄� (荑쇰━ �떎�뻾 �꽦怨�, �뜲�씠�꽣 �뾾�쓬 70ms)
+
+[CD-MAT-007] �냼�옱愿�由� > 蹂댁쑀 �냼�옱 愿�由� | �닔遺덉씠�젰 �꺆 | selectInWarehouseManageOutListV1
+  -> O | 1嫄� 議고쉶 (55ms)
+
+[CD-MAT-008] �냼�옱愿�由� > 蹂댁쑀 �냼�옱 愿�由� | 諛붿퐫�뱶�뙘�뾽 /json-list | selectInWarehousePopV1
+  -> O | 0嫄� (荑쇰━ �떎�뻾 �꽦怨�, �뜲�씠�꽣 �뾾�쓬 104ms)
+
+[CD-MAT-009] �옉�뾽愿�由� > �옱怨좉��由� | 紐⑸줉 寃��깋 | selectInsideStockListV1
+  -> O | 1嫄� 議고쉶 (60ms)
+
+=== �셿猷� ===
+  O: 10嫄� / X: 0嫄� / skip: 0嫄�

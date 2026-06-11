@@ -1,0 +1,15 @@
+selectItemOrderRegisterPopListSeq:
+  TBL_CODE_LANG1 참조: False
+  TBL_CODE_LANG 참조: False
+
+selectItemOrderRegisterPopListNum:
+  TBL_CODE_LANG1 참조: False
+  TBL_CODE_LANG 참조: False
+
+selectItemOrderRegisterPopListInspectSeq:
+  TBL_CODE_LANG1 참조: False
+  TBL_CODE_LANG 참조: False
+
+selectItemOrderRegisterPopListInspectNum:
+  TBL_CODE_LANG1 참조: False
+  TBL_CODE_LANG 참조: False

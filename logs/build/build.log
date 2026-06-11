@@ -1,0 +1,78 @@
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud}
+Attempting to read last messages from the daemon log...
+Daemon pid: 15368
+  log file: C:\Users\USER\.gradle\daemon\8.14.3\daemon-15368.out.log
+----- Last 20 lines from daemon log file - daemon-15368.out.log -----
+2026-06-09T14:06:13.591+0900 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 1436: received class org.gradle.launcher.daemon.protocol.Build
+2026-06-09T14:06:13.591+0900 [DEBUG] [org.gradle.launcher.daemon.server.DefaultDaemonConnection] thread 1436: Received non-IO message from client: Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud}
+2026-06-09T14:06:13.591+0900 [INFO] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Received command: Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud}.
+2026-06-09T14:06:13.591+0900 [DEBUG] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Starting executing command: Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud} with connection: socket connection from /127.0.0.1:49185 to /127.0.0.1:53043.
+2026-06-09T14:06:13.591+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Command execution: started DaemonCommandExecution[command = Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud}, connection = DefaultDaemonConnection: socket connection from /127.0.0.1:49185 to /127.0.0.1:53043] after 1.4244333333333332 minutes of idle
+2026-06-09T14:06:13.591+0900 [INFO] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Marking the daemon as busy, address: [c4300de1-d24e-46e0-a41d-e6c521c783f2 port:49185, addresses:[localhost/127.0.0.1]]
+2026-06-09T14:06:13.591+0900 [DEBUG] [org.gradle.launcher.daemon.registry.PersistentDaemonRegistry] Marking busy by address: [c4300de1-d24e-46e0-a41d-e6c521c783f2 port:49185, addresses:[localhost/127.0.0.1]]
+2026-06-09T14:06:13.592+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on daemon addresses registry.
+2026-06-09T14:06:13.592+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2026-06-09T14:06:13.593+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2026-06-09T14:06:13.593+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] resetting idle timer
+2026-06-09T14:06:13.593+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-06-09T14:06:13.593+0900 [INFO] [org.gradle.launcher.daemon.server.exec.StartBuildOrRespondWithBusy] Daemon is about to start building Build{id=3333e674-0fdd-458c-a1f8-e0315964e95b, currentDir=E:\Tomes-Cloud}. Dispatching build started information...
+2026-06-09T14:06:13.593+0900 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 1438: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@27c52849
+2026-06-09T14:06:13.594+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, USERDOMAIN_ROAMINGPROFILE, PROCESSOR_LEVEL, SYSTEMDRIVE, SESSIONNAME, ALLUSERSPROFILE, PROCESSOR_ARCHITECTURE, CLAUDE_PROJECT_DIR, LINES, VSCODE_GIT_IPC_HANDLE, VSCODE_PYTHON_AUTOACTIVATE_GUARD, PSModulePath, COREPACK_ENABLE_AUTO_PIN, COPILOT_DEBUG_NONCE, PROGRAMFILES, CLAUDE_CODE_ENTRYPOINT, VSCODE_INJECTION, EFC_55552_4126798990, CLAUDECODE, COLORTERM, USERNAME, VSCODE_GIT_ASKPASS_NODE, PWD, TERM_PROGRAM_VERSION, GIT_ASKPASS, ProgramFiles(x86), CHROME_CRASHPAD_PIPE_NAME, FPS_BROWSER_USER_PROFILE_STRING, PATHEXT, SHELL, DriverData, IntelliJ IDEA Community Edition, CLAUDE_CODE_TUI_JUST_SWITCHED, CLAUDE_EFFORT, AI_AGENT, NoDefaultCurrentDirectoryInExePath, OLDPWD, CLAUDE_CODE_SSE_PORT, WINDIR, ProgramData, ProgramW6432, HOMEPATH, PROCESSOR_IDENTIFIER, PUBLIC, EXEPATH, SHLVL, ZES_ENABLE_SYSMAN, LOCALAPPDATA, IntelliJ IDEA, USERDOMAIN, FPS_BROWSER_APP_PROFILE_STRING, LOGONSERVER, JAVA_HOME, PLINK_PROTOCOL, TERM, LANG, VSCODE_GIT_ASKPASS_MAIN, MSYSTEM, OneDrive, APPDATA, EFC_55552_1592913036, CLAUDE_CODE_SESSION_ID, SYSTEMROOT, VSCODE_GIT_ASKPASS_EXTRA_ARGS, COLUMNS, OS, TERM_PROGRAM, COMPUTERNAME, COMMONPROGRAMFILES, COMSPEC, PROCESSOR_REVISION, CommonProgramW6432, TEMP, HOMEDRIVE, USERPROFILE, TMP, CommonProgramFiles(x86), NUMBER_OF_PROCESSORS, HOME]
+2026-06-09T14:06:13.594+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-06-09T14:06:13.594+0900 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 15368). The daemon log file: C:\Users\USER\.gradle\daemon\8.14.3\daemon-15368.out.log
+2026-06-09T14:06:13.595+0900 [INFO] [org.gradle.launcher.daemon.server.exec.LogAndCheckHealth] Starting 5th build in daemon [uptime: 2 hrs 21 mins 39.569 secs, performance: 100%, GC rate: 0.00/s, heap usage: 1% of 512 MiB, non-heap usage: 17% of 384 MiB]
+2026-06-09T14:06:13.595+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-06-09T14:06:13.595+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=e2946691-1198-465b-a681-674ffb961a99,javaHome=E:\Tool\jdk-21\jdk-21,javaVersion=21,javaVendor=Oracle Corporation,daemonRegistryDir=C:\Users\USER\.gradle\daemon,pid=15368,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=KR,-Duser.language=ko,-Duser.variant]----- End of the daemon log -----
+
+JVM crash log found: file:///E:/Tomes-Cloud/hs_err_pid15368.log
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud}
+Attempting to read last messages from the daemon log...
+Daemon pid: 78800
+  log file: C:\Users\USER\.gradle\daemon\8.14.3\daemon-78800.out.log
+----- Last 20 lines from daemon log file - daemon-78800.out.log -----
+2026-06-09T14:07:22.787+0900 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 44: received class org.gradle.launcher.daemon.protocol.Build
+2026-06-09T14:07:22.787+0900 [DEBUG] [org.gradle.launcher.daemon.server.DefaultDaemonConnection] thread 44: Received non-IO message from client: Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud}
+2026-06-09T14:07:22.787+0900 [INFO] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Received command: Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud}.
+2026-06-09T14:07:22.788+0900 [DEBUG] [org.gradle.launcher.daemon.server.DefaultIncomingConnectionHandler] Starting executing command: Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud} with connection: socket connection from /127.0.0.1:49667 to /127.0.0.1:49670.
+2026-06-09T14:07:22.789+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Command execution: started DaemonCommandExecution[command = Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud}, connection = DefaultDaemonConnection: socket connection from /127.0.0.1:49667 to /127.0.0.1:49670] after 0.0014 minutes of idle
+2026-06-09T14:07:22.789+0900 [INFO] [org.gradle.launcher.daemon.server.DaemonRegistryUpdater] Marking the daemon as busy, address: [7fefe7ef-0679-4751-af67-b982ec81b258 port:49667, addresses:[localhost/127.0.0.1]]
+2026-06-09T14:07:22.789+0900 [DEBUG] [org.gradle.launcher.daemon.registry.PersistentDaemonRegistry] Marking busy by address: [7fefe7ef-0679-4751-af67-b982ec81b258 port:49667, addresses:[localhost/127.0.0.1]]
+2026-06-09T14:07:22.790+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on daemon addresses registry.
+2026-06-09T14:07:22.790+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2026-06-09T14:07:22.791+0900 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2026-06-09T14:07:22.791+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] resetting idle timer
+2026-06-09T14:07:22.791+0900 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-06-09T14:07:22.792+0900 [INFO] [org.gradle.launcher.daemon.server.exec.StartBuildOrRespondWithBusy] Daemon is about to start building Build{id=6a08c1df-4a04-4bb9-897c-1562f20fa00c, currentDir=E:\Tomes-Cloud}. Dispatching build started information...
+2026-06-09T14:07:22.792+0900 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 46: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@6cfd7892
+2026-06-09T14:07:22.793+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, USERDOMAIN_ROAMINGPROFILE, PROCESSOR_LEVEL, SYSTEMDRIVE, SESSIONNAME, ALLUSERSPROFILE, PROCESSOR_ARCHITECTURE, CLAUDE_PROJECT_DIR, LINES, VSCODE_GIT_IPC_HANDLE, VSCODE_PYTHON_AUTOACTIVATE_GUARD, PSModulePath, COREPACK_ENABLE_AUTO_PIN, COPILOT_DEBUG_NONCE, PROGRAMFILES, CLAUDE_CODE_ENTRYPOINT, VSCODE_INJECTION, EFC_55552_4126798990, CLAUDECODE, COLORTERM, USERNAME, VSCODE_GIT_ASKPASS_NODE, PWD, TERM_PROGRAM_VERSION, GIT_ASKPASS, ProgramFiles(x86), CHROME_CRASHPAD_PIPE_NAME, FPS_BROWSER_USER_PROFILE_STRING, PATHEXT, SHELL, DriverData, IntelliJ IDEA Community Edition, CLAUDE_CODE_TUI_JUST_SWITCHED, CLAUDE_EFFORT, AI_AGENT, NoDefaultCurrentDirectoryInExePath, OLDPWD, CLAUDE_CODE_SSE_PORT, WINDIR, ProgramData, ProgramW6432, HOMEPATH, PROCESSOR_IDENTIFIER, PUBLIC, EXEPATH, SHLVL, ZES_ENABLE_SYSMAN, LOCALAPPDATA, IntelliJ IDEA, USERDOMAIN, FPS_BROWSER_APP_PROFILE_STRING, LOGONSERVER, JAVA_HOME, PLINK_PROTOCOL, TERM, LANG, VSCODE_GIT_ASKPASS_MAIN, MSYSTEM, OneDrive, APPDATA, EFC_55552_1592913036, CLAUDE_CODE_SESSION_ID, SYSTEMROOT, VSCODE_GIT_ASKPASS_EXTRA_ARGS, COLUMNS, OS, TERM_PROGRAM, COMPUTERNAME, COMMONPROGRAMFILES, COMSPEC, PROCESSOR_REVISION, CommonProgramW6432, TEMP, HOMEDRIVE, USERPROFILE, TMP, CommonProgramFiles(x86), NUMBER_OF_PROCESSORS, HOME]
+2026-06-09T14:07:22.796+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-06-09T14:07:22.797+0900 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 78800). The daemon log file: C:\Users\USER\.gradle\daemon\8.14.3\daemon-78800.out.log
+2026-06-09T14:07:22.798+0900 [INFO] [org.gradle.launcher.daemon.server.exec.LogAndCheckHealth] Starting build in new daemon [memory: 512 MiB]
+2026-06-09T14:07:22.799+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-06-09T14:07:22.799+0900 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=cc7f1811-b962-4665-bf74-7d7460bd8261,javaHome=E:\Tool\jdk-21\jdk-21,javaVersion=21,javaVendor=Oracle Corporation,daemonRegistryDir=C:\Users\USER\.gradle\daemon,pid=78800,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=KR,-Duser.language=ko,-Duser.variant]----- End of the daemon log -----
+
+JVM crash log found: file:///E:/Tomes-Cloud/hs_err_pid78800.log
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

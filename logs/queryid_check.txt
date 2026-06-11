@@ -1,0 +1,10 @@
+=== v1/material.xml ===
+  selectItemOrderRegisterPopListNum: V1=True, plain=False
+  selectItemOrderRegisterPopListSeq: V1=True, plain=False
+  selectItemOrderRegisterPopListInspectNum: V1=True, plain=False
+  selectItemOrderRegisterPopListInspectSeq: V1=True, plain=False
+=== sqlMaps/material.xml ===
+  selectItemOrderRegisterPopListNum: V1=False, plain=True
+  selectItemOrderRegisterPopListSeq: V1=False, plain=True
+  selectItemOrderRegisterPopListInspectNum: V1=False, plain=True
+  selectItemOrderRegisterPopListInspectSeq: V1=False, plain=True

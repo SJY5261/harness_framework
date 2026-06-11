@@ -1,0 +1,26 @@
+총 줄 수: 7944
+
+=== 처음 20줄 ===
+[17:11:28] _ensure_browser(headless=False)
+[17:13:14] _ensure_browser(headless=False)
+[17:13:30] _ensure_browser(headless=False)  → 로그인 완료
+[17:13:38] tc_ensure_data(menu1=견적관리, menu2=견적관리)
+[17:13:41] tc_ensure_data(menu1=견적관리)  → 견적 데이터 준비 완료 (EST_SEQ=9022)
+[17:13:41] tc_evaluate(js=() => {
+  const modal = document.querySelector('.alertify.aj)
+[17:13:41] tc_evaluate(js=() => {
+  const modal = document.querySelector('.a)  → result=False
+[17:13:41] tc_evaluate(js=() => {
+          try { if (window.$) window.$('#common_ware)
+[17:13:41] tc_evaluate(js=() => {
+          try { if (window.$) window.$('#c)  → result=True
+[17:13:41] tc_navigate(menu1=견적관리, menu2=견적관리)
+[17:13:46] tc_navigate(menu1=견적관리, menu2=견적관리)  → OK url=http://smd.localhost:8081/main#
+[17:13:46] tc_evaluate(js=() => { const dlgs = Array.from(document.querySelectorAll('.)
+[17:13:46] tc_evaluate(js=() => { const dlgs = Array.from(document.querySele)  → result=
+[17:13:46] tc_evaluate(js=() => { const policy = 'rolling_wide' || 'rolling_wide'; con)
+[17:13:46] tc_evaluate(js=() => { const policy = 'rolling_wide' || 'rolling_)  → result=ok:date_range policy=rolling_wide start=2024/06/01 target=#ESTIMATE_LIST_START_DT|name=ESTIMATE_LIST
+[17:13:46] tc_evaluate(js=() => { const dlgs = Array.from(document.querySelectorAll('.)
+
+=== [로 시작하는 고유 날짜/시간 패턴 처음 10개 ===
+로그 날짜 범위: []

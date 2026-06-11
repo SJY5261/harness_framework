@@ -1,0 +1,12 @@
+읽은 TC 수: 11
+row615 CD-FT-CTL-207 |  >  > 제조원가분석 | func=전체조회건수
+row616 CD-FT-CTL-211 |  > 재고관리 > 재고관리 | func=재고번호
+row617 CD-FT-CTL-212 |  > 재고관리 > 재고관리 | func=발주처
+row618 CD-FT-CTL-213 |  > 재고관리 > 재고관리 | func=사업자
+row619 CD-FT-CTL-214 |  > 재고관리 > 재고관리 | func=품명
+row620 CD-FT-CTL-215 |  > 재고관리 > 재고관리 | func=소재종류
+row621 CD-FT-CTL-216 |  > 재고관리 > 재고관리 | func=장비
+row622 CD-FT-CTL-217 |  > 재고관리 > 재고관리 | func=창고
+row623 CD-FT-CTL-218 |  > 재고관리 > 재고관리 | func=위치
+row624 CD-FT-CTL-219 |  > 재고관리 > 재고관리 | func=규격
+row625 CD-FT-CTL-220 |  > 재고관리 > 재고관리 | func=W

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npm run lint 2>&1 && npm run build 2>&1 && npm run test 2>&1"
+            "command": "cd /e/Tomes-Cloud && ./gradlew build -q 2>&1 | tee -a /e/LOGS/tomes-cloud/build/build.log && cd /e/Test-Automize && pytest tests/ -q 2>&1 | tee -a /e/LOGS/tomes-cloud/test/test.log"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE 'rm\\s+-rf|git\\s+push\\s+--force|git\\s+reset\\s+--hard|DROP\\s+TABLE'; then echo 'BLOCKED: 위험한 명령어가 감지되었습니다.' >&2; exit 1; fi"
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE 'rm\\s+-[rRfF]*r|rm\\s+--recursive|git\\s+push\\s+(--force|-f\\b)|git\\s+reset\\s+--hard|git\\s+clean\\s+-[fdxX]+|git\\s+checkout\\s+--\\s*\\.|DROP\\s+TABLE|TRUNCATE\\s+TABLE|rmdir\\s+/[sS]|rd\\s+/[sS]|del\\s+/[fFsS]'; then echo 'BLOCKED: 위험한 명령어가 감지되었습니다.' >&2; exit 1; fi"
           }
         ]
       }

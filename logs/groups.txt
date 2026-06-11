@@ -1,0 +1,54 @@
+row   3  menu1='견적관리'           menu2=견적관리
+row  34  menu1=''               menu2=견적작성
+row 113  menu1=''               menu2=견적 표준계산관리
+row 128  menu1='수주관리'           menu2=수주관리
+row 255  menu1=''               menu2=수주현황
+row 279  menu1=''               menu2=매출현황
+row 305  menu1=''               menu2=수금관리
+row 333  menu1=''               menu2=작업지시관리
+row 513  menu1=''               menu2=가공확정
+row 575  menu1=''               menu2=제조원가분석
+row 616  menu1=''               menu2=재고관리
+row 813  menu1='POP출/입고이력'      menu2=외주견적관리
+row 901  menu1=''               menu2=외주주문관리
+row1005  menu1=''               menu2=외주발송이력
+row1050  menu1=''               menu2=외주마감이력
+row1080  menu1=''               menu2=외주현황
+row1131  menu1='소재관리'           menu2=소재주문등록
+row1220  menu1=''               menu2=소재주문이력
+row1252  menu1=''               menu2=보유 소재 관리
+row1312  menu1='생산관리'           menu2=CNC 가공계획 관리
+row1358  menu1=''               menu2=CNC 실적관리
+row1409  menu1=''               menu2=CAM 작업이력
+row1440  menu1=''               menu2=가공수행이력
+row1458  menu1=''               menu2=장비이력 관리
+row1510  menu1='검사관리'           menu2=검사실적 관리
+row1604  menu1=''               menu2=검사이력 관리
+row1637  menu1=''               menu2=부적합이력 조회
+row1663  menu1='출하관리'           menu2=출하관리
+row1747  menu1=''               menu2=출하/반품 이력조회
+row1771  menu1='레포트'            menu2=일별 가공현황
+row1787  menu1=''               menu2=일별 가공계획
+(월간상세현황)
+row1818  menu1=''               menu2=월간 영업 현황
+row1821  menu1=''               menu2=월간품질현황
+(SMD추가)
+row1836  menu1=''               menu2=CNC가동현황
+(MCT가동현황)
+row1839  menu1=''               menu2=성과지표현황
+row1848  menu1='작업목록조회(공통)'     menu2=DashBoard
+row1852  menu1=''               menu2=MIS Tortal Dashboard
+(가공진행현황판)
+row1862  menu1=''               menu2=품질분석 대시보드
+(품질현황상황판)
+row1879  menu1=''               menu2=CNC 가공 현황판
+(MCT가공현황판)
+row1881  menu1=''               menu2=월간 납기 현황
+(화면 그리드 조회X)
+(주문현황상황판)
+row1900  menu1='POP/DB'         menu2=POP
+row1909  menu1=''               menu2=DrawingBoard
+row1936  menu1='AI형상분석'         menu2=유사형태기록조회
+row1943  menu1='시스템'            menu2=사용자관리
+row1989  menu1=''               menu2=메뉴관리
+row2000  menu1=''               menu2=기준정보관리

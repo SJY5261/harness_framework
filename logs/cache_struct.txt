@@ -1,0 +1,5 @@
+최상위 키: ['CD-FT-BIZ-001', 'CD-FT-BIZ-002', 'CD-FT-BIZ-003', 'CD-FT-BIZ-004', 'CD-FT-BIZ-005']
+MTR 키: CD-FT-MTR-001
+MTR 타입: <class 'dict'>
+딕셔너리 첫 키들: ['row_num', 'no', 'menu1', 'menu2', 'screen_name']
+첫 항목 타입: <class 'int'>

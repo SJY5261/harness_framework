@@ -1,0 +1,17 @@
+=== v1/main.xml (1개 쿼리) ===
+  selectProcessHistoryList-mainV1 [TBL_CODE_LANG]
+=== v1/material.xml (12개 쿼리) ===
+  selectInWarehousePopV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterDetailV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterListV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterPopListNumV1 [TBL_CODE_LANG]
+  selectInsideStockListV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterPopListSeqV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterPopListInspectNumV1 [TBL_CODE_LANG]
+  selectItemOrderRegisterPopListInspectSeqV1 [TBL_CODE_LANG]
+  selectInWarehouseManageOutListV1 [TBL_CODE_LANG]
+  selectInWarehouseManageListDetailV1 [TBL_CODE_LANG]
+  selectDefectiveItemLookupListV1 [TBL_CODE_LANG]
+  selectInWarehouseManageListV1 [TBL_CODE_LANG]
+=== sqlMaps/material.xml (1개 쿼리) ===
+  selectInsideStockAbbrNm [TBL_CODE]

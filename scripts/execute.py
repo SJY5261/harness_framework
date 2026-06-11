@@ -108,7 +108,8 @@ class StepExecutor:
 
     def _run_git(self, *args) -> subprocess.CompletedProcess:
         cmd = ["git"] + list(args)
-        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True)
+        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace")
 
     def _checkout_branch(self):
         branch = f"feat-{self._phase_name}"

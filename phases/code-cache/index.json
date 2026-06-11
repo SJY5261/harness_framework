@@ -23,7 +23,8 @@
       "name": "client-memoize",
       "status": "completed",
       "started_at": "2026-06-11T13:17:59+0900",
-      "summary": "body-script.js의 fnGetCommCodeGridSelectBox/Etc에 g_codeSelectBoxCache 메모이제이션 적용(키 SB|highCd|topOption, ETC|highCd|refCd), g_code AJAX 재로드 시 캐시 초기화. 사전 조사: 호출부 300건 중 반환 배열 변형 호출부 없음(.filter 등 비변형만) → 캐시 배열 직접 반환. console.error('1')은 파일에 이미 부재(제거 불필요) (E:\\Tomes-Cloud\\src\\main\\webapp\\resource\\modules\\attr\\tabs\\body-script.js)"
+      "summary": "body-script.js의 fnGetCommCodeGridSelectBox/Etc에 g_codeSelectBoxCache 메모이제이션 적용(키 SB|highCd|topOption, ETC|highCd|refCd), g_code AJAX 재로드 시 캐시 초기화. 사전 조사: 호출부 300건 중 반환 배열 변형 호출부 없음(.filter 등 비변형만) → 캐시 배열 직접 반환. console.error('1')은 파일에 이미 부재(제거 불필요) (E:\\Tomes-Cloud\\src\\main\\webapp\\resource\\modules\\attr\\tabs\\body-script.js)",
+      "completed_at": "2026-06-11T13:22:06+0900"
     }
   ],
   "created_at": "2026-06-11T13:10:27+0900"

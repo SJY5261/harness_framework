@@ -2,6 +2,13 @@
 
 _최종 갱신: 2026-06-11_
 
+## [2026-06-11] code-cache step 2 완료 (client-memoize) — task 전체 완료
+- **완료**: `body-script.js`(tabs용)의 `fnGetCommCodeGridSelectBox`/`fnGetCommCodeGridSelectBoxEtc`에 `g_codeSelectBoxCache` 메모이제이션 적용(키 `SB|highCd|topOption`, `ETC|highCd|refCd`). g_code AJAX 재로드 success에서 캐시 초기화. 함수 시그니처·반환 형태·`new Option('', null)` 동작 보존.
+- **사전 조사**: 호출부 300건(JS/JSP 27개 파일) 패턴 검사 — 반환 배열 변형(push/splice/sort/pop) 호출부 없음(.filter 등 비변형만) → slice() 복사 없이 캐시 배열 직접 반환. `console.error('1')`은 파일에 이미 부재했음(이전 디버깅 세션에서 제거된 듯 — 제거 작업 불필요).
+- **검증**: `gradlew build -q` 통과, node --check 통과, AC grep 전부 PASS. 커밋: %클라우드 Sun-Pro fc62c5c, &하네스 feat-code-cache 8686003(index.json step2=completed).
+- **다음 단계**: code-cache 3개 step 모두 완료 → 서버 재시작(shell\startServer.local.bat, gradlew build 후) + estimate-standard-calculation-manage 화면에서 렌더링 체감 확인. 필요 시 feat-code-cache 브랜치 push/PR.
+- **주의**: %클라우드에 step과 무관한 미커밋 변경(build.gradle, logback-spring.xml) 잔존 — 커밋하지 않고 그대로 둠.
+
 ## [2026-06-11] code-cache step 1 완료 (cache-evict)
 - **완료**: `SystemServiceImpl.commonCodeModifyGrid()`에 @CacheEvict 추가 — value는 getSessionCodeList의 @Cacheable과 문자 단위 동일(`com:tomes:service:impl:SystemServiceImpl:getSessionCodeList`), `allEntries=true`, `cacheManager="everyHour"` 명시(@Primary가 every5Seconds라 생략 불가). 본문 로직 무변경(어노테이션 5줄만 추가).
 - **검증**: `gradlew build -q` 통과(경고는 기존 코드의 deprecated/unchecked 노트). 커밋: %클라우드 Sun-Pro 5e8b025, &하네스 feat-code-cache a8ef166(index.json step1=completed).

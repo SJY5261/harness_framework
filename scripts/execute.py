@@ -59,7 +59,7 @@ class StepExecutor:
     """Phase 디렉토리 안의 step들을 순차 실행하는 하네스."""
 
     MAX_RETRIES = 3
-    FEAT_MSG = "feat({phase}): step {num} — {name}"
+    FEAT_MSG = "feat({phase}): step {num} - {name}"
     CHORE_MSG = "chore({phase}): step {num} output"
     TZ = timezone(timedelta(hours=9))
 
@@ -70,6 +70,9 @@ class StepExecutor:
         self._phase_dir_name = phase_dir_name
         self._top_index_file = self._phases_dir / "index.json"
         self._auto_push = auto_push
+        # guardrails(CLAUDE.md+docs) 신선도 캐시 — mid-run 규칙 편집 반영용 (M2)
+        self._guardrails_sig = None
+        self._guardrails_cache = ""
 
         if not self._phase_dir.is_dir():
             print(f"ERROR: {self._phase_dir} not found")
@@ -180,7 +183,19 @@ class StepExecutor:
 
     # --- guardrails & context ---
 
-    def _load_guardrails(self) -> str:
+    def _guardrails_signature(self) -> tuple:
+        """CLAUDE.md + docs/*.md 의 (경로, mtime_ns) 튜플. 변경 감지용."""
+        sig = []
+        claude_md = ROOT / "CLAUDE.md"
+        if claude_md.exists():
+            sig.append((str(claude_md), claude_md.stat().st_mtime_ns))
+        docs_dir = ROOT / "docs"
+        if docs_dir.is_dir():
+            for doc in sorted(docs_dir.glob("*.md")):
+                sig.append((str(doc), doc.stat().st_mtime_ns))
+        return tuple(sig)
+
+    def _read_guardrails(self) -> str:
         sections = []
         claude_md = ROOT / "CLAUDE.md"
         if claude_md.exists():
@@ -190,6 +205,21 @@ class StepExecutor:
             for doc in sorted(docs_dir.glob("*.md")):
                 sections.append(f"## {doc.stem}\n\n{doc.read_text(encoding='utf-8')}")
         return "\n\n---\n\n".join(sections) if sections else ""
+
+    def _load_guardrails(self) -> str:
+        """guardrails(CLAUDE.md+docs)를 신선도 검사 후 반환 (M2).
+
+        파일 mtime이 직전과 같으면 캐시를 재사용하고, 변경됐으면 재로딩한다.
+        step/재시도마다 호출되므로 run 도중 CLAUDE.md를 고치면 후속 step이
+        최신 규칙을 받는다. 비용은 stat 몇 회 + 변경 시에만 read 1회.
+        """
+        sig = self._guardrails_signature()
+        if sig != self._guardrails_sig:
+            if self._guardrails_sig is not None:
+                print("  [guardrails] CLAUDE.md/docs 변경 감지 - 재로딩")
+            self._guardrails_cache = self._read_guardrails()
+            self._guardrails_sig = sig
+        return self._guardrails_cache
 
     @staticmethod
     def _build_step_context(index: dict) -> str:
@@ -204,9 +234,6 @@ class StepExecutor:
 
     def _build_preamble(self, guardrails: str, step_context: str,
                         prev_error: Optional[str] = None) -> str:
-        commit_example = self.FEAT_MSG.format(
-            phase=self._phase_name, num="N", name="<step-name>"
-        )
         retry_section = ""
         if prev_error:
             retry_section = (
@@ -226,8 +253,8 @@ class StepExecutor:
             f"   - AC 통과 → \"completed\" + \"summary\" 필드에 이 step의 산출물을 한 줄로 요약\n"
             f"   - {self.MAX_RETRIES}회 수정 시도 후에도 실패 → \"error\" + \"error_message\" 기록\n"
             f"   - 사용자 개입이 필요한 경우 (API 키, 인증, 수동 설정 등) → \"blocked\" + \"blocked_reason\" 기록 후 즉시 중단\n"
-            f"6. 모든 변경사항을 커밋하라:\n"
-            f"   {commit_example}\n\n---\n\n"
+            f"6. git 커밋을 직접 실행하지 마라. 특히 E:\\harness_framework\\Projects\\Tomes-Cloud 저장소에는 절대 커밋하지 마라.\n"
+            f"   이유: 코드 커밋 권한은 사용자에게 있다. 수정한 파일의 절대경로를 summary에 기록하는 것으로 대신하라.\n\n---\n\n"
         )
 
     # --- Claude 호출 ---
@@ -304,6 +331,7 @@ class StepExecutor:
         prev_error = None
 
         for attempt in range(1, self.MAX_RETRIES + 1):
+            guardrails = self._load_guardrails()  # step·재시도마다 신선도 검사(mid-run 편집 반영)
             index = self._read_json(self._index_file)
             step_context = self._build_step_context(index)
             preamble = self._build_preamble(guardrails, step_context, prev_error)

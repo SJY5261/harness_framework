@@ -1,12 +1,25 @@
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "PYTHONUTF8=1 python /e/harness_framework/.claude/hooks/context_freshness_gate.py",
+            "statusMessage": "context freshness gate"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "cd /e/Tomes-Cloud && ./gradlew build -q 2>&1 | tee -a /e/LOGS/tomes-cloud/build/build.log && cd /e/Test-Automize && pytest tests/ -q 2>&1 | tee -a /e/LOGS/tomes-cloud/test/test.log"
+            "command": "PYTHONUTF8=1 python /e/harness_framework/.claude/hooks/answer_review_gate.py",
+            "statusMessage": "answer-review gate"
           }
         ]
       }

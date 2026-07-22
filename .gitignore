@@ -7,3 +7,9 @@ tsconfig.tsbuildinfo
 # phase execution outputs
 phases/**/phase*-output.json
 phases/**/step*-output.json
+
+# nested project repos (each has its own .git)
+Projects/
+
+# python bytecode cache
+__pycache__/

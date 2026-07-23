@@ -8,6 +8,8 @@
 
 ※ 2026-06-12 디렉토리 재구성: 두 프로젝트가 `E:\Tomes-Cloud`, `E:\Test-Automize`에서 `&하네스\Projects\` 하위로 이동됨. 구 경로가 적힌 과거 문서·로그는 새 경로로 읽는다. 각 프로젝트는 자체 git 저장소를 유지한다(하네스 저장소와 별개).
 
+※ 개인 PC 기간(2026-07-23~, 업무용 노트북 수리): 이 PC의 하네스 루트는 `D:\tomes\harness-framework`이고 E: 드라이브가 없다. 이 파일·PATHS.md·과거 문서·아래 명령어 예시의 `E:\harness_framework`(`E:/harness_framework`)는 전부 `D:\tomes\harness-framework`로 읽는다(하위 구조 동일 — `Projects\Tomes-Cloud`, `Projects\Test-Automize` 존재 확인됨). 업무용 PC 복귀 시 이 문단을 제거한다.
+
 ## 기술 스택
 - Java 21 + Spring Boot 3.5
 - MyBatis (SQL 매퍼, XML 기반)

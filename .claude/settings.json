@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PYTHONUTF8=1 python /e/harness_framework/.claude/hooks/context_freshness_gate.py",
+            "command": "PYTHONUTF8=1 py /d/tomes/harness-framework/.claude/hooks/context_freshness_gate.py",
             "statusMessage": "context freshness gate"
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PYTHONUTF8=1 python /e/harness_framework/.claude/hooks/answer_review_gate.py",
+            "command": "PYTHONUTF8=1 py /d/tomes/harness-framework/.claude/hooks/answer_review_gate.py",
             "statusMessage": "answer-review gate"
           }
         ]

@@ -1,4 +1,10 @@
 {
+  "statusLine": {
+    "type": "command",
+    "command": "PYTHONUTF8=1 py /d/tomes/harness-framework/.claude/statusline.py",
+    "padding": 0,
+    "refreshInterval": 5
+  },
   "hooks": {
     "UserPromptSubmit": [
       {

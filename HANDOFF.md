@@ -28,6 +28,7 @@ _최종 갱신: 2026-07-14 (작업별 분리 개편)_
 - [거래명세표] 슬라이드36+라벨모달 구현분은 **7/20 재구성된 stash@{0}**(transaction_statement.jsp 단독, base 3b52126 — 바로 apply 가능)에 보관(+백업 패치 2종). 재개 시 남은 결정(수량 의미·PACKING_CNT 이원화·출하 라벨 보호 등)부터 — 상세: handoff/거래명세표.md
 - [기타] 도면팝업 CSS 분리는 커밋·머지됨(7c01d3f, PR#26 — 실화면 검증만 미실시) / application-local.yml 복구 경위 / getCompanyStaffList 캐시 개선(사용자 트리거 대기) — 상세: handoff/기타.md
 - [토큰절감] 7/20 오전 토큰 급소진 원인 분석 완료 → daily_worklog.py 절감 개선(--model sonnet 기본 등) 완료 → 노션 백필도 7/20 오늘자까지 실전송 캐치업 완료(7/17 무활동 확인). 다음: CLAUDE.md 다이어트 승인 대기 — 상세: handoff/토큰절감.md
+- [Claude????] ??? ?? ???(?? ????? ?? ?????? ???context???) + ??? ?? ?? ?? ????? ?? ? ??: handoff/Claude????.md
 - [Codex연계] Claude x Codex 협업 체계 — 7/20 최종 설계 완료, 7/21 peer_review 완료(4건 결함 발견) + 정식 3라운드 토론(블라인드 Round 1 최초 실증)으로 4건 전부 합의·구현 완료(CLAUDE.md 3건, AGENTS.md 1건) — 상세: handoff/Codex연계.md, 정본: discussion/2026-07-21_협업체계_취약점보완.md
 
 ## 규칙 변경 공지

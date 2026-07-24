@@ -70,7 +70,7 @@ class StepExecutor:
         self._phase_dir_name = phase_dir_name
         self._top_index_file = self._phases_dir / "index.json"
         self._auto_push = auto_push
-        # guardrails(CLAUDE.md+docs) 신선도 캐시 — mid-run 규칙 편집 반영용 (M2)
+        # Codex 정본+docs 신선도 캐시 — mid-run 규칙 편집 반영용
         self._guardrails_sig = None
         self._guardrails_cache = ""
 
@@ -184,42 +184,49 @@ class StepExecutor:
     # --- guardrails & context ---
 
     def _guardrails_signature(self) -> tuple:
-        """CLAUDE.md + docs/*.md 의 (경로, mtime_ns) 튜플. 변경 감지용."""
+        """Codex 정본 + 활성 docs의 (경로, mtime_ns) 튜플. 변경 감지용."""
         sig = []
-        claude_md = ROOT / "CLAUDE.md"
-        if claude_md.exists():
-            sig.append((str(claude_md), claude_md.stat().st_mtime_ns))
+        for name in ("AGENTS.md", "PROJECT_RULES.md"):
+            rules = ROOT / name
+            if rules.exists():
+                sig.append((str(rules), rules.stat().st_mtime_ns))
         docs_dir = ROOT / "docs"
         if docs_dir.is_dir():
             for doc in sorted(docs_dir.glob("*.md")):
+                if doc.name == "CLAUDE_LEGACY_RULES.md":
+                    continue
                 sig.append((str(doc), doc.stat().st_mtime_ns))
         return tuple(sig)
 
     def _read_guardrails(self) -> str:
         sections = []
-        claude_md = ROOT / "CLAUDE.md"
-        if claude_md.exists():
-            sections.append(f"## 프로젝트 규칙 (CLAUDE.md)\n\n{claude_md.read_text(encoding='utf-8')}")
+        for name in ("AGENTS.md", "PROJECT_RULES.md"):
+            rules = ROOT / name
+            if rules.exists():
+                sections.append(f"## 저장소 규칙 ({name})\n\n{rules.read_text(encoding='utf-8')}")
         docs_dir = ROOT / "docs"
         if docs_dir.is_dir():
             for doc in sorted(docs_dir.glob("*.md")):
+                if doc.name == "CLAUDE_LEGACY_RULES.md":
+                    continue
                 sections.append(f"## {doc.stem}\n\n{doc.read_text(encoding='utf-8')}")
         return "\n\n---\n\n".join(sections) if sections else ""
 
     def _load_guardrails(self) -> str:
-        """guardrails(CLAUDE.md+docs)를 신선도 검사 후 반환 (M2).
+        """Codex 정본+docs를 신선도 검사 후 반환.
 
         파일 mtime이 직전과 같으면 캐시를 재사용하고, 변경됐으면 재로딩한다.
-        step/재시도마다 호출되므로 run 도중 CLAUDE.md를 고치면 후속 step이
+        step/재시도마다 호출되므로 run 도중 정본을 고치면 후속 step이
         최신 규칙을 받는다. 비용은 stat 몇 회 + 변경 시에만 read 1회.
         """
         sig = self._guardrails_signature()
-        if sig != self._guardrails_sig:
-            if self._guardrails_sig is not None:
-                print("  [guardrails] CLAUDE.md/docs 변경 감지 - 재로딩")
+        previous_sig = getattr(self, "_guardrails_sig", None)
+        if sig != previous_sig:
+            if previous_sig is not None:
+                print("  [guardrails] Codex 정본/docs 변경 감지 - 재로딩")
             self._guardrails_cache = self._read_guardrails()
             self._guardrails_sig = sig
-        return self._guardrails_cache
+        return getattr(self, "_guardrails_cache", "")
 
     @staticmethod
     def _build_step_context(index: dict) -> str:
@@ -257,9 +264,9 @@ class StepExecutor:
             f"   이유: 코드 커밋 권한은 사용자에게 있다. 수정한 파일의 절대경로를 summary에 기록하는 것으로 대신하라.\n\n---\n\n"
         )
 
-    # --- Claude 호출 ---
+    # --- Codex 호출 ---
 
-    def _invoke_claude(self, step: dict, preamble: str) -> dict:
+    def _invoke_codex(self, step: dict, preamble: str) -> dict:
         step_num, step_name = step["step"], step["name"]
         step_file = self._phase_dir / f"step{step_num}.md"
 
@@ -269,13 +276,20 @@ class StepExecutor:
 
         prompt = preamble + step_file.read_text(encoding="utf-8")
         result = subprocess.run(
-            ["claude", "-p", "--dangerously-skip-permissions", "--output-format", "json", prompt],
+            [
+                "codex", "exec",
+                "--sandbox", "workspace-write",
+                "--cd", self._root,
+                "--json",
+                "-",
+            ],
+            input=prompt,
             cwd=self._root, capture_output=True, text=True, timeout=1800,
             encoding="utf-8", errors="replace",
         )
 
         if result.returncode != 0:
-            print(f"\n  WARN: Claude가 비정상 종료됨 (code {result.returncode})")
+            print(f"\n  WARN: Codex가 비정상 종료됨 (code {result.returncode})")
             if result.stderr:
                 print(f"  stderr: {result.stderr[:500]}")
 
@@ -341,7 +355,7 @@ class StepExecutor:
                 tag += f" [retry {attempt}/{self.MAX_RETRIES}]"
 
             with progress_indicator(tag) as pi:
-                self._invoke_claude(step, preamble)
+                self._invoke_codex(step, preamble)
                 elapsed = int(pi.elapsed)
 
             index = self._read_json(self._index_file)

@@ -1,0 +1,18 @@
+{
+  "description": "Tomes repository rule freshness notice",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py .codex/hooks/context_freshness_gate.py",
+            "timeout": 10,
+            "statusMessage": "Checking repository rule freshness"
+          }
+        ]
+      }
+    ]
+  }
+}

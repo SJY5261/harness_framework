@@ -27,10 +27,11 @@ _최종 갱신: 2026-07-14 (작업별 분리 개편)_
 - [차트] 메인 가동율 V1 쿼리 적용은 커밋됨(9f49184)·사용자 "이 건 마무리" 확정 → 아카이브로 이동. 잔존 표시/구조 이슈(막대 뜸·SQL의 HTML 생성 등)는 보류 목록으로 유지 — 상세: handoff/차트.md
 - [거래명세표] 슬라이드36+라벨모달 구현분은 **7/20 재구성된 stash@{0}**(transaction_statement.jsp 단독, base 3b52126 — 바로 apply 가능)에 보관(+백업 패치 2종). 재개 시 남은 결정(수량 의미·PACKING_CNT 이원화·출하 라벨 보호 등)부터 — 상세: handoff/거래명세표.md
 - [기타] 도면팝업 CSS 분리는 커밋·머지됨(7c01d3f, PR#26 — 실화면 검증만 미실시) / application-local.yml 복구 경위 / getCompanyStaffList 캐시 개선(사용자 트리거 대기) — 상세: handoff/기타.md
-- [토큰절감] 7/20 오전 토큰 급소진 원인 분석 완료 → daily_worklog.py 절감 개선(--model sonnet 기본 등) 완료 → 노션 백필도 7/20 오늘자까지 실전송 캐치업 완료(7/17 무활동 확인). 다음: CLAUDE.md 다이어트 승인 대기 — 상세: handoff/토큰절감.md
-- [Claude진행안내] 장시간 작업 상태줄(경과 시간·실제 계획 진행도·최근 작업·context·비용) + 단계별 중간 보고 규칙 구현·검증 완료 — 상세: handoff/Claude진행안내.md
-- [Codex연계] Claude x Codex 협업 체계 — 7/20 최종 설계 완료, 7/21 peer_review 완료(4건 결함 발견) + 정식 3라운드 토론(블라인드 Round 1 최초 실증)으로 4건 전부 합의·구현 완료(CLAUDE.md 3건, AGENTS.md 1건) — 상세: handoff/Codex연계.md, 정본: discussion/2026-07-21_협업체계_취약점보완.md
+- [토큰절감] 7/20 Claude 기준 절감 개선 기록. 7/24 주 에이전트 전환으로 daily_worklog.py는 모델 고정 없는 읽기 전용·ephemeral Codex 요약을 사용하며 Claude 수집은 선택적 호환으로만 유지 — 상세: handoff/토큰절감.md, handoff/Codex주에이전트전환.md
+- [Codex진행안내] Codex commentary 기반 단계별 진행 안내를 정본화. Claude 상태줄은 선택적 호환 자산으로 보존 — 상세: handoff/Codex진행안내.md
+- [Codex주에이전트전환] **완료** — Codex를 기본 오케스트레이터로 승격하고 규칙·훅·execute.py·daily_worklog.py·토론 체계를 전환. Claude는 명시적 요청 시 선택적 보조로만 유지 — 상세: handoff/Codex주에이전트전환.md, 과거 협업 체계: handoff/Codex연계.md
 
 ## 규칙 변경 공지
 - 2026-07-13 CLAUDE.md에 토큰 절약 규칙 신설됨 — 작업 시 참조.
-- 2026-07-15 answer_review_gate.py v2 + answer-reviewer 정의 보강(합성 트랜스크립트 14/14 검증). 게이트가 엄격해짐: 검토 호출은 Agent subagent_type만 인정(파일 Read로는 통과 불가, SendMessage 이어쓰기 미인정), 옵트아웃 마커는 최종 메시지에 전체 문구 그대로, 검토 시 최종 메시지 배너 필수, 턴당 차단 2회 상한, 옵트아웃은 logs/answer_review_optouts.log에 기록. 리뷰어 의뢰 시 ①원 질문 전문 ②초안 전체 ③참조 파일 목록 필수 전달.
+- 2026-07-15 Claude `answer_review_gate.py` v2 + answer-reviewer 정의 보강(역사 기록). 2026-07-24부터 Codex 완료 조건에는 적용하지 않으며 Claude 선택 사용 시에만 해당한다.
+- 2026-07-24 Codex 주 에이전트 전환: `AGENTS.md` + `PROJECT_RULES.md`가 현재 정본. `CLAUDE.md`와 `.claude/`는 선택적 호환 자산.

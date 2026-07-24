@@ -1,0 +1,5 @@
+# Repository-scoped Codex settings only.
+# Hooks are configured in hooks.json beside this file.
+# Model, provider, authentication, notification, approval, sandbox, and
+# multi-agent preferences belong to the user's ~/.codex/config.toml and are
+# intentionally not pinned here.

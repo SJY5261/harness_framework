@@ -4,8 +4,8 @@
 
 먼저 아래 파일들을 읽고 프로젝트의 아키텍처와 설계 의도를 파악하라:
 
-- `E:\harness_framework\docs\ARCHITECTURE.md`
-- `E:\harness_framework\docs\ADR.md`
+- `docs/ARCHITECTURE.md`
+- `docs/ADR.md`
 - `E:\Tomes-Cloud\src\main\java\com\tomes\service\impl\SystemServiceImpl.java`
   (63~136행: commonCodeModifyGrid — 수정 대상,
    429~439행: getSessionCodeList — 캐시 이름 확인,
@@ -62,8 +62,8 @@ cd E:/Tomes-Cloud && ./gradlew build -q   # 컴파일 에러 없음
 2. 아키텍처 체크리스트를 확인한다:
    - getSessionCodeList의 @Cacheable value 문자열과 @CacheEvict value 문자열이 완전히 일치하는가?
    - cacheManager="everyHour"가 명시되어 있는가?
-   - CLAUDE.md CRITICAL 규칙을 위반하지 않았는가?
-3. 결과에 따라 `E:\harness_framework\phases\code-cache\index.json`의 step 1을 업데이트한다:
+   - PROJECT_RULES.md의 변경 불변식을 위반하지 않았는가?
+3. 결과에 따라 `phases/code-cache/index.json`의 step 1을 업데이트한다:
    - 성공 → `"status": "completed"`, `"summary": "산출물 한 줄 요약"`
    - 수정 3회 시도 후에도 실패 → `"status": "error"`, `"error_message": "구체적 에러 내용"`
    - 사용자 개입 필요 → `"status": "blocked"`, `"blocked_reason": "구체적 사유"` 후 즉시 중단
@@ -73,5 +73,5 @@ cd E:/Tomes-Cloud && ./gradlew build -q   # 컴파일 에러 없음
 - commonCodeModifyGrid의 비즈니스 로직(INSERT/UPDATE 분기, JSON 파싱)을 수정하지 마라. 이유: 이 step의 범위는 캐시 무효화 어노테이션 추가뿐이다.
 - 다른 메서드의 @Cacheable(getSessionCodeList, selectGfileFileImageInfo 등)을 건드리지 마라. 이유: step0이 의존하는 캐시 동작이 바뀐다.
 - 주석 처리된 기존 @Cacheable/@CacheEvict(421행, 460행 등)를 살리지 마라. 이유: 과거에 의도적으로 비활성화된 것으로, 이번 작업 범위가 아니다.
-- MyBatis XML의 기존 queryId를 변경하지 마라 (CLAUDE.md CRITICAL).
+- MyBatis XML의 기존 queryId를 변경하지 마라 (PROJECT_RULES.md).
 - 기존 테스트를 깨뜨리지 마라.

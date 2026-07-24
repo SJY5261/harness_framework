@@ -34,6 +34,15 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - 실제 `codex exec --strict-config` 실행으로 저장소 설정·훅 로드와 마지막 메시지 출력 계약 확인.
 - 활성 자동화의 `claude -p`, 승인 우회 옵션 제거 확인.
 
+## 2026-07-24 Codex 규칙 최적화
+
+- 상시 로드 규칙을 운영 원칙(`AGENTS.md`)과 제품 불변식(`PROJECT_RULES.md`)으로 다시 압축했다.
+- `docs/SECOND_BRAIN.md`에 규칙·활성 상태·결정·증적·Notion 일지의 역할과 승격 수명주기를 정의했다.
+- `HANDOFF.md`를 활성 작업·다음 행동 중심의 짧은 인덱스로 정리하고 `PATHS.md`를 상대 경로 중심으로 교정했다.
+- 하네스는 모든 docs 자동 주입 대신 phase `context_files`만 읽는다. 저장소 밖 경로와 누락 파일은 실패 처리한다.
+- 하네스의 `git add -A`를 제거했다. 기존 staged 변경이 있으면 중단하고, 기존 dirty 경로를 제외한 신규 작업 경로만 명시적으로 스테이징한다.
+- 검증: 관련 테스트 `59 passed`, Python 컴파일 및 phase 컨텍스트 경로 검사 통과.
+
 ## 다음 단계
 
 - 이후 작업은 Codex 진입점과 진행 안내 규칙을 기본으로 사용한다.

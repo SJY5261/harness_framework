@@ -70,7 +70,7 @@ class StepExecutor:
         self._phase_dir_name = phase_dir_name
         self._top_index_file = self._phases_dir / "index.json"
         self._auto_push = auto_push
-        # Codex 정본+docs 신선도 캐시 — mid-run 규칙 편집 반영용
+        # Codex 정본+phase가 명시한 컨텍스트의 신선도 캐시
         self._guardrails_sig = None
         self._guardrails_cache = ""
 
@@ -91,6 +91,8 @@ class StepExecutor:
     def run(self):
         self._print_header()
         self._check_blockers()
+        self._ensure_clean_index()
+        self._preexisting_paths = self._changed_paths()
         self._checkout_branch()
         guardrails = self._load_guardrails()
         self._ensure_created_at()
@@ -119,6 +121,31 @@ class StepExecutor:
         return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True,
                               encoding="utf-8", errors="replace")
 
+    def _changed_paths(self) -> set[str]:
+        """tracked 변경과 미추적 파일 경로를 반환한다."""
+        changed = set()
+        for args in (
+            ("diff", "--name-only"),
+            ("diff", "--cached", "--name-only"),
+            ("ls-files", "--others", "--exclude-standard"),
+        ):
+            result = self._run_git(*args)
+            if result.returncode == 0:
+                changed.update(line for line in result.stdout.splitlines() if line)
+        return changed
+
+    def _ensure_clean_index(self) -> None:
+        """기존 staged 변경이 step 커밋에 섞이는 것을 막는다."""
+        result = self._run_git("diff", "--cached", "--quiet")
+        if result.returncode != 0:
+            print("ERROR: 기존 staged 변경이 있습니다. 커밋하거나 unstage한 뒤 다시 실행하세요.")
+            sys.exit(1)
+
+    def _stage_paths(self, paths) -> None:
+        selected = sorted(set(paths))
+        if selected:
+            self._run_git("add", "--", *selected)
+
     def _checkout_branch(self):
         branch = f"feat-{self._phase_name}"
 
@@ -145,10 +172,10 @@ class StepExecutor:
     def _commit_step(self, step_num: int, step_name: str):
         output_rel = f"phases/{self._phase_dir_name}/step{step_num}-output.json"
         index_rel = f"phases/{self._phase_dir_name}/index.json"
+        preexisting = getattr(self, "_preexisting_paths", set())
+        code_paths = self._changed_paths() - preexisting - {output_rel, index_rel}
 
-        self._run_git("add", "-A")
-        self._run_git("reset", "HEAD", "--", output_rel)
-        self._run_git("reset", "HEAD", "--", index_rel)
+        self._stage_paths(code_paths)
 
         if self._run_git("diff", "--cached", "--quiet").returncode != 0:
             msg = self.FEAT_MSG.format(phase=self._phase_name, num=step_num, name=step_name)
@@ -158,7 +185,7 @@ class StepExecutor:
             else:
                 print(f"  WARN: 코드 커밋 실패: {r.stderr.strip()}")
 
-        self._run_git("add", "-A")
+        self._stage_paths({output_rel, index_rel})
         if self._run_git("diff", "--cached", "--quiet").returncode != 0:
             msg = self.CHORE_MSG.format(phase=self._phase_name, num=step_num)
             r = self._run_git("commit", "-m", msg)
@@ -183,37 +210,42 @@ class StepExecutor:
 
     # --- guardrails & context ---
 
+    def _context_paths(self) -> list[Path]:
+        """항상 필요한 정본과 phase가 명시한 파일만 반환한다."""
+        paths = [ROOT / "AGENTS.md", ROOT / "PROJECT_RULES.md"]
+        index = self._read_json(self._index_file)
+        root_resolved = ROOT.resolve()
+        for raw in index.get("context_files", []):
+            candidate = (ROOT / raw).resolve()
+            if candidate != root_resolved and root_resolved not in candidate.parents:
+                raise ValueError(f"context_files 경로가 저장소 밖을 가리킵니다: {raw}")
+            if not candidate.is_file():
+                raise FileNotFoundError(f"context_files 파일이 없습니다: {raw}")
+            if candidate not in paths:
+                paths.append(candidate)
+        return paths
+
     def _guardrails_signature(self) -> tuple:
-        """Codex 정본 + 활성 docs의 (경로, mtime_ns) 튜플. 변경 감지용."""
-        sig = []
-        for name in ("AGENTS.md", "PROJECT_RULES.md"):
-            rules = ROOT / name
-            if rules.exists():
-                sig.append((str(rules), rules.stat().st_mtime_ns))
-        docs_dir = ROOT / "docs"
-        if docs_dir.is_dir():
-            for doc in sorted(docs_dir.glob("*.md")):
-                if doc.name == "CLAUDE_LEGACY_RULES.md":
-                    continue
-                sig.append((str(doc), doc.stat().st_mtime_ns))
-        return tuple(sig)
+        """활성 컨텍스트의 (경로, mtime_ns) 튜플. 변경 감지용."""
+        return tuple(
+            (str(path), path.stat().st_mtime_ns)
+            for path in self._context_paths()
+            if path.exists()
+        )
 
     def _read_guardrails(self) -> str:
         sections = []
-        for name in ("AGENTS.md", "PROJECT_RULES.md"):
-            rules = ROOT / name
-            if rules.exists():
-                sections.append(f"## 저장소 규칙 ({name})\n\n{rules.read_text(encoding='utf-8')}")
-        docs_dir = ROOT / "docs"
-        if docs_dir.is_dir():
-            for doc in sorted(docs_dir.glob("*.md")):
-                if doc.name == "CLAUDE_LEGACY_RULES.md":
-                    continue
-                sections.append(f"## {doc.stem}\n\n{doc.read_text(encoding='utf-8')}")
+        for path in self._context_paths():
+            if path.exists():
+                rel = path.relative_to(ROOT)
+                sections.append(
+                    f"## 컨텍스트 ({rel.as_posix()})\n\n"
+                    f"{path.read_text(encoding='utf-8')}"
+                )
         return "\n\n---\n\n".join(sections) if sections else ""
 
     def _load_guardrails(self) -> str:
-        """Codex 정본+docs를 신선도 검사 후 반환.
+        """Codex 정본+명시적 phase 컨텍스트를 신선도 검사 후 반환.
 
         파일 mtime이 직전과 같으면 캐시를 재사용하고, 변경됐으면 재로딩한다.
         step/재시도마다 호출되므로 run 도중 정본을 고치면 후속 step이
@@ -223,7 +255,7 @@ class StepExecutor:
         previous_sig = getattr(self, "_guardrails_sig", None)
         if sig != previous_sig:
             if previous_sig is not None:
-                print("  [guardrails] Codex 정본/docs 변경 감지 - 재로딩")
+                print("  [context] Codex 정본/phase 컨텍스트 변경 감지 - 재로딩")
             self._guardrails_cache = self._read_guardrails()
             self._guardrails_sig = sig
         return getattr(self, "_guardrails_cache", "")
@@ -433,7 +465,7 @@ class StepExecutor:
         self._write_json(self._index_file, index)
         self._update_top_index("completed")
 
-        self._run_git("add", "-A")
+        self._stage_paths({f"phases/{self._phase_dir_name}/index.json"})
         if self._run_git("diff", "--cached", "--quiet").returncode != 0:
             msg = f"chore({self._phase_name}): mark phase completed"
             r = self._run_git("commit", "-m", msg)

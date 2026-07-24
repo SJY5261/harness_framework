@@ -4,8 +4,8 @@
 
 먼저 아래 파일들을 읽고 프로젝트의 아키텍처와 설계 의도를 파악하라:
 
-- `E:\harness_framework\docs\ARCHITECTURE.md`
-- `E:\harness_framework\docs\ADR.md`
+- `docs/ARCHITECTURE.md`
+- `docs/ADR.md`
 - `E:\Tomes-Cloud\src\main\webapp\resource\modules\attr\tabs\body-script.js` (수정 대상)
   - 25~47행: $(document).ready — g_code AJAX 로드 (`g_code = data.list`)
   - 489~504행: g_codeNmMap — 이미 존재하는 lazy 캐시 패턴 (참고용)
@@ -85,8 +85,8 @@ node --check E:/Tomes-Cloud/src/main/webapp/resource/modules/attr/tabs/body-scri
 2. 체크리스트를 확인한다:
    - 두 함수의 반환 "형태"(객체 배열 [{value, text, ...}])가 기존과 동일한가?
    - g_code 재로드 시 캐시가 초기화되는가?
-   - CLAUDE.md CRITICAL 규칙(ParamQuery 11.0.0 API, JSP-컨트롤러 매핑 불변)을 위반하지 않았는가?
-3. 결과에 따라 `E:\harness_framework\phases\code-cache\index.json`의 step 2를 업데이트한다:
+   - PROJECT_RULES.md의 변경 불변식(ParamQuery 11.0.0 API, JSP-컨트롤러 매핑 불변)을 위반하지 않았는가?
+3. 결과에 따라 `phases/code-cache/index.json`의 step 2를 업데이트한다:
    - 성공 → `"status": "completed"`, `"summary": "산출물 한 줄 요약 + 사전 조사 결과(변형 호출부 유무)"`
    - 수정 3회 시도 후에도 실패 → `"status": "error"`, `"error_message": "구체적 에러 내용"`
    - 사용자 개입 필요 → `"status": "blocked"`, `"blocked_reason": "구체적 사유"` 후 즉시 중단
@@ -96,5 +96,5 @@ node --check E:/Tomes-Cloud/src/main/webapp/resource/modules/attr/tabs/body-scri
 - `WEB-INF/views/attr/page/body-script.jsp`와 `WEB-INF/views/attr/common/body-script.jsp`의 동명 함수를 수정하지 마라. 이유: 이번 작업 범위는 본 애플리케이션(tabs 레이아웃)이 사용하는 외부 JS 1곳으로 한정한다.
 - `json-list-cache.js`를 수정하지 마라. 이유: AJAX 레이어 캐시는 이미 동작 중이며 이 step의 범위가 아니다.
 - 그리드 화면 JS(estimate-standard-calculation-manage.js 등)의 render/change 콜백을 수정하지 마라. 이유: 호출부 동작 변경은 별도 작업이다.
-- ParamQuery Grid 7.x 문법을 사용하지 마라 — 반드시 11.0.0 API (CLAUDE.md CRITICAL).
+- ParamQuery Grid 7.x 문법을 사용하지 마라 — 반드시 11.0.0 API (PROJECT_RULES.md).
 - 기존 Test-Automize 테스트를 깨뜨리지 마라.

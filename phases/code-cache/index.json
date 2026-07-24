@@ -1,6 +1,10 @@
 {
   "project": "Tomes-Cloud",
   "phase": "code-cache",
+  "context_files": [
+    "docs/ARCHITECTURE.md",
+    "docs/ADR.md"
+  ],
   "steps": [
     {
       "step": 0,

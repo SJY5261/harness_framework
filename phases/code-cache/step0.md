@@ -4,8 +4,8 @@
 
 먼저 아래 파일들을 읽고 프로젝트의 아키텍처와 설계 의도를 파악하라:
 
-- `E:\harness_framework\docs\ARCHITECTURE.md`
-- `E:\harness_framework\docs\ADR.md`
+- `docs/ARCHITECTURE.md`
+- `docs/ADR.md`
 - `E:\Tomes-Cloud\src\main\java\com\tomes\controller\JsonController.java` (81~85행: /json-list 엔드포인트)
 - `E:\Tomes-Cloud\src\main\java\com\tomes\service\impl\InnodaleServiceImpl.java` (수정 대상)
 - `E:\Tomes-Cloud\src\main\java\com\tomes\service\InnodaleService.java` (인터페이스)
@@ -74,17 +74,17 @@ cd E:/Tomes-Cloud && ./gradlew build -q   # 컴파일 에러 없음
 2. 아키텍처 체크리스트를 확인한다:
    - ARCHITECTURE.md 디렉토리 구조를 따르는가? (서비스 로직은 ServiceImpl에만)
    - ADR 기술 스택을 벗어나지 않았는가? (ADR-004: Redis Spring Cache)
-   - CLAUDE.md CRITICAL 규칙을 위반하지 않았는가? (queryId 변경 금지)
-3. 결과에 따라 `E:\harness_framework\phases\code-cache\index.json`의 step 0을 업데이트한다:
+   - PROJECT_RULES.md의 변경 불변식을 위반하지 않았는가? (queryId 변경 금지)
+3. 결과에 따라 `phases/code-cache/index.json`의 step 0을 업데이트한다:
    - 성공 → `"status": "completed"`, `"summary": "산출물 한 줄 요약 (수정 파일 경로 포함)"`
    - 수정 3회 시도 후에도 실패 → `"status": "error"`, `"error_message": "구체적 에러 내용"`
    - 사용자 개입 필요 → `"status": "blocked"`, `"blocked_reason": "구체적 사유"` 후 즉시 중단
 
 ## 금지사항
 
-- MyBatis XML(sqlMaps/)의 기존 queryId를 변경하지 마라. 이유: 컨트롤러·서비스가 문자열로 직접 참조하므로 런타임 오류 발생 (CLAUDE.md CRITICAL).
+- MyBatis XML(sqlMaps/)의 기존 queryId를 변경하지 마라. 이유: 컨트롤러·서비스가 문자열로 직접 참조하므로 런타임 오류 발생 (PROJECT_RULES.md).
 - `selectSessionCodeList` 외 다른 queryId의 처리 경로를 바꾸지 마라. 이유: /json-list는 전 화면이 공유하는 범용 엔드포인트다.
 - 새 캐시 어노테이션·새 CacheManager를 만들지 마라. 이유: 기존 getSessionCodeList 캐시를 재사용하는 것이 이 설계의 핵심이다.
-- application-*.yml에 신규 비밀번호·시크릿을 추가하지 마라 (CLAUDE.md CRITICAL).
+- application-*.yml에 신규 비밀번호·시크릿을 추가하지 마라 (PROJECT_RULES.md).
 - E:\Tomes-Cloud 외부 디렉토리의 파일을 수정하지 마라 (phases/code-cache/index.json 상태 업데이트는 예외).
 - 기존 테스트를 깨뜨리지 마라.

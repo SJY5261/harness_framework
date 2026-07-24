@@ -50,6 +50,7 @@ def phase_dir(tmp_project):
     index = {
         "project": "TestProject",
         "phase": "mvp",
+        "context_files": ["docs/guide.md", "docs/arch.md"],
         "steps": [
             {"step": 0, "name": "setup", "status": "completed", "summary": "프로젝트 초기화 완료"},
             {"step": 1, "name": "core", "status": "completed", "summary": "핵심 로직 구현"},
@@ -148,7 +149,7 @@ class TestJsonHelpers:
 # ---------------------------------------------------------------------------
 
 class TestLoadGuardrails:
-    def test_loads_codex_rules_and_docs(self, executor, tmp_project):
+    def test_loads_codex_rules_and_explicit_context(self, executor, tmp_project):
         with patch.object(ex, "ROOT", tmp_project):
             result = executor._load_guardrails()
         assert "# Rules" in result
@@ -161,12 +162,12 @@ class TestLoadGuardrails:
             result = executor._load_guardrails()
         assert "---" in result
 
-    def test_docs_sorted_alphabetically(self, executor, tmp_project):
+    def test_context_keeps_declared_order(self, executor, tmp_project):
         with patch.object(ex, "ROOT", tmp_project):
             result = executor._load_guardrails()
         arch_pos = result.index("arch")
         guide_pos = result.index("guide")
-        assert arch_pos < guide_pos
+        assert guide_pos < arch_pos
 
     def test_no_agents_md(self, executor, tmp_project):
         (tmp_project / "AGENTS.md").unlink()
@@ -176,13 +177,22 @@ class TestLoadGuardrails:
         assert "Project Rules" in result
         assert "Architecture" in result
 
-    def test_no_docs_dir(self, executor, tmp_project):
+    def test_missing_declared_context_fails(self, executor, tmp_project):
         import shutil
         shutil.rmtree(tmp_project / "docs")
         with patch.object(ex, "ROOT", tmp_project):
-            result = executor._load_guardrails()
-        assert "Rules" in result
-        assert "Architecture" not in result
+            with pytest.raises(FileNotFoundError):
+                executor._load_guardrails()
+
+    def test_rejects_context_outside_repository(self, executor, tmp_project):
+        index = json.loads(executor._index_file.read_text(encoding="utf-8"))
+        index["context_files"] = ["../../secret.md"]
+        executor._index_file.write_text(
+            json.dumps(index, ensure_ascii=False), encoding="utf-8"
+        )
+        with patch.object(ex, "ROOT", tmp_project):
+            with pytest.raises(ValueError):
+                executor._load_guardrails()
 
     def test_empty_project(self, tmp_path):
         with patch.object(ex, "ROOT", tmp_path):
@@ -192,6 +202,7 @@ class TestLoadGuardrails:
             idx = {"project": "T", "phase": "t", "steps": []}
             (phases_dir / "index.json").write_text(json.dumps(idx))
             inst = ex.StepExecutor.__new__(ex.StepExecutor)
+            inst._index_file = phases_dir / "index.json"
             result = inst._load_guardrails()
         assert result == ""
 
@@ -387,9 +398,16 @@ class TestCheckoutBranch:
 
 class TestCommitStep:
     def test_two_phase_commit(self, executor):
+        executor._preexisting_paths = {"user-note.md"}
         calls = []
         def fake_git(*args):
             calls.append(args)
+            if args == ("diff", "--name-only"):
+                return MagicMock(returncode=0, stdout="src/new.py\nuser-note.md\n")
+            if args == ("diff", "--cached", "--name-only"):
+                return MagicMock(returncode=0, stdout="")
+            if args == ("ls-files", "--others", "--exclude-standard"):
+                return MagicMock(returncode=0, stdout="")
             if args[:2] == ("diff", "--cached"):
                 return MagicMock(returncode=1)
             return MagicMock(returncode=0, stdout="", stderr="")
@@ -401,12 +419,21 @@ class TestCommitStep:
         assert len(commit_calls) == 2
         assert "feat(mvp):" in commit_calls[0][2]
         assert "chore(mvp):" in commit_calls[1][2]
+        add_calls = [c for c in calls if c[0] == "add"]
+        assert ("add", "--", "src/new.py") in add_calls
+        assert all("user-note.md" not in c for c in add_calls)
 
     def test_no_code_changes_skips_feat_commit(self, executor):
         call_count = {"diff": 0}
         calls = []
         def fake_git(*args):
             calls.append(args)
+            if args in (
+                ("diff", "--name-only"),
+                ("diff", "--cached", "--name-only"),
+                ("ls-files", "--others", "--exclude-standard"),
+            ):
+                return MagicMock(returncode=0, stdout="")
             if args[:2] == ("diff", "--cached"):
                 call_count["diff"] += 1
                 if call_count["diff"] == 1:
@@ -420,6 +447,18 @@ class TestCommitStep:
         commit_msgs = [c[2] for c in calls if c[0] == "commit"]
         assert len(commit_msgs) == 1
         assert "chore" in commit_msgs[0]
+
+
+class TestCleanIndex:
+    def test_clean_index_continues(self, executor):
+        executor._run_git = MagicMock(return_value=MagicMock(returncode=0))
+        executor._ensure_clean_index()
+
+    def test_staged_changes_stop_run(self, executor):
+        executor._run_git = MagicMock(return_value=MagicMock(returncode=1))
+        with pytest.raises(SystemExit) as exc_info:
+            executor._ensure_clean_index()
+        assert exc_info.value.code == 1
 
 
 # ---------------------------------------------------------------------------

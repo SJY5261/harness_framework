@@ -1,6 +1,6 @@
 # 경로 안내
 
-경로는 가능한 한 저장소 상대 경로를 사용한다. 현재 하네스 루트는 작업 환경에서 `git rev-parse --show-toplevel`로 확인하며 과거 문서의 `E:\harness_framework`는 현재 루트로 재해석한다.
+경로는 가능한 한 저장소 상대 경로를 사용한다. 현재 업무 PC의 하네스 루트는 `D:\harness_framework`이며 실행 시에는 `git rev-parse --show-toplevel`로 다시 확인한다. 과거 문서의 `E:\harness_framework`와 개인 PC의 `D:\tomes\harness-framework`는 현재 루트로 재해석한다.
 
 | 약칭/역할 | 저장소 기준 경로 |
 |---|---|

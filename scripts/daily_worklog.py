@@ -50,7 +50,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 # --- 경로/설정 ---------------------------------------------------------------
-# PC마다 하네스 루트가 달라(업무용 E:\harness_framework / 개인 D:\tomes\harness-framework)
+# 현재 업무 PC 하네스 루트는 D:\harness_framework이며, 다른 환경에서도 이 파일 위치로 루트를 판별한다.
 # 스크립트 위치(scripts/ 상위)에서 자동 유도한다 — 양쪽 PC에서 수정 없이 동작.
 HARNESS = Path(__file__).resolve().parent.parent
 REPOS = [

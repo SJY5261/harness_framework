@@ -76,9 +76,11 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 | 제품 미커밋 diff | `%클라우드` 위 2개 파일 | 현재 파일을 덮어쓰지 말고 Git diff로 병합 | **완료** — 전달본과 줄바꿈 정규화 후 내용 일치 |
 | 제품 로컬 커밋 | `%클라우드` HEAD `c0ac256` 포함 16커밋 | push 또는 Git bundle/patch | **미전달** |
 | 가공확정 증적 | `logs/가공확정_*` | 관련 로그·JSON·스크린샷 디렉터리 선별 복사 | **미전달** |
-| 로컬 실행 설정 | `%클라우드/shell/runDev.local.bat`, `%테스트/.env` 등 | 승인된 보안 매체로 별도 이동 | **부분** — 업무 PC 기존 파일은 보존, 개인 PC본 미전달 |
+| 로컬 실행 설정 | `%클라우드/shell/runDev.local.bat`, `%테스트/.env` 등 | 승인된 보안 매체로 별도 이동 | **부분** — 기존 비밀값 보존, `.env`의 `E:` 경로는 현재 `D:` 경로로 교정, 개인 PC본 미전달 |
 | Codex 개인 설정 | 모델·인증·알림·전역 권한 | 저장소에 넣지 않고 업무용 PC에서 별도 설정 | **부분** — 기존 인증·모델 설정 확인, 알림·전역 권한 원본 미전달 |
-| 개발 런타임 | JDK 21, Python | 업무 PC 사용자 환경 설정 | **부분** — JDK 21 `JAVA_HOME`/`Path` 완료, Python 미설치 |
+| 개발 런타임 | JDK 21, Python, Node, MySQL, Playwright | 업무 PC 사용자 환경 설정 | **완료** — Python 3.14.6·의존성·Chromium 포함, 사용자 `Path`와 PowerShell `RemoteSigned` 설정 |
+| Git/GitHub | Git 작성자·GCM·GitHub CLI | 사용자 설정·브라우저 인증 | **부분** — 작성자와 CLI 복구, GitHub 브라우저 로그인 대기 |
+| 작업일지 자동화 | `scripts/run_worklog.bat`, `DailyWorklog` | 현재 경로로 교정 후 평일 17:30 예약 | **완료(로컬)** — dry-run 통과, Notion 토큰은 미전달 |
 
 비밀번호, 토큰, 계정값은 이 문서나 Git에 기록하지 않는다.
 
@@ -87,6 +89,7 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 - 두 작업을 하나의 PC 복귀 문서에서 요약하고 상세 내용은 기존 handoff에 연결한다 — 중복 기록으로 상태가 어긋나는 것을 줄이기 위해서다.
 - 2026-07-24 이후 새 변경은 이 문서 하단 변경 기록에 계속 추가한다 — 업무용 PC 복귀 시 이동 범위를 한곳에서 확인하기 위해서다.
 - 제품 미커밋 파일은 자동 커밋하지 않는다 — `%클라우드` 커밋은 사용자 몫이라는 저장소 규칙을 따른다.
+- PC 이관 근거는 `C:\Users\User\Desktop\Downloads`만 사용한다. `C:\Users\User\Downloads`의 일반 앱 설치 파일은 이번 작업 범위가 아니다.
 
 ## 이후 변경 기록
 
@@ -94,6 +97,7 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 |---|---|---|---|---|---|
 | 2026-07-27 | `&하네스` | 업무용 PC 복귀 인계 문서 작성 | `handoff/업무PC복귀인계.md`, `HANDOFF.md` | 문서와 Git diff 확인 | 대기 |
 | 2026-07-27 | 업무용 PC | 하네스 동기화, 제품 2파일 병합, Git safe.directory 3개와 JDK 21 사용자 환경 설정 | `536f9a1`, 기록 커밋 `accadf2`(로컬), 제품 JSP/JS 2개 | 하네스 HEAD·제품 diff·JS 문법·설정값 확인 | 부분 완료 |
+| 2026-07-27 | 업무용 PC | 포맷 후 개발 환경 복구 | Python 3.14.6, GitHub CLI, Playwright Chromium, `%테스트/.env`, `run_worklog.bat`, `DailyWorklog`, `D:\GITHUB\tomes-cloud-v1-master` junction | 하네스 59 PASS, 제품 build PASS, Playwright PASS, `%테스트` 191 PASS/3 FAIL | 부분 완료 |
 
 ## 검증
 
@@ -103,8 +107,11 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 - 하네스 원격 fast-forward와 HEAD `536f9a1` 확인 — 통과
 - 전달 제품 파일 2개와 업무 PC 병합본 비교 — 통과(줄바꿈 형식 제외 내용 일치)
 - `git diff --check`, `node --check control-manage.js` — 통과
-- `%클라우드` Gradle 빌드 — 미완료(최초 의존성 다운로드가 장시간 TLS 대기하여 해당 빌드 프로세스 종료)
-- 하네스 59개 테스트·`%테스트` pytest — 미실행(Python 런타임 미설치)
+- `%클라우드` Gradle 빌드(JDK 21, `--max-workers=4 --no-daemon`) — 통과(기존 Lombok 경고 1건)
+- 하네스 마이그레이션 테스트·Python 컴파일 — 59개 통과
+- `%테스트` 전체 pytest — 191개 통과, OSR-173 계획 파일의 기존 `assert_eval` 누락으로 3개 실패
+- Playwright Chromium headless 실행 — 통과
+- DailyWorklog `--dry-run --no-ai`와 평일 17:30 예약 작업 — 통과
 - dev 실화면 4개 케이스·POP 실기기 — 업무용 PC에서 미실행
 
 ## 다음 행동
@@ -112,9 +119,10 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 1. 개인 PC에서 `%클라우드` HEAD `c0ac256`을 push하거나 Git bundle/patch로 다시 전달한다.
 2. `logs/가공확정_*` 증적을 선별 전달한다.
 3. 개인 Codex 알림·전역 권한과 로컬 실행 설정의 실제 값을 승인된 보안 매체로 전달한다.
-4. Python 3.11 이상과 `py` 런처를 설치하거나 기존 설치 경로를 복구한 뒤 하네스 59개 테스트와 `%테스트` pytest를 실행한다.
-5. Gradle 의존성 다운로드가 가능한 네트워크에서 `%클라우드` 빌드와 관련 실화면 4개 케이스를 재검증한다.
-6. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
+4. 열린 GitHub CLI 창에서 브라우저 인증을 완료한 뒤 하네스 기록 커밋 push와 제품 원격 fetch를 재시도한다.
+5. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
+6. `%클라우드` 관련 실화면 4개 케이스와 POP 실기기를 재검증한다.
+7. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
 
 ## 블로커·위험
 
@@ -123,8 +131,7 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 - 제품 원격은 현재 업무 PC 자격 증명으로 비대화형 fetch가 되지 않는다. 인증 복구 후 원격 상태를 다시 확인해야 한다.
 - 가공확정 재확정 수정 2개 파일은 업무 PC에 미커밋으로 반영됐으므로 커밋 전까지 작업트리 보존이 필요하다.
 - 가공확정 검증 증적과 개인 Codex 알림·전역 권한 값은 전달 폴더에 없다.
-- Python 런타임이 없어 하네스·테스트 자동화 검증과 DailyWorklog 실행이 불가능하다.
-- Gradle 첫 빌드는 의존성 다운로드 TLS 대기로 완료되지 않았다.
+- `%테스트`의 `tests/test_osr173_size_type_change.py`는 `CD-FT-OSR-173.json`에 없는 `assert_eval` 레시피를 요구해 3개가 실패한다. 환경 실패가 아니라 커밋된 계획 데이터 불일치다.
 - 운영 DB 메뉴 비활성은 아직 미적용이다. 적용 시 백업·트랜잭션·검증 SELECT 후 사용자 확인을 받고 COMMIT해야 한다.
 - `%테스트/.env`, `application-local.yml`, `runDev.local.bat` 등에는 비밀이 있을 수 있어 일반 문서나 Git으로 옮기면 안 된다.
 

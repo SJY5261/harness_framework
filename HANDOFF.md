@@ -6,15 +6,16 @@ _최종 갱신: 2026-07-27_
 
 ## 현재 환경
 
-- 하네스 루트: `D:\tomes\harness-framework` (과거 `E:\harness_framework` 기록은 현재 루트로 재해석)
-- Python은 현재 세션에서 `py`를 사용한다. bare `python`과 `python3`는 Windows Store 스텁일 수 있다.
+- 하네스 루트: `D:\harness_framework` (과거 `E:\harness_framework`, `D:\tomes\harness-framework` 기록은 현재 루트로 재해석)
+- JDK 21은 `D:\Tool\jdk-21\jdk-21`이며 사용자 `JAVA_HOME`과 `Path` 등록 완료.
+- Python 런타임은 미설치 상태다. `python`과 `python3`는 Windows Store 스텁이고 `py` 런처도 없으므로 하네스·테스트 자동화 실행 전 설치가 필요하다.
 - `%클라우드` 커밋은 사용자 몫이며 브랜치·dirty 상태는 작업 시작 시 직접 확인한다.
 - DailyWorklog는 이 PC에서 `NOTION_TOKEN`이 없어 로컬 JSON만 생성한다. 백필 절차: `logs/notion_이관대기.md`
 - 공통 DB 주의: SYSTEM_ID로 테넌트를 확인하고 빈 문자열은 `IS NOT NULL AND LENGTH(...) > 0`으로 판정한다.
 
 ## 활성 작업
 
-- [업무PC복귀인계] **진행 중** — 현재 PC에서 진행한 Codex 주 에이전트 전환과 가공확정 작업을 업무용 PC로 옮기기 위한 커밋·미커밋 diff·로컬 설정 목록 — [상세](handoff/업무PC복귀인계.md)
+- [업무PC복귀인계] **부분 반영 / 미전달 자료 대기** — 하네스 `536f9a1`과 가공확정 제품 파일 2개, Git 신뢰 경로·JDK 설정은 반영 완료. 제품 HEAD `c0ac256`, 검증 증적, 개인 Codex 알림·권한 원본과 Python은 미전달·미설치 — [상세](handoff/업무PC복귀인계.md)
 - [가공확정] **KAN-63 / 진행 중** — 화면 비활성 및 잠긴 파트 재확정 검증 완료. 다음은 KAN-6 → KAN-35 → KAN-38 구현, `%클라우드` 수정분 커밋과 배포 시 운영 메뉴 반영 — [상세](handoff/가공확정.md)
 - [단가검토] **사용자 결정 대기** — 단가입력 개편 검증 완료. 배송비 컬럼명·견적→주문 복사 여부 결정 후 DDL 및 기록조회 후속 작업 — [상세](handoff/단가검토.md)
 - [DB결함] **구현 완료·독립 검토 대기** — 시드, 수동입력 차단, CONTROL_NUM 보정, 프로시저 동시성 가드 적용. 고위험 DB 변경 검토 상태는 상세 문서 기준 — [상세](handoff/DB결함.md)

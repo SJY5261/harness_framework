@@ -9,6 +9,7 @@ _최종 갱신: 2026-07-27_
 - 하네스 루트: `D:\harness_framework` (과거 `E:\harness_framework`, `D:\tomes\harness-framework` 기록은 현재 루트로 재해석)
 - JDK 21은 `D:\Tool\jdk-21\jdk-21`이며 사용자 `JAVA_HOME`과 `Path` 등록 완료.
 - Python 3.14.6과 `py` 런처, `%테스트` 요구 패키지·pytest·Playwright Chromium 설치 완료. Python·Scripts·Launcher 경로는 사용자 `Path`에 등록했고 `PYTHONUTF8=1`을 복구했다.
+- DBeaver 25.0.1에 `Tomes-Cloud` MariaDB 연결과 드라이버를 복구했고, 비밀번호는 DBeaver 보안 저장소에만 저장했다.
 - 실제 실행·개발 설정은 `D:\harness_framework`, `D:\Tool`, `D:\LOGS` 기준으로 통일했다. 환경 변수, Git, 편집기, 예약 작업, 바로가기, 서비스에는 옛 `E:` 프로젝트 경로가 없다. 과거 문서·로그의 `E:`는 이력으로 보존한다.
 - `%클라우드` 커밋은 사용자 몫이며 브랜치·dirty 상태는 작업 시작 시 직접 확인한다.
 - DailyWorklog는 평일 17:30 예약 작업으로 복구했다. 이 PC에는 `NOTION_TOKEN`이 없어 로컬 JSON만 생성하며 백필 절차는 `logs/notion_이관대기.md`를 따른다.

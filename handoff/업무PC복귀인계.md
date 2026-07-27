@@ -1,6 +1,6 @@
 # 업무용 PC 복귀 인계
 
-_최종 갱신: 2026-07-27 / 상태: 부분 반영 / 미전달 자료·인증 대기_
+_최종 갱신: 2026-07-27 / 상태: 주요 복구 완료 / 미전달 자료·실기기 검증 대기_
 
 ## 현재 상태
 
@@ -45,7 +45,7 @@ _최종 갱신: 2026-07-27 / 상태: 부분 반영 / 미전달 자료·인증 �
 
 ### 2. 가공확정 페이지 작업
 
-상태: **재확정 제품 코드 2개 업무용 PC 병합 완료 / 제품 HEAD·검증 증적 미전달 / 후속 구현 대기**
+상태: **재확정 제품 코드 2개 병합·제품 HEAD 동기화 완료 / 검증 증적 미전달 / 후속 구현 대기**
 
 - KAN-63의 “페이지 삭제”를 파일 삭제가 아닌 메뉴 비활성으로 확정했다.
 - dev DB에서 가공확정 메뉴를 비활성화했고 백업·복원 자료를 남겼다. 운영 DB에는 아직 적용하지 않았다.
@@ -62,9 +62,10 @@ _최종 갱신: 2026-07-27 / 상태: 부분 반영 / 미전달 자료·인증 �
 - 실제 POP 바코드 스캔 실기기 확인은 하지 않았다.
 - 다음 구현 순서는 KAN-6 → KAN-35 → KAN-38이다.
 
-개인 PC 기준은 `%클라우드` 브랜치 `feature-control-0713`, HEAD `c0ac256`,
-upstream 대비 16커밋 ahead였다. 업무용 PC에는 해당 커밋 객체가 없고 전달 폴더에도
-Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 기능 변경은 병합했다.
+개인 PC 기준 `%클라우드` HEAD `c0ac256`은 GitHub 인증 후 `origin/main`에서 확인됐다.
+업무용 PC의 `feature-control-0713`을 `3b52126`에서 `c0ac256`으로 fast-forward했고,
+기존 staged/unstaged 변경과 미추적 파일 목록은 그대로 복원했다. 위 2개 파일의 기능
+변경도 유지되며 안전 백업은 `stash@{0}`에 남겼다.
 
 상세 정본: `handoff/가공확정.md`
 
@@ -74,12 +75,12 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 |---|---|---|---|
 | 하네스 커밋 | `40a8a0e` ~ `b562e37` | 원격 동기화 후 HEAD 확인 | **완료** — `536f9a1` |
 | 제품 미커밋 diff | `%클라우드` 위 2개 파일 | 현재 파일을 덮어쓰지 말고 Git diff로 병합 | **완료** — 전달본과 줄바꿈 정규화 후 내용 일치 |
-| 제품 로컬 커밋 | `%클라우드` HEAD `c0ac256` 포함 16커밋 | push 또는 Git bundle/patch | **미전달** |
+| 제품 로컬 커밋 | `%클라우드` HEAD `c0ac256` 포함 16커밋 | push 또는 Git bundle/patch | **완료** — 인증 후 `origin/main`에서 확인, `feature-control-0713` fast-forward |
 | 가공확정 증적 | `logs/가공확정_*` | 관련 로그·JSON·스크린샷 디렉터리 선별 복사 | **미전달** |
 | 로컬 실행 설정 | `%클라우드/shell/runDev.local.bat`, `%테스트/.env` 등 | 승인된 보안 매체로 별도 이동 | **부분** — 기존 비밀값 보존, `.env`의 `E:` 경로는 현재 `D:` 경로로 교정, 개인 PC본 미전달 |
 | Codex 개인 설정 | 모델·인증·알림·전역 권한 | 저장소에 넣지 않고 업무용 PC에서 별도 설정 | **부분** — 기존 인증·모델 설정 확인, 알림·전역 권한 원본 미전달 |
-| 개발 런타임 | JDK 21, Python, Node, MySQL, Playwright | 업무 PC 사용자 환경 설정 | **완료** — Python 3.14.6·의존성·Chromium 포함, 사용자 `Path`와 PowerShell `RemoteSigned` 설정 |
-| Git/GitHub | Git 작성자·GCM·GitHub CLI | 사용자 설정·브라우저 인증 | **부분** — 작성자와 CLI 복구, GitHub 브라우저 로그인 대기 |
+| 개발 런타임 | JDK 21, Python, Node, MySQL, Playwright | 업무 PC 사용자 환경 설정 | **완료** — Python 3.14.6·의존성·Chromium 포함, 사용자 `Path`·`PYTHONUTF8=1`과 PowerShell `RemoteSigned` 설정 |
+| Git/GitHub | Git 작성자·GCM·GitHub CLI | 사용자 설정·브라우저 인증 | **완료** — `SJY5261` 키링 인증, GitHub 전용 credential helper 연결, 하네스 push·제품 fetch 확인 |
 | 작업일지 자동화 | `scripts/run_worklog.bat`, `DailyWorklog` | 현재 경로로 교정 후 평일 17:30 예약 | **완료(로컬)** — dry-run 통과, Notion 토큰은 미전달 |
 
 비밀번호, 토큰, 계정값은 이 문서나 Git에 기록하지 않는다.
@@ -98,6 +99,7 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 | 2026-07-27 | `&하네스` | 업무용 PC 복귀 인계 문서 작성 | `handoff/업무PC복귀인계.md`, `HANDOFF.md` | 문서와 Git diff 확인 | 대기 |
 | 2026-07-27 | 업무용 PC | 하네스 동기화, 제품 2파일 병합, Git safe.directory 3개와 JDK 21 사용자 환경 설정 | `536f9a1`, 기록 커밋 `accadf2`(로컬), 제품 JSP/JS 2개 | 하네스 HEAD·제품 diff·JS 문법·설정값 확인 | 부분 완료 |
 | 2026-07-27 | 업무용 PC | 포맷 후 개발 환경 복구 | Python 3.14.6, GitHub CLI, Playwright Chromium, `%테스트/.env`, `run_worklog.bat`, `DailyWorklog`, `D:\GITHUB\tomes-cloud-v1-master` junction | 하네스 59 PASS, 제품 build PASS, Playwright PASS, `%테스트` 191 PASS/3 FAIL | 부분 완료 |
+| 2026-07-27 | 업무용 PC | GitHub 인증과 원격 동기화, Python UTF-8 복구 | 하네스 `801528f` push, 제품 `c0ac256` fast-forward, `PYTHONUTF8=1` | GitHub API·Git 원격 읽기, 제품 build, 하네스 59 PASS, 로컬 변경 목록 보존 확인 | 주요 복구 완료 |
 
 ## 검증
 
@@ -112,24 +114,22 @@ Git bundle/patch가 없어 현재 HEAD는 `3b52126`이다. 위 2개 파일의 �
 - `%테스트` 전체 pytest — 191개 통과, OSR-173 계획 파일의 기존 `assert_eval` 누락으로 3개 실패
 - Playwright Chromium headless 실행 — 통과
 - DailyWorklog `--dry-run --no-ai`와 평일 17:30 예약 작업 — 통과
+- GitHub CLI `SJY5261` 키링 인증, 하네스 `myfork/feat-code-cache` push, 제품 `origin` fetch — 통과
+- 제품 `feature-control-0713`을 `c0ac256`으로 fast-forward 후 staged/unstaged·미추적 목록 보존 — 통과
+- `PYTHONUTF8=1` 사용자 설정 후 하네스 테스트 — 59개 통과
 - dev 실화면 4개 케이스·POP 실기기 — 업무용 PC에서 미실행
 
 ## 다음 행동
 
-1. 개인 PC에서 `%클라우드` HEAD `c0ac256`을 push하거나 Git bundle/patch로 다시 전달한다.
-2. `logs/가공확정_*` 증적을 선별 전달한다.
-3. 개인 Codex 알림·전역 권한과 로컬 실행 설정의 실제 값을 승인된 보안 매체로 전달한다.
-4. 열린 GitHub CLI 창에서 브라우저 인증을 완료한 뒤 하네스 기록 커밋 push와 제품 원격 fetch를 재시도한다.
-5. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
-6. `%클라우드` 관련 실화면 4개 케이스와 POP 실기기를 재검증한다.
-7. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
+1. `logs/가공확정_*` 증적을 선별 전달한다.
+2. 개인 Codex 알림·전역 권한과 로컬 실행 설정의 실제 값을 승인된 보안 매체로 전달한다.
+3. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
+4. `%클라우드` 관련 실화면 4개 케이스와 POP 실기기를 재검증한다.
+5. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
 
 ## 블로커·위험
 
-- 개인 PC의 `%클라우드` HEAD `c0ac256`과 16개 로컬 커밋은 전달 폴더·현재 로컬 객체·원격 ref에 없어 이 PC에서 복구할 수 없다.
-- 하네스 반영 기록 커밋 `accadf2`는 생성했지만 업무 PC GitHub 자격 증명이 없어 `myfork/feat-code-cache` push가 실패했다.
-- 제품 원격은 현재 업무 PC 자격 증명으로 비대화형 fetch가 되지 않는다. 인증 복구 후 원격 상태를 다시 확인해야 한다.
-- 가공확정 재확정 수정 2개 파일은 업무 PC에 미커밋으로 반영됐으므로 커밋 전까지 작업트리 보존이 필요하다.
+- 가공확정 재확정 수정 2개 파일을 포함한 제품 로컬 변경은 미커밋 상태이므로 커밋 전까지 작업트리를 보존해야 한다. `c0ac256` fast-forward 직전 tracked 상태는 제품 `stash@{0}`에도 안전 백업했다.
 - 가공확정 검증 증적과 개인 Codex 알림·전역 권한 값은 전달 폴더에 없다.
 - `%테스트`의 `tests/test_osr173_size_type_change.py`는 `CD-FT-OSR-173.json`에 없는 `assert_eval` 레시피를 요구해 3개가 실패한다. 환경 실패가 아니라 커밋된 계획 데이터 불일치다.
 - 운영 DB 메뉴 비활성은 아직 미적용이다. 적용 시 백업·트랜잭션·검증 SELECT 후 사용자 확인을 받고 COMMIT해야 한다.

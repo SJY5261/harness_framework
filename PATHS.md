@@ -11,6 +11,7 @@
 | 프로젝트 불변식 | `PROJECT_RULES.md` |
 | 현재 작업 인덱스 | `HANDOFF.md` |
 | 세컨브레인 구조 | `docs/SECOND_BRAIN.md` |
+| 사용자 전달 PR·리뷰·보고서 | `C:\Users\<사용자>\Desktop\PR` |
 | Codex 공용 설정 | `.codex/` |
 | 하네스 실행기 | `scripts/execute.py` |
 | 작업일지 자동화 | `scripts/daily_worklog.py` |

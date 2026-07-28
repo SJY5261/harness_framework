@@ -105,6 +105,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 | 2026-07-27 | 업무용 PC | 수리 후 `C:`, `D:` 두 드라이브 환경에 맞춰 프로젝트 관련 경로 전수 정리 | 하네스·제품·테스트 보조 설정, 환경 변수, Git, 편집기, 예약 작업 | 실제 설정의 옛 `E:`·개인 PC 경로 0건, 하네스 59 PASS, Gradle help PASS, `%테스트` 191 PASS/기존 3 FAIL | 경로 통일 완료 |
 | 2026-07-27 | 업무용 PC | DBeaver의 `Tomes-Cloud` 개발 DB 연결 복구 | DBeaver 25.0.1 로컬 워크스페이스·MariaDB 3.5.2 드라이버 | 저장 연결 1건, 보안 자격 증명 저장소, `SELECT 1` 통과 | 완료 |
 | 2026-07-28 | 업무용 PC·`&하네스` | 포맷 전 SID로 인한 Codex Windows 샌드박스 초기화 오류 복구 | 작업공간 소유권·ACL, Python 3.14 HKLM 등록, 개인 Codex Temp·Gradle 홈, `artifacts/acl_before_codex_sandbox_fix_2026-07-28.txt` | `workspace` 반복 초기화·실제 쓰기, `read-only`·`.git`·`.codex` 쓰기 차단, 하네스 59 PASS, 제품 build PASS, `%테스트` 191 PASS/기존 3 FAIL | 샌드박스 완료 |
+| 2026-07-28 | 업무용 PC·`&하네스` | Codex `UserPromptSubmit` 훅의 JSON 오인 오류 수정 | `.codex/hooks/context_freshness_gate.py`, `scripts/test_codex_migration.py` | 상태 전이 회귀 테스트 포함 하네스 60 PASS, 실제 훅 JSON 출력·후속 무출력 통과 | 완료 |
 
 ## 검증
 
@@ -131,6 +132,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 - `SetNamedSecurityInfoW failed: 5` 원인을 작업공간의 포맷 전 소유자 SID와 이전 샌드박스 ACE로 확인하고, ACL 복원본 저장 후 현재 사용자 소유권·현재 `CodexSandboxUsers` 상속 ACE로 정규화 — 통과
 - `codex sandbox -P :workspace` 반복 초기화와 별도 `CodexSandboxOffline` 계정 실행·하위 쓰기 — 통과. `:read-only`, `.git`, `.codex` 쓰기 시도 — 정상 차단
 - 샌드박스 계정의 Python 3.14 `py` 인식, 전용 Temp, 격리된 Gradle 캐시 적용 후 하네스 59 PASS·제품 전체 빌드 PASS. `%테스트`는 191 PASS/기존 OSR-173 3 FAIL
+- `UserPromptSubmit` 훅은 `[`로 시작하는 평문을 Codex가 JSON으로 오인해 실패하던 원인을 공식 `hookSpecificOutput.additionalContext` JSON 출력으로 교정했다. 최초 실행 무출력→규칙 변경 후 유효 JSON→재실행 무출력 회귀 테스트와 실제 과거 세션 상태 통합 실행 통과, 하네스 60 PASS
 
 ## 다음 행동
 

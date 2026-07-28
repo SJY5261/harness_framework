@@ -1,6 +1,7 @@
 """Codex-primary migration tests for worklog automation."""
 
 import importlib.util
+import io
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -70,3 +71,45 @@ def test_collect_codex_session_filters_workspace(tmp_path):
     assert len(blocks) == 1
     assert "나: 요청" in blocks[0]
     assert "Codex: 진행" in blocks[0]
+
+
+def test_context_freshness_hook_emits_valid_codex_json_after_rule_change(
+    tmp_path, monkeypatch, capsys
+):
+    hook = _load(
+        "context_freshness_gate",
+        ROOT / ".codex" / "hooks" / "context_freshness_gate.py",
+    )
+    watched = {
+        name: tmp_path / name
+        for name in ("AGENTS.md", "PROJECT_RULES.md", "HANDOFF.md")
+    }
+    for path in watched.values():
+        path.write_text("initial", encoding="utf-8")
+
+    monkeypatch.setattr(hook, "WATCH", watched)
+    monkeypatch.setattr(hook.tempfile, "gettempdir", lambda: str(tmp_path))
+    payload = json.dumps(
+        {
+            "session_id": "hook-contract-test",
+            "turn_id": "turn-1",
+            "hook_event_name": "UserPromptSubmit",
+            "prompt": "test",
+        }
+    )
+
+    monkeypatch.setattr(hook.sys, "stdin", io.StringIO(payload))
+    assert hook.main() == 0
+    assert capsys.readouterr().out == ""
+
+    watched["AGENTS.md"].write_text("changed", encoding="utf-8")
+    monkeypatch.setattr(hook.sys, "stdin", io.StringIO(payload))
+    assert hook.main() == 0
+    output = json.loads(capsys.readouterr().out)
+    hook_output = output["hookSpecificOutput"]
+    assert hook_output["hookEventName"] == "UserPromptSubmit"
+    assert "AGENTS.md" in hook_output["additionalContext"]
+
+    monkeypatch.setattr(hook.sys, "stdin", io.StringIO(payload))
+    assert hook.main() == 0
+    assert capsys.readouterr().out == ""

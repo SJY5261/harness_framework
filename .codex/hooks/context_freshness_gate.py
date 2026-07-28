@@ -61,9 +61,20 @@ def main():
     ]
     if changed:
         files = ", ".join(changed)
-        print(
+        notice = (
             f"[규칙 신선도 알림] 세션 중 변경된 정본: {files}. "
             "해당 규칙에 근거해 판단하기 전에 원본을 다시 읽고 대조하세요."
+        )
+        print(
+            json.dumps(
+                {
+                    "hookSpecificOutput": {
+                        "hookEventName": "UserPromptSubmit",
+                        "additionalContext": notice,
+                    }
+                },
+                ensure_ascii=False,
+            )
         )
     return 0
 

@@ -1,6 +1,6 @@
 # 업무용 PC 복귀 인계
 
-_최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 / 미전달 원본·POP 실기기 검증 대기_
+_최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화면 재검증 완료 / 미전달 원본·POP 실기기 검증 대기_
 
 ## 현재 상태
 
@@ -79,8 +79,8 @@ _최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 /
 | 제품 로컬 커밋 | `%클라우드` HEAD `c0ac256` 포함 16커밋 | push 또는 Git bundle/patch | **완료** — 인증 후 `origin/main`에서 확인, `feature-control-0713` fast-forward |
 | 가공확정 증적 | `logs/가공확정_*` | 관련 로그·JSON·스크린샷 디렉터리 선별 복사 | **부분** — 개인 PC 원본은 미전달, 업무 PC 재검증 증적 신규 생성 |
 | 로컬 실행 설정 | `%클라우드/shell/runDev.local.bat`, `%테스트/.env` 등 | 승인된 보안 매체로 별도 이동 | **완료(현재 환경)** — 기존 비밀값 보존, `D:\harness_framework`·`D:\Tool`·`D:\LOGS` 기준으로 통일하고 서버·Gradle·테스트 경로 확인 |
-| Codex 개인 설정 | 모델·인증·알림·전역 권한 | 저장소에 넣지 않고 업무용 PC에서 별도 설정 | **부분** — 기존 인증·모델 설정 확인, 알림·전역 권한 원본 미전달 |
-| 개발 런타임 | JDK 21, Python, Node, MySQL, Playwright | 업무 PC 사용자 환경 설정 | **완료** — Python 3.14.6·의존성·Chromium 포함, 사용자 `Path`·`PYTHONUTF8=1`과 PowerShell `RemoteSigned` 설정 |
+| Codex 개인 설정 | 모델·인증·알림·전역 권한 | 저장소에 넣지 않고 업무용 PC에서 별도 설정 | **부분** — 기존 인증·모델과 elevated Windows 샌드박스·전용 Temp·Gradle 홈 설정 완료, 알림 원본만 미전달 |
+| 개발 런타임 | JDK 21, Python, Node, MySQL, Playwright | 업무 PC 사용자 환경 설정 | **완료** — Python 3.14.6·의존성·Chromium 포함, 사용자 `Path`·`PYTHONUTF8=1`, 샌드박스용 Python 공용 등록과 PowerShell `RemoteSigned` 설정 |
 | Git/GitHub | Git 작성자·GCM·GitHub CLI | 사용자 설정·브라우저 인증 | **완료** — `SJY5261` 키링 인증, GitHub 전용 credential helper 연결, 하네스 push·제품 fetch 확인 |
 | 작업일지 자동화 | `scripts/run_worklog.bat`, `DailyWorklog` | 현재 경로로 교정 후 평일 17:30 예약 | **완료(로컬)** — dry-run 통과, Notion 토큰은 미전달 |
 
@@ -104,6 +104,7 @@ _최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 /
 | 2026-07-27 | 업무용 PC | 남은 항목 재확인, 개발 실행 경로·JDK 보정, 가공확정 실화면 재검증 | `runDev.local.bat`, `logs/가공확정_업무PC재검증_2026-07-27.json` | 서버·DB 연결, 기존 확정 자동화 1건, 재구성한 화면 4건 통과 | 실화면 완료·POP 실기기 대기 |
 | 2026-07-27 | 업무용 PC | 수리 후 `C:`, `D:` 두 드라이브 환경에 맞춰 프로젝트 관련 경로 전수 정리 | 하네스·제품·테스트 보조 설정, 환경 변수, Git, 편집기, 예약 작업 | 실제 설정의 옛 `E:`·개인 PC 경로 0건, 하네스 59 PASS, Gradle help PASS, `%테스트` 191 PASS/기존 3 FAIL | 경로 통일 완료 |
 | 2026-07-27 | 업무용 PC | DBeaver의 `Tomes-Cloud` 개발 DB 연결 복구 | DBeaver 25.0.1 로컬 워크스페이스·MariaDB 3.5.2 드라이버 | 저장 연결 1건, 보안 자격 증명 저장소, `SELECT 1` 통과 | 완료 |
+| 2026-07-28 | 업무용 PC·`&하네스` | 포맷 전 SID로 인한 Codex Windows 샌드박스 초기화 오류 복구 | 작업공간 소유권·ACL, Python 3.14 HKLM 등록, 개인 Codex Temp·Gradle 홈, `artifacts/acl_before_codex_sandbox_fix_2026-07-28.txt` | `workspace` 반복 초기화·실제 쓰기, `read-only`·`.git`·`.codex` 쓰기 차단, 하네스 59 PASS, 제품 build PASS, `%테스트` 191 PASS/기존 3 FAIL | 샌드박스 완료 |
 
 ## 검증
 
@@ -127,11 +128,14 @@ _최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 /
 - POP 바코드 실기기 — 연결 장치 중 식별 가능한 스캐너가 없어 미실행
 - 세 저장소의 실행 설정, 환경 변수, Git safe.directory, VS Code·터미널, 예약 작업, 바로가기, 서비스, SourceTree에서 옛 `E:`와 개인 PC 루트 재검색 — 실제 사용 설정 0건
 - `D:\harness_framework`, `D:\Tool`, `D:\LOGS` 대상 존재 여부와 Git Bash `/d/` 경로 확인 — 통과
+- `SetNamedSecurityInfoW failed: 5` 원인을 작업공간의 포맷 전 소유자 SID와 이전 샌드박스 ACE로 확인하고, ACL 복원본 저장 후 현재 사용자 소유권·현재 `CodexSandboxUsers` 상속 ACE로 정규화 — 통과
+- `codex sandbox -P :workspace` 반복 초기화와 별도 `CodexSandboxOffline` 계정 실행·하위 쓰기 — 통과. `:read-only`, `.git`, `.codex` 쓰기 시도 — 정상 차단
+- 샌드박스 계정의 Python 3.14 `py` 인식, 전용 Temp, 격리된 Gradle 캐시 적용 후 하네스 59 PASS·제품 전체 빌드 PASS. `%테스트`는 191 PASS/기존 OSR-173 3 FAIL
 
 ## 다음 행동
 
 1. 개인 PC의 `logs/가공확정_*` 원본 증적이 남아 있다면 선별 전달해 업무 PC 재검증 항목과 대조한다.
-2. 개인 Codex 알림·전역 권한의 실제 값을 승인된 보안 매체로 전달한다.
+2. 개인 Codex 알림 원본이 필요하면 승인된 보안 매체로 전달한다.
 3. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
 4. POP 바코드 스캐너를 연결한 뒤 실제 입력과 후속 상태 반영을 검증한다.
 5. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
@@ -139,7 +143,7 @@ _최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 /
 ## 블로커·위험
 
 - 가공확정 재확정 수정 2개 파일을 포함한 제품 로컬 변경은 미커밋 상태이므로 커밋 전까지 작업트리를 보존해야 한다. `c0ac256` fast-forward 직전 tracked 상태는 제품 `stash@{0}`에도 안전 백업했다.
-- 개인 PC의 가공확정 원본 증적과 Codex 알림·전역 권한 값은 전달 폴더에 없다. 업무 PC 재검증 증적은 `logs/가공확정_업무PC재검증_2026-07-27.json`에 새로 남겼다.
+- 개인 PC의 가공확정 원본 증적과 Codex 알림 원본은 전달 폴더에 없다. 전역 샌드박스 권한은 업무 PC에서 재구성했고, 화면 재검증 증적은 `logs/가공확정_업무PC재검증_2026-07-27.json`에 새로 남겼다.
 - 과거 문서·로그·검증 산출물에는 당시 사용한 `E:` 경로가 남아 있다. 실행 설정과 구분되는 이력이므로 일괄 치환하지 않았다.
 - `%테스트`의 `tests/test_osr173_size_type_change.py`는 `CD-FT-OSR-173.json`에 없는 `assert_eval` 레시피를 요구해 3개가 실패한다. 환경 실패가 아니라 커밋된 계획 데이터 불일치다.
 - 운영 DB 메뉴 비활성은 아직 미적용이다. 적용 시 백업·트랜잭션·검증 SELECT 후 사용자 확인을 받고 COMMIT해야 한다.
@@ -152,4 +156,5 @@ _최종 갱신: 2026-07-27 / 상태: 주요 복구·실화면 재검증 완료 /
 - `logs/가공확정_S53R14_소비처조사_2026-07-23.md`
 - `logs/가공확정_재확정검증_2026-07-24/`
 - `logs/가공확정_업무PC재검증_2026-07-27.json`
+- `artifacts/acl_before_codex_sandbox_fix_2026-07-28.txt`
 - `PATHS.md`

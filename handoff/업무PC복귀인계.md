@@ -1,6 +1,6 @@
 # 업무용 PC 복귀 인계
 
-_최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화면 재검증 완료 / 미전달 원본·POP 실기기 검증 대기_
+_최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 훅 실검증 완료 / DB TLS 결정·Codex 전수 재감사·미전달 원본·POP 실기기 검증 대기_
 
 ## 현재 상태
 
@@ -27,6 +27,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 - 하네스 실행기와 일일 작업일지 요약의 기본 호출을 `codex exec`로 전환했다.
 - 세컨브레인 구조, 경로 문서, 활성 handoff 인덱스와 진행 안내를 Codex 기준으로 정리했다.
 - 관련 테스트는 최종 59개 통과했고 Python 컴파일, 설정 파싱, phase 컨텍스트 경로 검사를 통과했다.
+- 이후 발견된 `UserPromptSubmit` 평문/JSON 오인 결함은 커밋 `185d9ae`에서 수정했으며, 상태 전이 테스트를 포함한 하네스 60개와 실제 다음 프롬프트 수명주기 검증이 통과했다. Codex 전체 런타임 호환성은 별도 전수 재감사 대기다.
 
 업무용 PC에서 받아야 할 `&하네스` 커밋:
 
@@ -70,6 +71,17 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 
 상세 정본: `handoff/가공확정.md`
 
+### 3. 개발 DB TLS와 로컬 MariaDB 설정
+
+상태: **원인 조사 완료 / 변경 결정 대기**
+
+- 개발 DB 서버는 MariaDB `10.11.15`이며 `have_ssl=DISABLED`, `require_secure_transport=OFF`, 세션 `Ssl_cipher`·`Ssl_version`이 빈 값이다.
+- `%클라우드`는 MariaDB Connector/J `3.5.7`을 사용하지만 develop/local/production JDBC URL 모두 `sslMode`가 없어 기본값 `disable`로 연결한다.
+- 따라서 CLI 경고만의 문제가 아니라 현재 원격 개발 DB 연결은 실제 비암호화 상태다.
+- MariaDB 11.4 CLI 경고는 `MYSQL_PWD`로 전달한 비밀번호가 CLI의 사전 `opt_password` 검사에 포함되지 않아 인증서 검증을 끄는 경로에서 발생한다. `--skip-ssl`은 경고만 없애며 연결을 보호하지 않는다.
+- `D:\Tool\mariaDB\data\my.ini`의 `plugin-dir=E:\Tool\mariaDB/lib/plugin`은 포맷 전 잔존 경로다. 실제 플러그인 디렉터리는 `D:\Tool\mariaDB\lib\plugin`이며, 현재 인증은 외부 플러그인을 쓰지 않아 접속됐지만 다른 인증 플러그인 사용 시 장애 위험이 있다.
+- TLS 해결에는 서버 인증서·TLS 활성화와 DB 재시작, 인증서/CA 배포, JDBC `sslMode=verify-full` 적용 및 다른 클라이언트 회귀 검증이 필요하다. 서버·클라이언트 영향이 있어 사용자 결정 전에는 변경하지 않았다.
+
 ## PC 이동 대상
 
 | 구분 | 대상 | 전달 방식 | 업무용 PC 반영 |
@@ -106,6 +118,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 | 2026-07-27 | 업무용 PC | DBeaver의 `Tomes-Cloud` 개발 DB 연결 복구 | DBeaver 25.0.1 로컬 워크스페이스·MariaDB 3.5.2 드라이버 | 저장 연결 1건, 보안 자격 증명 저장소, `SELECT 1` 통과 | 완료 |
 | 2026-07-28 | 업무용 PC·`&하네스` | 포맷 전 SID로 인한 Codex Windows 샌드박스 초기화 오류 복구 | 작업공간 소유권·ACL, Python 3.14 HKLM 등록, 개인 Codex Temp·Gradle 홈, `artifacts/acl_before_codex_sandbox_fix_2026-07-28.txt` | `workspace` 반복 초기화·실제 쓰기, `read-only`·`.git`·`.codex` 쓰기 차단, 하네스 59 PASS, 제품 build PASS, `%테스트` 191 PASS/기존 3 FAIL | 샌드박스 완료 |
 | 2026-07-28 | 업무용 PC·`&하네스` | Codex `UserPromptSubmit` 훅의 JSON 오인 오류 수정 | `.codex/hooks/context_freshness_gate.py`, `scripts/test_codex_migration.py` | 상태 전이 회귀 테스트 포함 하네스 60 PASS, 실제 훅 JSON 출력·후속 무출력 통과 | 완료 |
+| 2026-07-28 | 업무용 PC·`&하네스`·개발 DB | 훅 실제 프롬프트 수명주기 확인 및 DB TLS/로컬 MariaDB 경로 조사 | 커밋 `185d9ae`, `D:\Tool\mariaDB\data\my.ini`, JDBC 설정 | 규칙 변경 후 다음 프롬프트 정상 컨텍스트 주입, 서버 TLS 상태·Connector/J 3.5.7 확인 | 조사 완료·변경 결정 대기 |
 
 ## 검증
 
@@ -133,14 +146,19 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 - `codex sandbox -P :workspace` 반복 초기화와 별도 `CodexSandboxOffline` 계정 실행·하위 쓰기 — 통과. `:read-only`, `.git`, `.codex` 쓰기 시도 — 정상 차단
 - 샌드박스 계정의 Python 3.14 `py` 인식, 전용 Temp, 격리된 Gradle 캐시 적용 후 하네스 59 PASS·제품 전체 빌드 PASS. `%테스트`는 191 PASS/기존 OSR-173 3 FAIL
 - `UserPromptSubmit` 훅은 `[`로 시작하는 평문을 Codex가 JSON으로 오인해 실패하던 원인을 공식 `hookSpecificOutput.additionalContext` JSON 출력으로 교정했다. 최초 실행 무출력→규칙 변경 후 유효 JSON→재실행 무출력 회귀 테스트와 실제 과거 세션 상태 통합 실행 통과, 하네스 60 PASS
+- 수정 커밋 이후 `AGENTS.md`·`HANDOFF.md` 변경을 감지한 실제 다음 사용자 프롬프트에서 오류 없이 규칙 신선도 컨텍스트 주입 — 통과
+- 개발 DB 기본 연결과 명시적 비SSL 연결에서 모두 서버 `have_ssl=DISABLED`, 세션 TLS cipher/version 없음 확인. Connector/J 3.5.7과 세 프로필 JDBC URL의 `sslMode` 부재 확인 — 조사 완료
 
 ## 다음 행동
 
-1. 개인 PC의 `logs/가공확정_*` 원본 증적이 남아 있다면 선별 전달해 업무 PC 재검증 항목과 대조한다.
-2. 개인 Codex 알림 원본이 필요하면 승인된 보안 매체로 전달한다.
-3. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
-4. POP 바코드 스캐너를 연결한 뒤 실제 입력과 후속 상태 반영을 검증한다.
-5. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
+1. 새 세션에서 `handoff/Codex주에이전트전환.md`의 다음 단계대로 `.codex` 훅·설정·실행기·자동화와 `.claude` 잔존 의존성을 실제 호출 경로 기준으로 전수 재감사한다.
+2. 개발 DB TLS를 유지하지 않을지, 서버 인증서·TLS 활성화와 JDBC `sslMode=verify-full`까지 적용할지 결정한다.
+3. `D:\Tool\mariaDB\data\my.ini`의 `plugin-dir`을 `E:`에서 `D:`로 교정할지 결정한다.
+4. Gradle 의존성 조회에서 확인된 Gradle 9 비호환 deprecated feature 경고를 별도 감사할지 결정한다.
+5. 개인 PC의 `logs/가공확정_*` 원본 증적이 남아 있다면 선별 전달해 업무 PC 재검증 항목과 대조한다.
+6. `%테스트`의 OSR-173 계획 파일과 테스트 기대값 불일치를 별도 저장소 결함으로 정리한다.
+7. POP 바코드 스캐너를 연결한 뒤 실제 입력과 후속 상태 반영을 검증한다.
+8. 위 항목 완료 후 표를 완료로 바꾸고 이 문서를 보관 처리한다.
 
 ## 블로커·위험
 
@@ -150,6 +168,9 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 샌드박스·실화�
 - `%테스트`의 `tests/test_osr173_size_type_change.py`는 `CD-FT-OSR-173.json`에 없는 `assert_eval` 레시피를 요구해 3개가 실패한다. 환경 실패가 아니라 커밋된 계획 데이터 불일치다.
 - 운영 DB 메뉴 비활성은 아직 미적용이다. 적용 시 백업·트랜잭션·검증 SELECT 후 사용자 확인을 받고 COMMIT해야 한다.
 - `%테스트/.env`, `application-local.yml`, `runDev.local.bat` 등에는 비밀이 있을 수 있어 일반 문서나 Git으로 옮기면 안 된다.
+- 개발 DB는 공인 IP TCP 연결인데 서버 TLS가 비활성이고 애플리케이션도 `sslMode=disable` 상태다. 개발 DB라도 자격 증명 이후의 SQL·결과가 네트워크에서 노출·변조될 수 있으므로 TLS 적용 여부를 명시적으로 결정해야 한다.
+- 로컬 MariaDB `plugin-dir`은 존재하지 않는 `E:` 경로를 가리킨다. 현재 접속 성공만으로 정상 설정으로 간주하지 않는다.
+- Gradle `dependencyInsight`는 성공했지만 Gradle 9에서 호환되지 않을 deprecated feature 사용 경고를 냈다. 이번 조사에서 원인 옵션까지는 분해하지 않았다.
 
 ## 관련 경로
 

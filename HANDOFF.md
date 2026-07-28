@@ -20,7 +20,8 @@ _최종 갱신: 2026-07-28_
 
 ## 활성 작업
 
-- [업무PC복귀인계] **주요 복구·Codex 샌드박스·UserPromptSubmit 훅·실화면 재검증 완료 / 미전달 원본·POP 실기기 대기** — GitHub 인증과 하네스 push, 제품 HEAD `c0ac256` 동기화, 가공확정 제품 파일 2개, 개발 런타임·경로·DailyWorklog와 Windows `workspace` 샌드박스 복구 완료. Codex 훅은 공식 JSON 출력으로 교정하고 상태 전이 테스트를 추가했다. 하네스 60 PASS, 제품 빌드 PASS, `%테스트` 191 PASS/기존 계획 불일치 3 FAIL. 개인 PC의 원본 증적·Codex 알림 원본과 POP 스캐너 실기기 검증은 대기 — [상세](handoff/업무PC복귀인계.md)
+- [Codex주에이전트전환] **주 전환·UserPromptSubmit 수정 및 실제 수명주기 검증 완료 / 전체 런타임 재감사 대기** — 훅 평문이 `[`로 시작해 JSON으로 오인되던 결함을 공식 `hookSpecificOutput.additionalContext` 출력으로 교정하고 상태 전이 테스트·실제 다음 프롬프트 주입까지 통과했다. 최초 전환 검증이 상태 전이와 출력 계약을 놓쳤으므로 `.codex` 전체와 `.claude` 잔존 의존성을 실제 호출 경로 기준으로 다시 감사해야 함 — [상세](handoff/Codex주에이전트전환.md)
+- [업무PC복귀인계] **주요 복구·Codex 훅·실화면 재검증 완료 / 개발 DB TLS 결정·미전달 원본·POP 실기기 대기** — 개발 런타임·경로·Windows `workspace` 샌드박스 복구와 Codex 훅 상태 전이 검증을 완료했다. 개발 DB 서버는 TLS가 비활성이고 Connector/J도 기본 비SSL 연결이며, 로컬 MariaDB 설정에는 존재하지 않는 `E:` 플러그인 경로가 남아 있어 적용 방침 결정이 필요하다. 하네스 60 PASS, 제품 빌드 PASS, `%테스트` 191 PASS/기존 계획 불일치 3 FAIL — [상세](handoff/업무PC복귀인계.md)
 - [가공확정] **KAN-63 / KAN-6 구현·빌드 완료, KAN-35 DB 반영 완료, KAN-38 화면 확정 전 보류** — 재확정 예외를 작업트리에 복원하고 작업상세정보의 가공확정 일시·진행상태 표시를 제거했다. 제조원가 분석 메뉴 8행은 영구 백업 후 숨김 처리·검증·COMMIT 완료. 작업지시 현황추적 화면은 사용자 결정에 따라 정확한 화면 사양이 확정될 때까지 구현하지 않음 — [상세](handoff/가공확정.md)
 - [단가검토] **사용자 결정 대기** — 단가입력 개편 검증 완료. 배송비 컬럼명·견적→주문 복사 여부 결정 후 DDL 및 기록조회 후속 작업 — [상세](handoff/단가검토.md)
 - [DB결함] **구현·제품 브랜치 push·PR 리뷰 3종 완료 / 독립 검토 대기** — 시드, 수동입력 차단, CONTROL_NUM 보정, 프로시저 동시성 가드 적용. `%클라우드` 커밋 `88bf7dc`를 `origin/feature-control-0713`에 push했고, `Desktop\PR\[07.28 DB결함 수정 리뷰]`에 MD·HTML·Codex Sites URL을 모두 생성했다. Sites 버전 7은 현재 사용자 1명만 허용한 상태로 배포 완료. 고위험 DB 변경 검토 상태는 상세 문서 기준 — [상세](handoff/DB결함.md)

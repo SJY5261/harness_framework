@@ -163,7 +163,7 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - 훅 JSON 파싱·Python 컴파일·제품 하위 경로 직접 실행은 통과했다.
 - 신규 Windows 실실행 테스트를 포함한 `scripts/test_codex_migration.py`는 `6 passed`, 하네스 전체는 `70 passed`다. 최초 pytest는 기존 샌드박스 Temp ACL과 전용 임시 폴더 부모 누락으로 fixture 설정이 두 차례 실패했으며, 저장소 내부 전용 임시 경로를 명시하고 제가 만든 임시 폴더만 제거한 재실행에서 통과했다.
 - 사용자 `Path`에서 Codex·Python·`py`·GitHub CLI·Claude Code·VS Code가 모두 D:로 해석되고, D: Codex doctor는 `17 ok / 0 warn / 0 fail`이다.
-- Python 3.14.6은 공식 설치본 해시 검증 후 D:로 재등록했고 기존 74개 패키지를 보존했다. C: 잔여 8,747개 파일은 D:와 바이트 단위로 같음을 확인한 뒤 제거했으며, GitHub CLI C: 패키지도 D: 실행 검증 후 제거했다.
+- Python 3.14.6은 공식 설치본 해시 검증 후 D:로 재등록했고 기존 74개 패키지를 보존했다. C: 잔여 8,747개 파일은 D:와 바이트 단위로 같음을 확인한 뒤 제거했으며, GitHub CLI C: 패키지 제거 후 Git credential helper도 D: 경로로 바꿔 원격 조회를 재검증했다.
 - Claude Code 실파일은 D:로 옮기고 공식 고정 업데이트 경로에는 D: 대상 junction을 뒀다. 실행 중인 C: Codex와 SourceTree는 로그인 자동 작업에서 재검증 후 정리한다.
 - `D:\Tool`에는 현재 사용자 수정 권한을 상속 적용해 이후 D: 설치·업데이트가 관리자 소유 ACL로 막히지 않게 했다.
 

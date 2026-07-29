@@ -1,6 +1,6 @@
 # 업무용 PC 복귀 인계
 
-_최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 훅 실검증 완료 / DB TLS 결정·Codex 전수 재감사·미전달 원본·POP 실기기 검증 대기_
+_최종 갱신: 2026-07-29 / 상태: 주요 복구·Codex 훅 실검증 완료 / DB TLS 결정·Codex 전수 재감사·미전달 원본 대기·POP 실기기 검증 보류_
 
 ## 현재 상태
 
@@ -61,7 +61,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 훅 실검증 완료 /
 | `Projects/Tomes-Cloud/src/main/webapp/resource/modules/pages/order/control-manage.js` | 동일한 재확정 예외를 작업지시관리 화면에 적용 |
 
 - 정적 문법 검사와 개인 PC의 dev 실화면 4개 케이스가 통과했다. 개인 PC 원본 증적은 미전달이지만, 업무 PC에서 현재 수정 조건을 기준으로 네 가지를 재구성해 다시 통과했다.
-- 실제 POP 바코드 스캔 실기기 확인은 하지 않았다.
+- 실제 POP 바코드 스캔 실기기 확인은 하지 않았으며, 2026-07-29 사용자 결정으로 검증을 보류했다.
 - 다음 구현 순서는 KAN-6 → KAN-35 → KAN-38이다.
 
 개인 PC 기준 `%클라우드` HEAD `c0ac256`은 GitHub 인증 후 `origin/main`에서 확인됐다.
@@ -113,7 +113,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 훅 실검증 완료 /
 | 2026-07-27 | 업무용 PC | 하네스 동기화, 제품 2파일 병합, Git safe.directory 3개와 JDK 21 사용자 환경 설정 | `536f9a1`, 기록 커밋 `accadf2`(로컬), 제품 JSP/JS 2개 | 하네스 HEAD·제품 diff·JS 문법·설정값 확인 | 부분 완료 |
 | 2026-07-27 | 업무용 PC | 포맷 후 개발 환경 복구 | Python 3.14.6, GitHub CLI, Playwright Chromium, `%테스트/.env`, `run_worklog.bat`, `DailyWorklog`, `D:\GITHUB\tomes-cloud-v1-master` junction | 하네스 59 PASS, 제품 build PASS, Playwright PASS, `%테스트` 191 PASS/3 FAIL | 부분 완료 |
 | 2026-07-27 | 업무용 PC | GitHub 인증과 원격 동기화, Python UTF-8 복구 | 하네스 `801528f` push, 제품 `c0ac256` fast-forward, `PYTHONUTF8=1` | GitHub API·Git 원격 읽기, 제품 build, 하네스 59 PASS, 로컬 변경 목록 보존 확인 | 주요 복구 완료 |
-| 2026-07-27 | 업무용 PC | 남은 항목 재확인, 개발 실행 경로·JDK 보정, 가공확정 실화면 재검증 | `runDev.local.bat`, `logs/가공확정_업무PC재검증_2026-07-27.json` | 서버·DB 연결, 기존 확정 자동화 1건, 재구성한 화면 4건 통과 | 실화면 완료·POP 실기기 대기 |
+| 2026-07-27 | 업무용 PC | 남은 항목 재확인, 개발 실행 경로·JDK 보정, 가공확정 실화면 재검증 | `runDev.local.bat`, `logs/가공확정_업무PC재검증_2026-07-27.json` | 서버·DB 연결, 기존 확정 자동화 1건, 재구성한 화면 4건 통과 | 실화면 완료·POP 실기기 사용자 보류 |
 | 2026-07-27 | 업무용 PC | 수리 후 `C:`, `D:` 두 드라이브 환경에 맞춰 프로젝트 관련 경로 전수 정리 | 하네스·제품·테스트 보조 설정, 환경 변수, Git, 편집기, 예약 작업 | 실제 설정의 옛 `E:`·개인 PC 경로 0건, 하네스 59 PASS, Gradle help PASS, `%테스트` 191 PASS/기존 3 FAIL | 경로 통일 완료 |
 | 2026-07-27 | 업무용 PC | DBeaver의 `Tomes-Cloud` 개발 DB 연결 복구 | DBeaver 25.0.1 로컬 워크스페이스·MariaDB 3.5.2 드라이버 | 저장 연결 1건, 보안 자격 증명 저장소, `SELECT 1` 통과 | 완료 |
 | 2026-07-28 | 업무용 PC·`&하네스` | 포맷 전 SID로 인한 Codex Windows 샌드박스 초기화 오류 복구 | 작업공간 소유권·ACL, Python 3.14 HKLM 등록, 개인 Codex Temp·Gradle 홈, `artifacts/acl_before_codex_sandbox_fix_2026-07-28.txt` | `workspace` 반복 초기화·실제 쓰기, `read-only`·`.git`·`.codex` 쓰기 차단, 하네스 59 PASS, 제품 build PASS, `%테스트` 191 PASS/기존 3 FAIL | 샌드박스 완료 |
@@ -139,7 +139,7 @@ _최종 갱신: 2026-07-28 / 상태: 주요 복구·Codex 훅 실검증 완료 /
 - dev 서버 `local` 프로필·DB 연결과 기존 작업지시확정 자동화 `CD-FT-CTL-032` — 통과
 - DBeaver 25.0.1 `Tomes-Cloud` 연결·MariaDB 3.5.2 드라이버·보안 자격 증명 저장 후 `SELECT 1` — 통과
 - 개인 PC 원본 증적은 찾지 못해 수정된 두 화면의 허용·차단 조건으로 네 가지를 재구성해 실화면 검증 — 4개 통과, 실제 저장 요청은 차단
-- POP 바코드 실기기 — 연결 장치 중 식별 가능한 스캐너가 없어 미실행
+- POP 바코드 실기기 — 연결 장치 중 식별 가능한 스캐너가 없어 미실행, 2026-07-29 사용자 결정으로 보류
 - 세 저장소의 실행 설정, 환경 변수, Git safe.directory, VS Code·터미널, 예약 작업, 바로가기, 서비스, SourceTree에서 옛 `E:`와 개인 PC 루트 재검색 — 실제 사용 설정 0건
 - `D:\harness_framework`, `D:\Tool`, `D:\LOGS` 대상 존재 여부와 Git Bash `/d/` 경로 확인 — 통과
 - `SetNamedSecurityInfoW failed: 5` 원인을 작업공간의 포맷 전 소유자 SID와 이전 샌드박스 ACE로 확인하고, ACL 복원본 저장 후 현재 사용자 소유권·현재 `CodexSandboxUsers` 상속 ACE로 정규화 — 통과

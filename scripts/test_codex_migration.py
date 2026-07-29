@@ -4,9 +4,12 @@ import importlib.util
 import io
 import json
 import os
+import subprocess
 import datetime as dt
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 
 ROOT = Path(__file__).parent.parent
@@ -159,3 +162,40 @@ def test_codex_hook_resolves_script_from_workspace_ancestor():
     assert "dirname" in handler["command"]
     assert "context_freshness_gate.py" in handler["commandWindows"]
     assert "Split-Path -Parent" in handler["commandWindows"]
+    assert not handler["commandWindows"].lstrip().lower().startswith("powershell")
+
+
+def test_codex_windows_hook_command_runs_from_nested_workspace(tmp_path):
+    if os.name != "nt":
+        pytest.skip("Windows command hook contract")
+
+    config = json.loads((ROOT / ".codex" / "hooks.json").read_text(encoding="utf-8"))
+    handler = config["hooks"]["UserPromptSubmit"][0]["hooks"][0]
+    payload = json.dumps(
+        {
+            "session_id": "hook-windows-command-test",
+            "turn_id": "turn-1",
+            "hook_event_name": "UserPromptSubmit",
+            "prompt": "test",
+        }
+    )
+    env = os.environ.copy()
+    env["TEMP"] = str(tmp_path)
+    env["TMP"] = str(tmp_path)
+
+    result = subprocess.run(
+        ["powershell.exe", "-NoProfile", "-Command", handler["commandWindows"]],
+        cwd=ROOT / "Projects" / "Tomes-Cloud",
+        input=payload,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+        env=env,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == ""
+    assert (tmp_path / "tomes_codex_rules_hook-windows-command-test.json").is_file()

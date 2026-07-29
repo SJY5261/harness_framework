@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "root=\"$PWD\"; while [ \"$root\" != \"/\" ]; do hook=\"$root/.codex/hooks/context_freshness_gate.py\"; if [ -f \"$hook\" ]; then exec python3 \"$hook\"; fi; root=\"$(dirname \"$root\")\"; done; exit 1",
-            "commandWindows": "powershell -NoProfile -Command \"$dir = (Get-Location).Path; while ($dir) { $hook = Join-Path $dir '.codex/hooks/context_freshness_gate.py'; if (Test-Path -LiteralPath $hook) { & py $hook; exit $LASTEXITCODE }; $parent = Split-Path -Parent $dir; if (-not $parent -or $parent -eq $dir) { break }; $dir = $parent }; exit 1\"",
+            "commandWindows": "$dir = (Get-Location).Path; while ($dir) { $hook = Join-Path $dir '.codex/hooks/context_freshness_gate.py'; if (Test-Path -LiteralPath $hook) { & py -3 -X utf8 $hook; exit $LASTEXITCODE }; $parent = Split-Path -Parent $dir; if (-not $parent -or $parent -eq $dir) { break }; $dir = $parent }; exit 1",
             "timeout": 10,
             "statusMessage": "Checking repository rule freshness"
           }

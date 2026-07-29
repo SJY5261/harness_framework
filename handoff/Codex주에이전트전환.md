@@ -133,12 +133,45 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - 새 PC·새 clone에서는 `py scripts/install_git_hooks.py`를 한 번 실행한다. 훅 실패는 `--no-verify`로 우회하지 않는다.
 - 기존 공개 이력의 원격 DB 자격증명은 별도 교체가 필요하다. 이력 재작성과 force-push는 수행하지 않았다.
 
+## 2026-07-29 Windows 훅·Codex 설치 경로 정리
+
+### 현상
+
+- `UserPromptSubmit`마다 `hook exited with code 1`이 반복됐다.
+- Codex CLI가 C: `0.145.0`과 D: `0.144.6`에 중복 설치돼 사용자 `Path`에서 C:가 D:보다 먼저 선택됐다.
+
+### 원인
+
+- Codex가 Windows `commandWindows`를 PowerShell로 실행하는데 `.codex/hooks.json`이 다시 `powershell -NoProfile -Command`를 호출했다. 이중 PowerShell에서 `$dir`, `$hook` 변수가 바깥 셸에 먼저 확장돼 사라지고 경로 탐색의 마지막 `exit 1`로 종료됐다.
+- D: npm 전역 경로는 맞았지만 `D:\Tool\nodejs\node_modules\@openai`가 관리자 소유·일반 사용자 읽기 전용 ACL이라 일반 npm 갱신이 `EPERM`으로 실패했다.
+
+### 해결
+
+- `commandWindows`에서 중첩 `powershell -NoProfile -Command`를 제거하고 `py -3 -X utf8`로 훅 스크립트를 직접 실행하게 했다.
+- 문자열 포함 검사에 더해 Codex와 동일하게 PowerShell로 `commandWindows`를 실행하고, 제품 하위 경로에서 종료 코드 0·무출력·상태 파일 생성을 확인하는 Windows 회귀 테스트를 추가했다.
+- D: Codex를 UAC 관리자 설치로 `0.145.0`에 맞추고 사용자 `Path`에서 C:의 루트·shim 두 항목을 제거해 `D:\Tool\nodejs`만 남겼다.
+- 현재 대화를 포함한 C: 기반 프로세스를 강제 종료하지 않도록, 해당 프로세스들이 종료된 직후 정확한 C: 설치 루트만 삭제하는 숨김 정리 작업을 등록했다. 결과 로그는 `D:\LOGS\codex-c-install-cleanup-20260729.log`다.
+
+### 채택 이유
+
+- 훅 명령 본문과 Codex의 셸 책임을 분리하면 Windows 변수의 이중 확장을 없애면서 기존 상위 경로 탐색 동작을 유지할 수 있다.
+- D: 버전을 현재 사용하던 C:와 동일하게 맞춰 설치 위치만 바꾸고 기능 버전 변경은 피했다.
+- 실행 중인 CLI를 즉시 삭제하거나 종료하는 대신 종료 후 삭제해 현재 세션과 다른 열린 Codex 세션의 데이터 손실 위험을 피했다.
+
+### 결과
+
+- 훅 JSON 파싱·Python 컴파일·제품 하위 경로 직접 실행은 통과했다.
+- 신규 Windows 실실행 테스트를 포함한 `scripts/test_codex_migration.py`는 `6 passed`, 하네스 전체는 `70 passed`다. 최초 pytest는 기존 샌드박스 Temp ACL과 전용 임시 폴더 부모 누락으로 fixture 설정이 두 차례 실패했으며, 저장소 내부 전용 임시 경로를 명시하고 제가 만든 임시 폴더만 제거한 재실행에서 통과했다.
+- D: 패키지 메타데이터와 직접 실행이 모두 `0.145.0`, C: 항목을 제외한 새 사용자 `Path`에서 `codex` 해석 결과가 `D:\Tool\nodejs\codex.ps1`임을 확인했다.
+- C: 설치 루트는 이 기록 시점에 실행 중인 세션 때문에 존재하며, 세션 종료 후 자동 삭제 및 로그 확인이 남아 있다.
+
 ## 다음 단계
 
 - [x] 관련 Python 컴파일·테스트·훅 하위 경로 실행을 검증한다.
 - [x] 문서 링크·인코딩·크기와 최종 diff를 검증한다.
 - [ ] 변경된 Codex 훅 정의가 다음 세션에서 신뢰 재확인을 요구하면 `/hooks`에서 검토한다.
 - [ ] `.claude/skills/`의 grilling 자산 정리는 Claude 세션에서 별도로 수행한다.
+- [ ] 다음 Codex 세션에서 C: 설치 루트가 사라졌고 `D:\LOGS\codex-c-install-cleanup-20260729.log`가 `removed`인지 확인한다.
 
 ## 블로커·주의
 

@@ -147,7 +147,7 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 
 ### 해결
 
-- `commandWindows`에서 중첩 `powershell -NoProfile -Command`를 제거하고 `py -3 -X utf8`로 훅 스크립트를 직접 실행하게 했다.
+- `commandWindows`에서 중첩 `powershell -NoProfile -Command`를 제거하고 D: 정본 `D:\Tool\Python\Launcher\py.exe`로 훅 스크립트를 직접 실행하게 했다.
 - 문자열 포함 검사에 더해 Codex와 동일하게 PowerShell로 `commandWindows`를 실행하고, 제품 하위 경로에서 종료 코드 0·무출력·상태 파일 생성을 확인하는 Windows 회귀 테스트를 추가했다.
 - D: Codex를 UAC 관리자 설치로 `0.145.0`에 맞추고 사용자 `Path`에서 C:의 루트·shim 두 항목을 제거해 `D:\Tool\nodejs`만 남겼다.
 - 현재 대화를 포함한 C: 기반 프로세스를 강제 종료하지 않도록, 해당 프로세스들이 종료된 직후 정확한 C: 설치 루트만 삭제하는 숨김 정리 작업을 등록했다. 결과 로그는 `D:\LOGS\codex-c-install-cleanup-20260729.log`다.
@@ -162,8 +162,10 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 
 - 훅 JSON 파싱·Python 컴파일·제품 하위 경로 직접 실행은 통과했다.
 - 신규 Windows 실실행 테스트를 포함한 `scripts/test_codex_migration.py`는 `6 passed`, 하네스 전체는 `70 passed`다. 최초 pytest는 기존 샌드박스 Temp ACL과 전용 임시 폴더 부모 누락으로 fixture 설정이 두 차례 실패했으며, 저장소 내부 전용 임시 경로를 명시하고 제가 만든 임시 폴더만 제거한 재실행에서 통과했다.
-- D: 패키지 메타데이터와 직접 실행이 모두 `0.145.0`, C: 항목을 제외한 새 사용자 `Path`에서 `codex` 해석 결과가 `D:\Tool\nodejs\codex.ps1`임을 확인했다.
-- C: 설치 루트는 이 기록 시점에 실행 중인 세션 때문에 존재하며, 세션 종료 후 자동 삭제 및 로그 확인이 남아 있다.
+- 사용자 `Path`에서 Codex·Python·`py`·GitHub CLI·Claude Code·VS Code가 모두 D:로 해석되고, D: Codex doctor는 `17 ok / 0 warn / 0 fail`이다.
+- Python 3.14.6은 공식 설치본 해시 검증 후 D:로 재등록했고 기존 74개 패키지를 보존했다. C: 잔여 8,747개 파일은 D:와 바이트 단위로 같음을 확인한 뒤 제거했으며, GitHub CLI C: 패키지도 D: 실행 검증 후 제거했다.
+- Claude Code 실파일은 D:로 옮기고 공식 고정 업데이트 경로에는 D: 대상 junction을 뒀다. 실행 중인 C: Codex와 SourceTree는 로그인 자동 작업에서 재검증 후 정리한다.
+- `D:\Tool`에는 현재 사용자 수정 권한을 상속 적용해 이후 D: 설치·업데이트가 관리자 소유 ACL로 막히지 않게 했다.
 
 ## 2026-07-29 훅 신뢰 상태 반복 경고 해소
 
@@ -191,6 +193,7 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - 새 0.145.0 app-server에서 `enabled: true`, `trustStatus: trusted`, 현재 해시 일치를 확인했다.
 - 훅 스크립트 Python 컴파일과 직접 실행은 종료 코드 0, 관련 회귀 테스트는 저장소 내부 전용 임시 경로에서 `6 passed`다.
 - 기본 pytest 임시 경로는 기존 ACL 때문에 최초 실행에서 1 passed/5 errors였으며, 코드 결함이 아니라 fixture 생성 실패임을 확인한 뒤 전용 경로로 재검증했다.
+- C: Python 제거 후 PATH 변경 전 프로세스에서 `py`를 찾지 못해 회귀 테스트 1건이 다시 실패했으며, Windows 훅을 D: 런처 절대 경로로 바꾸고 새 해시를 재신뢰한 뒤 같은 환경에서 `6 passed`를 확인했다.
 
 ## 다음 단계
 
@@ -198,15 +201,17 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - [x] 문서 링크·인코딩·크기와 최종 diff를 검증한다.
 - [x] 변경된 Codex 훅 정의의 현재 해시를 신뢰하고 활성화한 뒤 새 app-server에서 상태를 재검증한다.
 - [ ] `.claude/skills/`의 grilling 자산 정리는 Claude 세션에서 별도로 수행한다.
-- [ ] C: 자동 정리가 완료되지 않은 원인을 확인하고, 실행 중인 세션 종료 후 C: 설치·shim·사용자 `Path`를 정리할지 결정한다.
+- [ ] 다음 로그인 후 Codex·SourceTree 자동 작업 로그와 C: 실파일 제거를 확인한다.
 
 ## 블로커·주의
 
 - 기존 `scripts/daily_worklog.py`와 여러 handoff 파일은 작업 시작 전부터 미추적 상태였다. 이번 전환과 직접 관련된 파일만 선별해 커밋한다.
 - 과거 문서의 “Claude/answer-reviewer 검증 완료” 표기는 당시 사실 기록이므로 소급 변경하지 않는다.
 - 현재 확인된 UserPromptSubmit 결함은 수정됐지만, 같은 방식의 상태 전이 누락이 다른 훅·자동화에 없는지는 아직 전수 검증하지 않았다.
-- C: 자동 정리는 완료되지 않았다. 현재 `codex`는 C: shim을 먼저 선택하고 `codex doctor`는 실행 패키지 루트(C:)와 npm 전역 패키지 루트(D:) 불일치로 install/update 2건을 실패 처리한다. 두 설치 모두 0.145.0이어서 이번 훅 신뢰 판정의 직접 원인은 아니며, 실행 중인 세션을 종료하거나 설치·`Path`를 변경하지 않았다.
-- 2026-07-29 동시 작업이 `e852e43`, `9d40074`, `c20bc26`을 생성해 `myfork/feat-code-cache`에 push했다. 현재 워킹트리는 clean이며 이 세 커밋은 이번 Codex가 직접 실행한 커밋이 아니다.
+- C: Codex 실파일은 기존 세션들이 사용 중이고 SourceTree도 프로세스 2개가 실행 중이라 강제 종료하지 않았다. 새 셸과 사용자 `Path`는 이미 D: 정본이며, 로그인 자동 작업은 사용 중이면 다음 로그인까지 유지된다.
+- C: 설치 레지스트리에는 Edge/WebView·NVIDIA 드라이버와 Chrome·Office·한컴이 남아 있다. 시스템·드라이버 또는 설치 관리자가 위치를 고정하는 제품은 수동 폴더 이동이 업데이트·복구를 깨뜨릴 수 있어 이번 개발 도구 이관에서 제외했다.
+- 로그인 등록 초기안의 `New-Item -Force`가 같은 키의 기존 값을 지우는 동작을 임시 키에서 재현했다. 키가 없을 때만 생성하도록 교정해 Codex·SourceTree 값의 공존·지속을 확인했고 `StartupApproved`에는 복구 대상 사용자 Run 항목이 없었지만, 작업 전 RunOnce의 일회성 값 존재 여부는 사후 확인할 수 없다.
+- 2026-07-29 동시 작업이 `e852e43`, `9d40074`, `c20bc26`을 생성해 `myfork/feat-code-cache`에 push했다. 해당 기록 시점의 워킹트리는 clean이었으며 이 세 커밋은 이번 Codex가 직접 실행한 커밋이 아니다.
 - `9d40074`는 작업일지·패치 백업·분석 로그·이미지 등 41개 파일을 추가했다. 신규 파일에서 일반적인 API 키·토큰·개인키·비밀번호 할당 패턴은 발견되지 않았지만 공개 가능한 업무 데이터인지 별도 검토가 필요하다.
 - 원격 `SJY5261/harness_framework`는 PUBLIC이다. 기존 `logs/check_rows.py`에는 플레이스홀더가 아닌 13자 비밀번호와 원격 호스트 설정이 있고 `ac2553f`부터 공개 이력에 남아 있다. 값은 보고서에 남기지 않는다.
 - 위 자격증명은 우선 교체가 필요하다. Git 이력에서 제거하려면 이력 재작성과 force-push가 필요하므로 사용자 승인 전에는 실행하지 않는다.

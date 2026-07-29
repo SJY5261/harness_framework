@@ -11,7 +11,7 @@ _최종 갱신: 2026-07-29_
 
 ## 활성 작업
 
-- [Codex주에이전트전환] **UserPromptSubmit 훅 신뢰·활성화 복구 / C:·D: CLI 중복 설치 정리 결정 대기** — 현재 훅 해시의 신뢰 상태는 유지됐지만 `enabled = false`가 남아 있던 원인을 확인해 사용자 설정을 활성화했고, 새 0.145.0 app-server에서 `trusted + enabled`를 검증했다. C: 자동 정리는 완료되지 않아 현재 C: shim이 먼저 선택되며, 실행 중 세션 종료가 필요한 설치·`Path` 정리는 별도 결정이 필요하다 — [상세](handoff/Codex주에이전트전환.md)
+- [Codex주에이전트전환] **UserPromptSubmit 훅 정상화 / D: 도구 정본 전환 완료·실행 중 C: 사본 정리 대기** — 새 0.145.0 app-server에서 훅 `trusted + enabled`와 D: Codex doctor 17 ok를 재검증했다. Python·GitHub CLI·Claude Code·사용자 `Path`는 D:로 전환했고, 실행 중인 C: Codex·SourceTree는 로그인 자동 작업에서 검증 후 정리한다 — [상세](handoff/Codex주에이전트전환.md)
 - [업무PC복귀인계] **주요 복구·Codex 훅·실화면 재검증 완료 / 개발 DB TLS 결정·미전달 원본 대기·POP 실기기 보류** — 개발 런타임·경로·Windows `workspace` 샌드박스 복구와 Codex 훅 상태 전이 검증을 완료했다. 개발 DB 서버는 TLS가 비활성이고 Connector/J도 기본 비SSL 연결이며, 로컬 MariaDB 설정에는 존재하지 않는 `E:` 플러그인 경로가 남아 있어 적용 방침 결정이 필요하다. POP 바코드 스캐너 실기기 검증은 2026-07-29 사용자 결정으로 보류했다. 하네스 60 PASS, 제품 빌드 PASS, `%테스트` 191 PASS/기존 계획 불일치 3 FAIL — [상세](handoff/업무PC복귀인계.md)
 - [가공확정] **KAN-63 / KAN-6 구현·빌드 완료, KAN-35 DB 반영 완료, KAN-38 화면·POP 실기기 검증 보류** — 재확정 예외를 작업트리에 복원하고 작업상세정보의 가공확정 일시·진행상태 표시를 제거했다. 제조원가 분석 메뉴 8행은 영구 백업 후 숨김 처리·검증·COMMIT 완료. 작업지시 현황추적 화면과 POP 바코드 스캐너 실기기 검증은 사용자 결정에 따라 보류 — [상세](handoff/가공확정.md)
 - [단가검토] **사용자 결정 대기** — 단가입력 개편 검증 완료. 배송비 컬럼명·견적→주문 복사 여부 결정 후 DDL 및 기록조회 후속 작업 — [상세](handoff/단가검토.md)

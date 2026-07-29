@@ -162,6 +162,7 @@ def test_codex_hook_resolves_script_from_workspace_ancestor():
     assert "dirname" in handler["command"]
     assert "context_freshness_gate.py" in handler["commandWindows"]
     assert "Split-Path -Parent" in handler["commandWindows"]
+    assert r"D:\Tool\Python\Launcher\py.exe" in handler["commandWindows"]
     assert not handler["commandWindows"].lstrip().lower().startswith("powershell")
 
 

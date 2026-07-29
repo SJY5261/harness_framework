@@ -6,14 +6,8 @@ _최종 갱신: 2026-07-29_
 
 ## 현재 환경
 
-- 하네스 루트: `D:\harness_framework` (과거 `E:\harness_framework`, `D:\tomes\harness-framework` 기록은 현재 루트로 재해석)
-- JDK 21은 `D:\Tool\jdk-21\jdk-21`이며 사용자 `JAVA_HOME`과 `Path` 등록 완료.
-- Python 3.14.6과 `py` 런처, `%테스트` 요구 패키지·pytest·Playwright Chromium 설치 완료. Python·Scripts·Launcher 경로는 사용자 `Path`에 등록했고 `PYTHONUTF8=1`을 복구했다.
-- DBeaver 25.0.1에 `Tomes-Cloud` MariaDB 연결과 드라이버를 복구했고, 비밀번호는 DBeaver 보안 저장소에만 저장했다.
-- 실제 실행·개발 설정은 `D:\harness_framework`, `D:\Tool`, `D:\LOGS` 기준으로 통일했다. 환경 변수, Git, 편집기, 예약 작업, 바로가기, 서비스에는 옛 `E:` 프로젝트 경로가 없다. 과거 문서·로그의 `E:`는 이력으로 보존한다.
-- DailyWorklog는 평일 17:30 예약 작업으로 복구했다. 이 PC에는 `NOTION_TOKEN`이 없어 로컬 JSON만 생성하며 백필 절차는 `logs/notion_이관대기.md`를 따른다.
-- Codex Windows `workspace` 샌드박스는 포맷 전 SID가 남은 작업공간 ACL을 현재 사용자·샌드박스 그룹 기준으로 복구했다. Python 공용 등록, 샌드박스 전용 Temp와 Gradle 캐시를 개인 Codex 설정에 연결했고 반복 초기화·하네스 59 PASS·제품 빌드 PASS를 재확인했다.
-- Codex CLI는 사용자 `Path`에서 C: 중복 설치 항목을 제거하고 `D:\Tool\nodejs`만 유지했다. D: 패키지는 기존 C:와 같은 `0.145.0`으로 맞췄으며, 실행 중인 C: 기반 세션이 모두 종료되면 숨김 정리 작업이 `C:\Users\User\AppData\Local\Programs\OpenAI Codex CLI`를 자동 삭제한다.
+- 사용자 환경 맞춤 판단과 현재 PC·도구·작업 성향의 정본은 [`context/README.md`](context/README.md)에서 찾는다.
+- 경로 정본은 `PATHS.md`, 작업별 변동 상태와 다음 행동은 아래 활성 작업과 연결된 handoff에서 확인한다. 오래된 git·프로세스·서버·DB 상태는 다시 측정한다.
 
 ## 활성 작업
 

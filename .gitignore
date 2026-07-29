@@ -16,10 +16,31 @@ __pycache__/
 
 # local agent/editor runtime settings
 .claude/settings.local.json
+.env
+.env.*
+!.env.example
+!.env.sample
+credentials*.json
+secrets*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+*.backup
 
 # runtime logs and machine-specific recovery snapshots
 *.log
 artifacts/acl_before_codex_sandbox_fix_*.txt
+logs/private/
+artifacts/private/
 
 # independently versioned Sites projects
 sites/

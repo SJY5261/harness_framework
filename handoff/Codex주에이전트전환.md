@@ -1,6 +1,6 @@
 # Codex 주 에이전트 전환
 
-_시작: 2026-07-24 / 상태: 주 전환·UserPromptSubmit 호환 수정 완료 / 전체 런타임 재감사 대기_
+_시작: 2026-07-24 / 상태: Codex 단독 운영 정책·런타임 재감사·검증 완료 / 훅 신뢰 확인 대기_
 
 ## 작업 목표
 
@@ -9,8 +9,12 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 ## 결정
 
 - Codex가 기본 오케스트레이터다.
+- 별도 명시가 없으면 Codex 단독으로 수행한다. Claude는 Claude 세션에서 별도 관리하며, 현재 프롬프트가 Claude 사용을 명시한 경우만 예외다.
 - `AGENTS.md`가 Codex 운영 정본, `PROJECT_RULES.md`가 제품 중립 프로젝트 규칙 정본이다.
 - `CLAUDE.md`와 `.claude/`는 선택적 호환 진입점·자산으로 보존한다.
+- 기존 grilling 절차는 폐기하며 Codex로 이식하지 않는다.
+- Jira·MCP·첨부 이미지 등 외부 정본을 확보하지 못하면 handoff나 코드로 추정 구현하지 않고 사용자 검토를 요청한다.
+- Codex와 Claude가 명시적으로 각각 사용된 경우에도 공통 HANDOFF·로그·경로 기록을 갱신해 작업 이력의 공백을 막는다.
 - 개인 모델·요금제·인증·알림·권한은 저장소 `.codex/config.toml`에 고정하지 않는다.
 - `peer_review_pending`은 Claude 부재가 아니라 독립 검토가 실제로 필요한 고위험 판단이 미검토일 때만 사용한다.
 - 과거 `discussion/` 원문은 역사 자료로 수정하지 않는다. 새 토론만 Codex 중심 템플릿을 사용한다.
@@ -86,12 +90,47 @@ Claude Code 중심의 규칙·자동화·협업 체계를 Codex 중심으로 전
 - Sites 게시는 계속 사용자의 명시적 요청이 있을 때만 수행한다.
 - 첫 적용 사례로 UserPromptSubmit 훅 오류 분석 보고서를 `[07.28 UserPromptSubmit 훅 오류 분석]` 폴더에 MD·HTML로 생성한다.
 
+## 2026-07-29 단일 Codex 운영·문서 구조 2단계 정리
+
+### 현상
+
+- 상시 규칙, 조건부 절차, 템플릿, 과거 이력이 일부 MD에 함께 누적됐다.
+- Codex 활성 실행 경로와 Claude 세션 전용 자산의 경계가 문서에는 있었지만 전체 호출 경로 재감사가 남아 있었다.
+- `.codex/hooks.json`이 상대경로로 훅을 호출해 저장소 하위 경로에서 세션을 시작하면 스크립트를 찾지 못할 가능성이 있었다.
+
+### 해결
+
+- `PR_작성규칙.md`의 양식과 DB 절차를 `templates/`, `docs/processes/`로 분리했다.
+- 크기·혼합 기준을 넘는 문서는 원문을 `logs/`에 보존하고 현재 handoff를 자동 축약하도록 정했다.
+- `DB결함.md`, `단가검토.md`의 전체 기존 본문을 `logs/handoff/`로 이동하고 현재 상태·결정·다음 행동만 새 handoff에 남겼다.
+- Codex 단독 기본, Claude 명시 요청 예외, `.claude/` 별도 관리, grilling 폐기, 외부 정본 미확보 시 중단을 공통 규칙에 반영했다.
+- 작업일지는 Claude를 실행하지 않고 Codex 및 명시적으로 사용된 Claude 세션 JSONL을 읽기 전용으로 합치도록 명시했다.
+- Codex 훅은 저장소 루트를 동적으로 구해 실행하도록 수정하고 `docs/SECOND_BRAIN.md`도 신선도 감시 대상에 포함했다.
+
+### 런타임 감사 결과
+
+- `scripts/execute.py`는 `codex exec`만 호출한다.
+- `scripts/daily_worklog.py`의 AI 요약은 읽기 전용·ephemeral `codex exec`만 사용한다.
+- Claude 관련 활성 코드는 과거 세션 JSONL 읽기뿐이며 `claude -p` 또는 Claude 프로세스 호출은 없다.
+- Codex `.codex/hooks.json`에는 답변 검토 `Stop` 훅이 없고 `UserPromptSubmit` 규칙 신선도 알림만 있다.
+- `.claude/settings.json`의 answer-review 훅과 `.claude/skills/`는 Claude 세션 전용 자산이다. Codex에서는 호출·수정하지 않는다.
+- `.claude/settings.local.json`의 `bypassPermissions`는 Claude 세션 설정이므로 이번 Codex 작업에서 변경하지 않는다.
+
+### 검증
+
+- Python 컴파일과 `.codex/hooks.json` 파싱 통과.
+- `scripts/` 전체 테스트 `62 passed`.
+- `Projects/Tomes-Cloud` 하위 경로에서 Windows 훅 명령을 직접 실행해 종료 코드 0과 상태 파일 생성을 확인했다.
+- 첫 하위 경로 보완안은 내부 Git 루트를 잘못 선택해 실패했으며, 현재 경로의 상위 디렉터리에서 실제 `.codex`를 찾는 방식으로 교정 후 통과했다.
+- pytest 기본 임시 폴더는 기존 ACL로 설정 단계에서 실패했으며, 저장소 안의 실행 전용 임시 폴더로 재실행해 전체 통과했다. 임시 폴더는 실행 후 제거했다.
+- `DB결함.md`, `단가검토.md` 역사 보존본은 제목 한 줄을 제외한 기존 바이트가 원본 SHA-256과 일치함을 확인했다.
+
 ## 다음 단계
 
-- [ ] `.codex/hooks.json`의 모든 이벤트를 최초·변경·차단·실패 상태로 실행해 출력 계약을 재검증한다.
-- [ ] `.codex/`, 실행 스크립트, 자동화에서 Claude 전용 경로·환경 변수·출력 형식·세션 포맷 의존성을 전수 검색하고 실제 호출 경로 기준으로 분류한다.
-- [ ] `.claude/` 잔존 파일은 선택적 호환 자산과 잘못 남은 활성 의존성으로 구분하고, 활성 Codex 경로에서 자동 호출되지 않는지 재확인한다.
-- [ ] 재감사 결과를 근거로 이 문서의 상태를 다시 완료로 전환한다.
+- [x] 관련 Python 컴파일·테스트·훅 하위 경로 실행을 검증한다.
+- [x] 문서 링크·인코딩·크기와 최종 diff를 검증한다.
+- [ ] 변경된 Codex 훅 정의가 다음 세션에서 신뢰 재확인을 요구하면 `/hooks`에서 검토한다.
+- [ ] `.claude/skills/`의 grilling 자산 정리는 Claude 세션에서 별도로 수행한다.
 
 ## 블로커·주의
 

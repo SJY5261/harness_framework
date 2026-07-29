@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """daily_worklog.py - 그날 작업 내용/배운 지식을 정리해 Notion에 기록.
 
-수집: 3개 git 저장소의 그날(KST) 커밋 + Codex 중심 세션 로그(jsonl)
+수집: 3개 git 저장소의 그날(KST) 커밋 + Codex 세션 로그 + 명시적으로 사용한 Claude 세션 로그(jsonl)
 요약: codex exec (headless) 로 구조화 JSON 생성
 출력: Notion API 로 풍부한 블록(콜아웃/표/토글/체크박스)으로 렌더
        --style tracker(기본): '작업 트래커' DB에 작업(task)마다 1행. 제목엔 날짜 미포함.
@@ -129,7 +129,7 @@ def _extract_text(content) -> str:
 
 
 def _collect_claude_sessions(date: _dt.date) -> list[str]:
-    """선택적 호환: 같은 날 Claude를 명시적으로 사용한 경우 함께 수집."""
+    """선택적 호환: 명시적으로 사용한 Claude 세션 기록만 읽고 프로세스는 실행하지 않는다."""
     if not CLAUDE_TRANSCRIPT_DIR.exists():
         return []
     start = _dt.datetime.combine(date, _dt.time.min).timestamp()
@@ -307,7 +307,7 @@ def collect_handoff() -> str:
 # detail 서술 템플릿 목록은 scripts/worklog_templates.md 참조(기본: STAR/PPP 혼합형).
 PROMPT_TMPL = """\
 아래는 {date} ({wd}요일)에 내가 한 개발 작업의 원자료다.
-(1) git 커밋 로그/변경 통계, (2) Codex 중심 대화 세션 로그.
+(1) git 커밋 로그/변경 통계, (2) Codex 세션과 명시적으로 사용한 Claude 세션 로그.
 이걸 그날 한 '작업 단위'로 끊어서 아래 JSON 스키마로 정확히 채워 출력하라.
 
 {{
@@ -792,7 +792,6 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-ai", action="store_true",
                     help="Codex 요약을 생략하고 원자료 기반 최소 JSON 생성")
-    ap.add_argument("--no-claude", action="store_true", help=argparse.SUPPRESS)
     ap.add_argument("--model", default=None,
                     help="Codex 요약 모델(기본: 사용자 Codex 설정)")
     ap.add_argument("--title-suffix", default="")
@@ -843,7 +842,7 @@ def main() -> int:
         log(f"from-json 로드: {src} (수집·요약 생략)")
     else:
         data = build_data(date, git_text, sessions,
-                          use_ai=not (args.no_ai or args.no_claude),
+                          use_ai=not args.no_ai,
                           open_tasks_text=open_tasks_text, handoff_text=handoff_text,
                           model=args.model)
     tasks = data.get("tasks", [])

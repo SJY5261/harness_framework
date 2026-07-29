@@ -3,6 +3,8 @@
 import importlib.util
 import io
 import json
+import os
+import datetime as dt
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -73,6 +75,34 @@ def test_collect_codex_session_filters_workspace(tmp_path):
     assert "Codex: 진행" in blocks[0]
 
 
+def test_collect_claude_history_is_read_only_and_keeps_session_boundary(tmp_path):
+    transcript_root = tmp_path / "claude-project"
+    transcript_root.mkdir()
+    transcript = transcript_root / "session.jsonl"
+    events = [
+        {"type": "user", "message": {"content": "Claude 명시 요청"}},
+        {"type": "assistant", "message": {"content": "Claude 작업 결과"}},
+    ]
+    transcript.write_text(
+        "\n".join(json.dumps(event, ensure_ascii=False) for event in events),
+        encoding="utf-8",
+    )
+    target_date = dt.date(2026, 7, 24)
+    stamp = dt.datetime(2026, 7, 24, 12, 0, 0).timestamp()
+    os.utime(transcript, (stamp, stamp))
+
+    with patch.object(worklog, "CLAUDE_TRANSCRIPT_DIR", transcript_root), patch(
+        "subprocess.run"
+    ) as run:
+        blocks = worklog._collect_claude_sessions(target_date)
+
+    run.assert_not_called()
+    assert len(blocks) == 1
+    assert "Claude 세션 1" in blocks[0]
+    assert "나: Claude 명시 요청" in blocks[0]
+    assert "Claude: Claude 작업 결과" in blocks[0]
+
+
 def test_context_freshness_hook_emits_valid_codex_json_after_rule_change(
     tmp_path, monkeypatch, capsys
 ):
@@ -82,9 +112,15 @@ def test_context_freshness_hook_emits_valid_codex_json_after_rule_change(
     )
     watched = {
         name: tmp_path / name
-        for name in ("AGENTS.md", "PROJECT_RULES.md", "HANDOFF.md")
+        for name in (
+            "AGENTS.md",
+            "PROJECT_RULES.md",
+            "HANDOFF.md",
+            "docs/SECOND_BRAIN.md",
+        )
     }
     for path in watched.values():
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("initial", encoding="utf-8")
 
     monkeypatch.setattr(hook, "WATCH", watched)
@@ -113,3 +149,13 @@ def test_context_freshness_hook_emits_valid_codex_json_after_rule_change(
     monkeypatch.setattr(hook.sys, "stdin", io.StringIO(payload))
     assert hook.main() == 0
     assert capsys.readouterr().out == ""
+
+
+def test_codex_hook_resolves_script_from_workspace_ancestor():
+    config = json.loads((ROOT / ".codex" / "hooks.json").read_text(encoding="utf-8"))
+    handler = config["hooks"]["UserPromptSubmit"][0]["hooks"][0]
+
+    assert "context_freshness_gate.py" in handler["command"]
+    assert "dirname" in handler["command"]
+    assert "context_freshness_gate.py" in handler["commandWindows"]
+    assert "Split-Path -Parent" in handler["commandWindows"]

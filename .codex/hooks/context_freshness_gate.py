@@ -17,6 +17,7 @@ WATCH = {
     "AGENTS.md": ROOT / "AGENTS.md",
     "PROJECT_RULES.md": ROOT / "PROJECT_RULES.md",
     "HANDOFF.md": ROOT / "HANDOFF.md",
+    "docs/SECOND_BRAIN.md": ROOT / "docs" / "SECOND_BRAIN.md",
 }
 
 

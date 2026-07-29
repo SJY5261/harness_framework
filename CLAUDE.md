@@ -9,3 +9,5 @@ Claude로 작업할 때도 다음 저장소 정본을 순서대로 따른다.
 3. `HANDOFF.md` — 현재 작업 인덱스. 요청과 관련된 `handoff/<작업>.md`만 이어서 읽는다.
 
 Claude 전용 `.claude/` 설정·훅·명령은 선택적 호환 자산이다. Codex의 정상 작업이나 자동화가 Claude의 설치·인증·요금제에 의존하게 만들지 않는다.
+
+Claude 세션에서 작업 상태가 바뀌면 Codex와 동일하게 공통 `HANDOFF.md`, 관련 `handoff/`, `logs/`를 갱신해 다음 세션이 작업 이력을 이어받게 한다. 기존 grilling 절차는 폐기 상태이며, `.claude/` 안의 관련 자산 정리는 Claude 세션에서 별도로 관리한다.

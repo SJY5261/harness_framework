@@ -1,0 +1,190 @@
+{
+  "summary": "DB결함 잔여 스탭 영향 전수분석, 검토훅 v2 재작성, main 56커밋 병합, 블루스크린 CPU 열화 진단, 작업지시 화면 재디자인 커밋을 수행함",
+  "tasks": [
+    {
+      "task_ref": "t-0027",
+      "title": "작업관리 DB 결함 수정",
+      "summary": "잔여 스탭(NOT NULL DDL·SP 가드)이 기존 프로세스를 깨뜨릴 위험을 전수 분석해 확정함",
+      "detail": "배경·목적 — ⓐⓑⓓⓒ 4건 구현 완료 후 남은 스탭(시드 upsert 교정→NOT NULL 보정+DDL→SP NOT EXISTS 가드) 착수 전, 각 스탭이 기존 프로세스를 파손시킬 요소가 있는지 사전 검증이 필요했음. 진행사항 브리핑과 1번 스탭(시드 교정) 상세 설명도 함께 수행함.\n\n진행 — Explore 에이전트로 order.xml·estimate.xml 등 코드 전수조사를 병행시키고, 라이브 DB에서 sql_mode·트리거·SP 본문·NULL 건수를 직접 실측함. sql_mode에 EMPTY_STRING_IS_NULL이 켜져 있고, CONTROL_NUM NULL이 문서상 2건이 아닌 23건(소프트 삭제 21건 포함)이며, REGIST_NUM은 이미 NOT NULL이고, 매핑 테이블에 AFTER 트리거 3종·SP가 smd/smd2/jet 3스키마에 복제돼 있음을 확인함.\n\n결과·임팩트 — 확정 파손 경로 1건 발견: 수동채번('N') 테넌트 발행 시 CONTROL_NUM=''이 NULL로 저장되므로 NOT NULL DDL을 걸면 발행이 즉사함 → 수동입력 차단을 DDL보다 선행하는 것으로 작업 순서를 재정립함. SP 가드는 DEL_YN='N' 조인 스코프 필수·조용한 skip 파급 등 설계 조건 2건을 확정하고, OUT_BARCODE 인덱스는 비유니크 한정 안전으로 판정함. 분석 전문을 handoff/DB결함.md에 갱신함.",
+      "status": "진행 중",
+      "tech": [
+        "MariaDB — sql_mode·트리거·SP 본문·NULL 건수 실측",
+        "MyBatis — order.xml·estimate.xml INSERT/UPDATE 경로 전수조사",
+        "Claude Code Explore 에이전트 — 코드 영향 전수조사 위임"
+      ],
+      "learnings": [
+        {
+          "title": "빈 문자열의 NULL 저장",
+          "detail": "sql_mode EMPTY_STRING_IS_NULL 환경에서는 ''가 NULL로 저장되므로, NOT NULL DDL 전에 빈 문자열을 넣는 앱 경로를 먼저 차단해야 함"
+        },
+        {
+          "title": "DDL은 삭제행도 검사",
+          "detail": "NOT NULL 제약은 소프트 삭제된 행도 통과하지 못하므로 백필 대상 산정에 삭제행 21건까지 포함해야 함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "문서상 NULL 보정 대상이 2건으로 기록돼 실측과 불일치",
+          "solution": "라이브 DB 실측으로 살아있는 2건+소프트 삭제 21건=총 23건 전량 백필 필요로 정정"
+        }
+      ],
+      "next": [
+        "%테스트 시드 upsert 교정",
+        "수동입력 차단(자동채번 서버 강제+사이트마스터 N 옵션 제거) 구현",
+        "CONTROL_NUM NULL 23건 백필 후 NOT NULL DDL",
+        "SP NOT EXISTS 가드 3스키마 반영"
+      ],
+      "tags": [
+        "DB결함",
+        "MariaDB",
+        "영향분석"
+      ]
+    },
+    {
+      "task_ref": "t-0016",
+      "title": "검토훅·하네스 규칙 정비",
+      "summary": "answer-reviewer 검토 게이트의 우회 구멍을 분석하고 훅 v2로 전면 재작성함",
+      "detail": "배경·목적 — 검토 백스톱 훅(answer_review_gate.py)이 tool_use 전체를 문자열 매칭해 정의 파일 Read만으로도 검토 완료로 오판되고, 1회 차단 후 재진입 시 무조건 통과되는 등 강제력 구멍 5건과 에이전트 정의의 입력 계약 부재를 분석으로 확인함.\n\n진행 — 훅 v2 전면 재작성: Agent 호출의 subagent_type==answer-reviewer만 검토로 인정, 세션 상태 파일 기반 턴당 차단 2회 상한, ASCII 키워드 단어 경계 정규식화, 옵트아웃은 최종 메시지의 전체 문구 일치+감사 로그 기록, 검토 시 배너 존재 확인을 추가함. answer-reviewer.md에 입력 계약(원 질문 전문+초안 전체+참조 파일 목록)·Bash 읽기 전용·위험도순 트리아지를 명문화하고 CLAUDE.md·HANDOFF.md를 갱신함.\n\n결과·임팩트 — 합성 트랜스크립트 시나리오 테스트 14/14 PASS를 2회 연속 재현해 멱등성까지 확인함. 리뷰어 model은 비용 대비 효과를 근거로 sonnet 유지로 결정함. 검토 우회가 실제로 발생하던 경로(파일 Read 오통과·재진입 통과)가 봉쇄됨.",
+      "status": "완료",
+      "tech": [
+        "Python — Stop 훅 answer_review_gate.py v2 재작성",
+        "Claude Code — 서브에이전트 정의·CLAUDE.md 규칙 정비"
+      ],
+      "learnings": [
+        {
+          "title": "훅 탐지는 필드 단위로",
+          "detail": "tool_use JSON 전체 문자열 매칭은 정의 파일 Read만으로 오통과되므로, Agent 호출의 subagent_type 필드만 인정하도록 좁혀야 강제력이 생김"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "검증 테스트 스크립트가 잔존 상태 파일 때문에 재실행 시 12/14로 비멱등",
+          "solution": "사전 정리 단계를 추가하고 2회 연속 실행으로 14/14 재현을 확인"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "하네스",
+        "검토자동화",
+        "훅"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "Codex 연계 방안 설계",
+      "summary": "&하네스에 Codex 병용 구조를 설계하고 Codex 제안 토론 프로토콜을 평가함",
+      "detail": "배경·목적 — Claude Code와 Codex를 동시에 활용하려는 요구에 따라 &하네스에 맞는 연계 구조를 검토함.\n\n진행 — execute.py가 스탭마다 claude -p를 서브프로세스로 호출하는 구조임을 실측하고, Claude=구현·Codex=읽기 전용 교차 리뷰의 역할 분담과 스탭 정의 engine 필드+codex exec 확장안을 제안함. 워킹트리 동시 쓰기 금지, HANDOFF 단일 작성자, cp949 환경의 UTF-8 명시, AGENTS.md는 CLAUDE.md 포인터로 두는 격리·규칙 방안을 함께 정리함.\n\n결과·임팩트 — Codex 세션이 제안한 토론 프로토콜(독립 작성→교차 검토→판정, 2라운드 제한)은 타당해 채택하되, API 오케스트레이터 신규 제작은 기존 execute.py 자산이 있어 과투자로 판정하고 공유 파일+CLI 확장 방향을 제시함. 일상 구현은 단방향 리뷰, 쟁점 결정만 교차 토론으로 이원화하는 비용 기준도 세움.",
+      "status": "진행 중",
+      "tech": [
+        "Codex CLI — codex exec 비대화 모드 연계 검토",
+        "&하네스 execute.py — CLI 오케스트레이터 구조 분석"
+      ],
+      "learnings": [
+        {
+          "title": "교차 토론의 비용 기준",
+          "detail": "교차 검토는 질문당 최소 5회 호출이 들어 전 작업 적용은 비효율적이며, 판단이 갈리는 설계 결정에만 한정해야 함"
+        }
+      ],
+      "issues": [],
+      "next": [
+        "execute.py engine 필드+codex exec 스탭 지원 구현",
+        "AGENTS.md·discussion 파일 규약 확정"
+      ],
+      "tags": [
+        "Codex",
+        "멀티에이전트",
+        "하네스"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "main 풀·브랜치 병합 정리",
+      "summary": "소스트리 풀 오류를 규명하고 stash→56커밋 풀→병합→수정분 복원까지 완료함",
+      "detail": "배경·목적 — 소스트리에서 main 풀이 실패하는 원인을 규명함. 미커밋 6파일 중 2파일(OrderServiceImpl.java, order.xml)을 원격 56커밋이 동일하게 수정해 git이 풀을 선제 차단한 것으로 확정함.\n\n진행 — 겹치는 2파일만 stash로 보관 후 main을 origin/main으로 fast-forward 풀(56커밋)하고, Danga-order 체크아웃·병합으로 세 브랜치를 aa63bb2로 일치시킴. 세션 git의 GitHub 자격증명 만료로 push가 불가해 사용자가 직접 push했고 원격 추적 ref로 반영을 확인함. 이후 stash apply로 DB결함 수정분을 복원해 충돌 마커 없음과 gradlew build 컴파일 통과를 검증함.\n\n결과·임팩트 — 우려했던 stash 충돌 없이 미커밋 6파일(DB결함 3+단가검토 3) 상태로 복귀했고, stash 엔트리는 백업으로 유지함. HANDOFF 공통 상태(브랜치·stash 번호·자격증명 만료)를 갱신하고, 8081 dev 서버 기동·재기동도 수차례 지원함.",
+      "status": "완료",
+      "tech": [
+        "Git — stash 부분 보관·fast-forward 병합·reflog 검증",
+        "Gradle — build로 복원분 컴파일 검증",
+        "Spring Boot — bootRun 8081 dev 서버 기동"
+      ],
+      "learnings": [
+        {
+          "title": "stash는 apply로 복원",
+          "detail": "원격 변경과 겹칠 수 있는 stash는 drop 없는 apply로 복원해 백업 엔트리를 남기고 빌드로 검증하는 것이 안전함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "세션 git의 GitHub 자격증명 만료로 비대화식 환경에서 push 진행 불가",
+          "solution": "사용자가 소스트리에서 직접 push하고 원격 추적 ref로 반영 확인, 원격 작업은 사용자 요청으로 하도록 HANDOFF에 기록"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "Git",
+        "형상관리"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "블루스크린 원인 진단·대응",
+      "summary": "반복 블루스크린을 CPU 코어 열화로 진단하고 감시 자동화와 BIOS 업데이트 준비를 마침",
+      "detail": "배경·목적 — 당일 2회 포함 최근 5회 블루스크린이 발생해 PC 점검 요청에서 출발, 원인 규명과 재발 대응 체계 구축을 진행함.\n\n원인 분석 — 이벤트 로그·WHEA 분석 결과 버그체크 코드가 매번 상이(0x139·0x50·0x101·0x1E)하고, WHEA Internal parity error 중 코어 특정 가능한 건이 전부 동일 논리 코어(APIC ID 33)에 집중되며 빈도가 가속 중임을 확인함. i9-14900HX의 알려진 열화 사례와 일치하는 진행성 하드웨어 결함으로 판정하고 HTML 보고서 아티팩트로 정리, 미니덤프 WinDbg 분석에 착수함.\n\n대응 — CPU 과부하 감시 스크립트(CpuWatch)를 작성해 60초 평균 90% 이상 지속 시 토스트 알림+경고음을 울리도록 예약 작업으로 등록하고 5초 단위 CSV 기록을 남기게 함. BIOS는 초기 V1.17 최신 판단을 정정해 공식 최신 V1.18(해당 증상 계열 MCU 수정 포함)로 확인, 업데이트 전 체크리스트로 BitLocker 복구 키 확인 안내·DailyWorklog 예약 비활성화·8081 서버 종료까지 수행함.\n\n결과·임팩트 — 블루스크린이 사용자 행위가 아닌 CPU 실리콘 열화에 기인함을 근거와 함께 확정하고, Acer 보증 수리 문의를 핵심 조치로 권고함. 다음 발생 시 CSV로 과부하 상관관계를 대조할 수 있는 기반을 마련함.",
+      "status": "진행 중",
+      "tech": [
+        "PowerShell — CpuWatch 감시 스크립트·예약 작업 등록",
+        "Windows 이벤트 로그/WHEA — 하드웨어 오류 패턴 분석",
+        "WinDbg — 미니덤프 자동 분석"
+      ],
+      "learnings": [
+        {
+          "title": "코어 고정 WHEA는 하드웨어",
+          "detail": "오류가 특정 논리 코어에만 반복 집중되면 드라이버가 아닌 CPU 실리콘 열화 신호로 판단해야 함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "초기 조사에서 커뮤니티 글 요약을 인용해 최신 BIOS를 V1.17로 오인",
+          "solution": "공식 릴리스 노트를 직접 재확인해 V1.18이 최신이며 증상 관련 MCU 수정이 포함됨을 정정"
+        }
+      ],
+      "next": [
+        "BIOS V1.18 업데이트 실행",
+        "미니덤프 5건 분석 결과 종합 보고",
+        "Acer 보증 수리 문의",
+        "DailyWorklog 예약 작업 재활성화"
+      ],
+      "tags": [
+        "하드웨어",
+        "진단",
+        "자동화"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "작업지시 화면 재디자인",
+      "summary": "작업지시관리 그리드 개편과 검토 팝업 시안 재디자인 1차 이식을 커밋함",
+      "detail": "배경·목적 — feat/work-manage-ui 흐름으로 작업지시관리 그리드를 개편하고, 작업지시 검토 화면에 퍼블리싱 시안 재디자인을 반영함.\n\n진행 — control-manage.js 그리드 개편(특수가공·정렬·컬럼명·연결주문, 9de85e1)과 origin/main 머지 후, 백업 JSP·work-order-review.css 신설 등 준비 커밋(a586dcb)→control-manage.jsp 이식(6189a49)→원복(ab65e54)→검토 팝업 create_control.jsp 대상 1차 재이식(ec2b1f8, +2,427라인)→필터카드 충돌 CSS 보정(d1040d6) 순으로 총 6커밋을 진행함.\n\n결과·임팩트 — 이식 대상을 작업관리 본 화면에서 검토 팝업(create_control)으로 재조정해 시안 재디자인 1차 반영을 완료하고, CSS 말미 섹션의 필터카드 충돌까지 보정함.",
+      "status": "진행 중",
+      "tech": [
+        "JSP/CSS — publishing 시안 이식·work-order-review.css",
+        "JavaScript — control-manage.js 그리드 개편"
+      ],
+      "learnings": [],
+      "issues": [
+        {
+          "problem": "control-manage.jsp에 이식한 재디자인이 맞지 않아 되돌림 필요",
+          "solution": "이식 커밋(6189a49)을 revert하고 검토 팝업(create_control.jsp)으로 대상을 변경해 1차 재이식"
+        }
+      ],
+      "next": [
+        "검토 팝업 재디자인 2차 이식 계속"
+      ],
+      "tags": [
+        "UI개편",
+        "퍼블리싱",
+        "작업지시"
+      ]
+    }
+  ]
+}

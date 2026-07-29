@@ -1,0 +1,242 @@
+{
+  "summary": "하네스 신선도 규칙·노션 자동화·단가검토 팝업/디자인을 정비하고 정적 캐시 설정과 PC 크래시를 분석함",
+  "tasks": [
+    {
+      "task_ref": "t-0008",
+      "title": "하네스 규칙·저장소 정리",
+      "summary": "컨텍스트 신선도 합의안(M1·M2·P1·P2)을 훅·스크립트·문서에 실제 적용함.",
+      "detail": "배경·목적 — 전날 두 세션이 SESSION_DIALOGUE.md에서 합의한 \"로드된 규칙 스냅샷을 최신으로 단정해 원본을 재대조하지 않는\" 반복 실패 차단안을 실제 코드에 반영하는 작업. 합의는 설계까지였고 적용은 미실시 상태였음.\n\n진행 — M1으로 context_freshness_gate.py 훅을 신설하고 settings.json에 UserPromptSubmit 훅을 등록해 CLAUDE.md·MEMORY.md의 sha256이 세션 첫 관측 이후 바뀌면 재대조 지시를 주입하게 함. M2로 execute.py를 step·재시도마다 guardrails 신선도 검사 후 재로딩하도록 _read_guardrails/_load_guardrails로 분리(기존엔 run당 1회만 로드). P1·P2로 CLAUDE.md에 stale 경고 1줄과 검증 정의 반줄을 추가함.\n\n사고·복구 — 훅 테스트 중 git checkout -- CLAUDE.md를 실행해 미커밋 working-tree(143줄)를 커밋본(76줄)으로 되돌림. 대화 초반 Read로 확보한 전문에서 복원하고 P1·P2 재적용, 정밀 대조로 손실 0(145줄) 확인. 교훈은 미커밋 파일에 destructive git 명령 금지.\n\n결과·검증 — settings.json JSON 유효성, 두 파이썬 파일 py_compile PASS, 훅 시나리오 3종(첫=무출력/내용변경=알림/무변경=무출력) PASS. answer-reviewer로 5개 주장이 파일과 일치함을 확인. 반복 실패를 메커니즘으로 강제 차단하는 안전망을 확보함.",
+      "status": "완료",
+      "tech": [
+        "Python — 신선도 게이트 훅",
+        "Claude Code 훅 — UserPromptSubmit 컨텍스트 주입",
+        "sha256 — 내용 해시 비교",
+        "py_compile — 문법 검증"
+      ],
+      "learnings": [
+        {
+          "title": "미커밋 git 금지",
+          "detail": "미커밋 working-tree 파일에 git checkout/restore를 쓰면 통째로 날아감. 복원은 컨텍스트에 남은 Read 전문에 의존하게 됨."
+        },
+        {
+          "title": "내용해시 vs mtime",
+          "detail": "신선도 판정을 mtime이 아닌 내용 sha256으로 해, touch는 알림을 내지 않음(의도된 동작)."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "테스트 중 git checkout으로 미커밋 CLAUDE.md(143줄)가 76줄로 소실",
+          "solution": "대화 초반 Read 전문에서 복원 후 P1/P2 재적용, 정밀 대조로 손실 0 확인"
+        }
+      ],
+      "next": [
+        "CLAUDE.md 사용자 커밋(커밋본 76줄로 working-tree 143줄이 취약)"
+      ],
+      "tags": [
+        "하네스",
+        "훅",
+        "자동화"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "정적 리소스 캐시 설정",
+      "summary": "정적 리소스 캐시 max-age를 1일로 변경하고 캐시 보안 논점을 정리함.",
+      "detail": "배경·목적 — 정적 리소스 캐시 만료를 기존 365일에서 1일로 조정하라는 요청. 적용 지점과 실측 헤더 확인이 목표.\n\n진행 — WebContextConfig.java의 /resource/** 핸들러 setCacheControl을 maxAge(365, DAYS)→maxAge(1, DAYS)로 변경. Java 변경은 자동 리로드가 안 돼 서버를 재기동하고 curl -I /resource/plugins/bluebird.min.js로 헤더를 실측함. yml(365d)은 핸들러 직접 등록 시 적용되지 않는 죽은 설정이라 미수정.\n\n보안 논점 — 과거 정적 캐시 작업에서 거론된 보안 이슈 3건을 정리: /resource/**를 Security 필터에서 통째 제외 시 인증/CSRF 부재, 긴 캐시 + 버저닝 부재로 보안 패치 전파 지연, cachePublic의 public 지시어가 공유 캐시에 사용자별 응답 노출 위험.\n\n결과 — gradlew compileJava 통과, 실측 Cache-Control: max-age=86400, public(정확히 1일) 확인. 커밋 c3c13fe(SecurityConfig·WebContextConfig)로 반영됨.",
+      "status": "완료",
+      "tech": [
+        "Spring — WebContextConfig setCacheControl",
+        "Spring Security — 기본 헤더라이터",
+        "curl — 캐시 헤더 실측",
+        "Gradle — compileJava"
+      ],
+      "learnings": [
+        {
+          "title": "yml 캐시 죽은 설정",
+          "detail": "addResourceHandlers가 /resource/**를 직접 등록하면 자동구성이 같은 패턴에 핸들러를 걸지 않아 yml의 cachecontrol 값이 실질 적용되지 않음."
+        }
+      ],
+      "issues": [],
+      "next": [
+        "혼란 방지용으로 yml 3곳도 1d로 정렬할지 결정(동작 영향 없음)"
+      ],
+      "tags": [
+        "Spring Boot",
+        "캐시",
+        "보안"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "PC 크래시 원인 분석",
+      "summary": "작업 중 발생한 블루스크린의 원인을 이벤트 로그로 분석함.",
+      "detail": "배경 — 자리를 비운 사이 PC가 강제 종료됨. 정전·전원 끊김인지 시스템 크래시인지 규명 요청.\n\n진행 — Windows 이벤트 로그를 분석. Event 41(Kernel-Power) 비정상 종료, 버그체크 0x00000101 CLOCK_WATCHDOG_TIMEOUT(프로세서 #8 응답 없음)으로 확인. 09:26 절전 진입→09:26:59 해제→09:27 전원소스 변경→09:29:49 크래시→09:44 재부팅 타임라인을 복원. 덤프 폴더가 관리자권한 전용이고 WinDbg 미설치라 직접 디스어셈블은 못 하고 이벤트 로그로 대체 분석.\n\n결과·해석 — 절전 복귀 + 전원소스 변경 직후 발생이라 CPU 전원관리(C-state)·칩셋 드라이버·BIOS 펌웨어가 의심 후보이며, 직전 Windows 업데이트가 1순위. WHEA 오류는 모두 corrected(정상)이고, 6/16에도 0x1e 블루스크린이 있어 반복성이 있음. BIOS/드라이버 최신화를 권장으로 제시.",
+      "status": "완료",
+      "tech": [
+        "Windows 이벤트 로그 — Kernel-Power/버그체크 분석",
+        "PowerShell — 이벤트 조회"
+      ],
+      "learnings": [
+        {
+          "title": "0x101 시그널",
+          "detail": "절전 복귀·전원소스 전환 직후의 CLOCK_WATCHDOG_TIMEOUT은 CPU 전원관리·칩셋 드라이버·BIOS 펌웨어 문제의 전형 패턴."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "덤프 파일이 관리자권한 전용·WinDbg 미설치로 직접 분석 불가",
+          "solution": "이벤트 로그의 크래시 전후 정황(절전/전원/버그체크)으로 원인을 좁혀 대체 분석"
+        }
+      ],
+      "next": [
+        "BIOS/칩셋·그래픽 드라이버 최신화",
+        "필요 시 WinDbg로 덤프 정밀 분석"
+      ],
+      "tags": [
+        "Windows",
+        "장애분석",
+        "디버깅"
+      ]
+    },
+    {
+      "task_ref": "t-0010",
+      "title": "단가검토 디자인 재현 실험",
+      "summary": "PPTX 원본이미지 기준 단가 상세검토 목업의 테두리·치수를 보정함.",
+      "detail": "배경 — 참고-PPTX원본이미지\\index.html 목업을 image6 기준으로 세부 보정하는 작업. 외곽 border 누락·외주이력 빈 셀 border·(최근 3년) 위치·전체 치수 4건 지적을 받았으나 첫 세션은 PC 크래시로 측정 스크립트만 남고 파일에 미반영됨.\n\n진행 — 다음 세션에서 미반영을 확인하고 재수행. 모든 표 외곽 border를 연한색에서 또렷한 회색으로, 외주이력 빈 값 셀 border 제거, (최근 3년)을 기록조회 헤더 우측으로 이동, 3단 비율·행 높이를 image6에 맞춰 정렬함.\n\n원인·재교정 — 외곽선이 border-collapse + overflow:hidden 조합에서 Chrome에 클리핑돼 실제로 그려지지 않았음. computed style(선언값)만 보고 \"적용됨\"으로 단정한 검증 결함을 인정하고, overflow:hidden·border-radius를 제거한 뒤 표 4변의 렌더 픽셀(darkpx)을 직접 측정하도록 교정.\n\n결과 — 5개 표 외곽선이 minLum=192로 실제 렌더됨을 측정·크롭 대조로 확인. 색감(청록 녹색·흰 값셀)은 이번 4건 범위 밖이라 보류함.",
+      "status": "진행 중",
+      "tech": [
+        "HTML/CSS — 목업 재현",
+        "Chrome headless — 기준 이미지 크롭 대조",
+        "Playwright — 렌더 픽셀 측정"
+      ],
+      "learnings": [
+        {
+          "title": "외곽선 클리핑",
+          "detail": "border-collapse 표에 overflow:hidden을 주면 외곽 1px 테두리가 클리핑돼 색을 바꿔도 안 그려짐."
+        },
+        {
+          "title": "선언값≠렌더",
+          "detail": "getComputedStyle의 borderWidth는 1px 선언만 확인할 뿐 실제 렌더를 보장하지 않아 가장자리 픽셀을 측정해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "1차 검증이 computed style만 봐 가공실적만 테두리가 그려진 걸 놓침",
+          "solution": "overflow/border-radius 제거 후 5개 표 4변 렌더 픽셀로 재측정·재확인"
+        }
+      ],
+      "next": [
+        "색감을 image6에 맞춤(선택)"
+      ],
+      "tags": [
+        "디자인 재현",
+        "CSS",
+        "픽셀 검증"
+      ]
+    },
+    {
+      "task_ref": "t-0002",
+      "title": "노션 작업일지 자동화",
+      "summary": "다일 작업 이어쓰기를 원장 기반으로 재설계하고 6/22~6/24를 재정리함.",
+      "detail": "배경·요구 — 사용자 요구 3건을 daily_worklog.py(tracker 방식)에 반영: 다일 작업은 최초 행에 이어쓰기·완료 시 상태 전환, 행 제목에서 날짜 제거, '초등학생 일기' 어투를 보고서체로 전환.\n\n재설계 — 1차는 제목 문자열 동일성으로 다일 작업을 매칭했으나, claude가 짓는 제목이 흔들리고 일반 제목이 오병합된다는 사용자 반려로 재설계. worklog_tasks.json 원장(영구 id↔Notion page_id)을 신설해 제목이 아닌 id로 매칭하고, 이어짐 판정은 원장의 열린 작업 목록과 HANDOFF.md 전문을 프롬프트에 주입해 맥락으로 판단(task_ref)하게 함.\n\n세션 병합 — collect_sessions가 세션마다 경계 헤더를 부여해 분할 단서로 쓰되, 같은 작업을 여러 세션에서 시도한 경우 하루 작업을 리스트업한 뒤 하나의 task로 병합하도록 프롬프트에 지시. 프롬프트 문체 규칙(감상·구어체 금지, 개조식/평서형)도 추가.\n\n실행·검증 — 네트워크 스텁 시뮬레이션이 신규생성·이어쓰기·완료전환·멱등·소실폴백 전 케이스 PASS. 구형 행 20개를 아카이브한 뒤 6/22~6/24를 순서대로 라이브 재생성(6/22 6건, 6/23 이어쓰기 4·신규 3, 6/24 이어쓰기 4·신규 1, 메인 로드 작업 완료 전환). 입력이 커진 6/23에서 300초 초과가 나 run_claude 타임아웃을 600초로 상향.",
+      "status": "진행 중",
+      "tech": [
+        "Python — daily_worklog.py 원장 로직",
+        "Notion API — 트래커 DB 행 이어쓰기/상태갱신",
+        "JSON 원장 — id↔page_id 매칭"
+      ],
+      "learnings": [
+        {
+          "title": "정체성은 id로",
+          "detail": "작업 정체성을 claude가 짓는 제목에 맡기면 오병합 위험. 영구 id 원장으로 결정론적 매칭해야 함."
+        },
+        {
+          "title": "세션은 단서일 뿐",
+          "detail": "세션 경계는 작업 분할의 1차 단서이나 절대 규칙이 아니어서, 같은 목표면 여러 세션을 한 task로 병합."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "1차 제목매칭은 일반 제목 오병합 리스크",
+          "solution": "id↔page_id 원장 기반으로 재설계해 충돌 제거"
+        },
+        {
+          "problem": "6/23 입력 194k로 claude 호출 300초 초과",
+          "solution": "run_claude 타임아웃을 600초로 상향"
+        }
+      ],
+      "next": [
+        "트래커 DB 컬럼 정리",
+        "라이브 운영하며 매칭 관찰"
+      ],
+      "tags": [
+        "Notion",
+        "자동화",
+        "Python"
+      ]
+    },
+    {
+      "task_ref": "t-0007",
+      "title": "단가검토 팝업 화면 개편",
+      "summary": "견적작성 단가검토 팝업을 목업 기준으로 리스킨하고 재작업 합의를 맞춤.",
+      "detail": "배경·목적 — 견적작성>단가검토 새 창 팝업(order_unit_price_calculate.jsp)을 PPTX 원본이미지 목업 디자인으로 교체. 조건은 기능 전부 유지, CSS 별도 파일, 좌측 기록조회는 그리드 형태만.\n\n1차 구현 — order_unit_price_calculate.css를 upc- 프리픽스로 신설하고 head에 link 추가. 헤더바(페이저·작업지시번호)에 prev/next를 footer에서 이동, 좌측 대상 List 마크업 제거, 기록조회 pqGrid 4개 shell + 아코디언(FIFO 최대 2개) 추가. compileJava·구조검증(div/form 균형, ID 보존) 통과.\n\n반려·재정렬 — 사용자가 \"기능만 기존 스크립트로 유지·디자인은 변경안\"인데 결과가 옛 디자인 그대로라고 지적. 요구 오독을 인정. 이를 막기 위해 grill-me 스킬을 도입해 grilling 세션으로 설계를 한 질문씩 합의: B(목업 재현), 저장/계산 필드는 보존(hidden), 죽은 .right_popup 미터치, 좌측 대상List 제거+헤더 페이저, 중앙 캔버스 확대/이동 유지, 무backing 요소는 placeholder, 제목 '단가 상세검토'.\n\n상태 — 재작업 계획을 합의 완료했으나 합의안대로의 본문 재구현은 미착수.",
+      "status": "진행 중",
+      "tech": [
+        "JSP — 팝업 마크업 재구성",
+        "CSS — 별도 파일 분리(upc- 네임스페이스)",
+        "ParamQuery Grid 11.0.0 — 빈 그리드 shell",
+        "Gradle — compileJava"
+      ],
+      "learnings": [
+        {
+          "title": "목업 대조 누락",
+          "detail": "ID·태그 균형만 점검하고 결과 화면을 기준 목업과 직접 대조하지 않아 방향 오류를 못 걸렀음."
+        },
+        {
+          "title": "죽은 UI 식별",
+          "detail": ".right_popup은 display:none이고 트리거 #processingCostBtn이 마크업에 없어 열 수 없는 데드 UI."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "'기능 유지·디자인 변경' 요구를 '기존 디자인 유지'로 오독해 1차 헛작업",
+          "solution": "grill-me/grilling 세션으로 설계 결정을 하나씩 합의해 재정렬"
+        }
+      ],
+      "next": [
+        "합의안대로 본문 재구현(목업 재현+기능 필드 보존)",
+        "앱 실행 후 실화면 렌더·실데이터 검증"
+      ],
+      "tags": [
+        "JSP",
+        "단가검토",
+        "리스킨",
+        "ParamQuery"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "grill-me 스킬 도입",
+      "summary": "Matt Pocock의 grill-me·grilling 스킬을 하네스에 원본 그대로 설치함.",
+      "detail": "배경 — 단가검토 작업에서 설계 방향 오독이 반복되자, 착수 전 계획을 집요하게 캐물어 정렬을 맞추는 grill-me 스킬을 도입하기로 함.\n\n진행 — WebSearch와 레포 확인으로 mattpocock/skills의 원본 SKILL.md 2개를 verbatim 확보. grill-me는 disable-model-invocation의 얇은 트리거이고 실제 동작은 grilling에 있어 둘 다 설치해야 함을 확인. 설치 위치는 사용자 지시에 따라 하네스 프로젝트(.claude/skills) 한정으로 정함.\n\n결과 — grill-me/SKILL.md와 grilling/SKILL.md를 원본 그대로 생성. 직후 /grill-me를 호출해 단가검토 재작업 설계를 한 질문씩 추천안과 함께 합의하는 grilling 세션을 실제 가동함.",
+      "status": "완료",
+      "tech": [
+        "Claude Code Skills — SKILL.md 설치",
+        "WebSearch — 원본 스킬 확인"
+      ],
+      "learnings": [
+        {
+          "title": "트리거/동작 분리",
+          "detail": "grill-me는 /grilling을 호출하는 얇은 트리거이고 실제 인터뷰 로직은 grilling 스킬에 있어 둘 다 설치해야 작동."
+        }
+      ],
+      "issues": [],
+      "next": [],
+      "tags": [
+        "Claude Code",
+        "스킬",
+        "하네스"
+      ]
+    }
+  ]
+}

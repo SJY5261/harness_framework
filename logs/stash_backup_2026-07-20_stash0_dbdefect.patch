@@ -1,0 +1,698 @@
+diff --git a/src/main/java/com/tomes/service/impl/OrderServiceImpl.java b/src/main/java/com/tomes/service/impl/OrderServiceImpl.java
+index 100f274..30d0c66 100644
+--- a/src/main/java/com/tomes/service/impl/OrderServiceImpl.java
++++ b/src/main/java/com/tomes/service/impl/OrderServiceImpl.java
+@@ -81,31 +81,44 @@ public class OrderServiceImpl implements OrderService {
+         if (duplicateRegistList.size() > 0) {
+             model.addAttribute("registList", duplicateRegistList);
+         } else {
+-            for (Map<String, Object> tempMap : listMap) {
+-                tempMap.put("LOGIN_USER_ID", userId);
+-                tempMap.put("LOGIN_USER_SEQ", userSeq);
+-                tempMap.put("LOGIN_COMP_MAIN_CD", loginCompMainCd);
+-                tempMap.put("LOGIN_SYSTEM_ID", loginSystemId);
++            // 접수번호 자동채번(MAX+1)은 동시 요청 시 같은 번호가 나올 수 있어 테넌트+발주사 단위 네임드락으로 직렬화한다.
++            // 락과 채번 SELECT(FOR UPDATE)가 같은 트랜잭션 커넥션에서 실행되는 것이 전제(@Transactional).
++            String numberingLockName = "TOMES_REGNUM_" + loginSystemId + "_" + loginCompMainCd;
++            boolean numberingLocked = false;
++            try {
++                if ("Y".equals(autoNumCreateYn) && !listMap.isEmpty()) {
++                    numberingLocked = acquireNumberingLock(numberingLockName);
++                }
++                for (Map<String, Object> tempMap : listMap) {
++                    tempMap.put("LOGIN_USER_ID", userId);
++                    tempMap.put("LOGIN_USER_SEQ", userSeq);
++                    tempMap.put("LOGIN_COMP_MAIN_CD", loginCompMainCd);
++                    tempMap.put("LOGIN_SYSTEM_ID", loginSystemId);
+ 
+-                if ("Y".equals(autoNumCreateYn)) {
+-                    if ("".equals(registNum)) {
+-                        tempMap.put("queryId", "orderMapper.createRegistNum");
+-                        registMap = innodaleDao.getInfo(tempMap);
+-                        registNum = (String) registMap.get("REGIST_NUM");
++                    if ("Y".equals(autoNumCreateYn)) {
++                        if ("".equals(registNum)) {
++                            tempMap.put("queryId", "orderMapper.createRegistNum");
++                            registMap = innodaleDao.getInfo(tempMap);
++                            registNum = (String) registMap.get("REGIST_NUM");
++                        } else {
++                            tempMap.put("queryId", "orderMapper.createRegistNumForNext");
++                            tempMap.put("ORDER_REGIST_NUM", registNum);
++                            registMap = innodaleDao.getInfo(tempMap);
++                            registNum = (String) registMap.get("REGIST_NUM");
++                        }
++                        tempMap.put("REGIST_NUM", registNum);
++                        tempMap.put("queryId", "orderMapper.createOrderAuto");
+                     } else {
+-                        tempMap.put("queryId", "orderMapper.createRegistNumForNext");
+-                        tempMap.put("ORDER_REGIST_NUM", registNum);
+-                        registMap = innodaleDao.getInfo(tempMap);
+-                        registNum = (String) registMap.get("REGIST_NUM");
++                        tempMap.put("queryId", "orderMapper.createOrder");
+                     }
+-                    tempMap.put("REGIST_NUM", registNum);
+-                    tempMap.put("queryId", "orderMapper.createOrderAuto");
+-                } else {
+-                    tempMap.put("queryId", "orderMapper.createOrder");
++                    this.innodaleDao.create(tempMap);
++                    tempMap.put("queryId", "orderMapper.insertOutBarcode");
++                    this.innodaleDao.create(tempMap);
++                }
++            } finally {
++                if (numberingLocked) {
++                    releaseNumberingLock(numberingLockName);
+                 }
+-                this.innodaleDao.create(tempMap);
+-                tempMap.put("queryId", "orderMapper.insertOutBarcode");
+-                this.innodaleDao.create(tempMap);
+             }
+         }
+     }
+@@ -137,8 +150,15 @@ public class OrderServiceImpl implements OrderService {
+         if (duplicationList.size() > 0) {
+             model.addAttribute("list", duplicationList);
+         } else {
+-            hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+-            this.innodaleDao.create(hashMap);
++            hashMap.put("queryId", "orderMapper.selectControlExcelAliveMappedOrderList");
++            List<Map<String, Object>> aliveMappedList = this.innodaleDao.getList(hashMap);
++
++            if (aliveMappedList.size() > 0) {
++                model.addAttribute("list", aliveMappedList);
++            } else {
++                hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
++                this.innodaleDao.create(hashMap);
++            }
+         }
+ 
+         hashMap.put("queryId", "orderMapper.deleteControlExcel");
+@@ -149,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
+     public void removeControl(Map<String, Object> map) throws Exception {
+         String jsonObject = (String) map.get("data");
+         String userId = (String) map.get("LOGIN_USER_ID");
++        String userSeq = (String) map.get("LOGIN_USER_SEQ");
+         ObjectMapper objectMapper = new ObjectMapper();
+         ArrayList<HashMap<String, Object>> jsonArray = null;
+ 
+@@ -158,11 +179,18 @@ public class OrderServiceImpl implements OrderService {
+ 
+         for (HashMap<String, Object> hashMap : jsonArray) {
+             hashMap.put("LOGIN_USER_ID", userId);
++            hashMap.put("LOGIN_USER_SEQ", userSeq);
+ 
+             if (hashMap.get("PART_NUM") == null || hashMap.get("PART_NUM").toString().trim().isEmpty()) {
+                 hashMap.put("queryId", "orderMapper.removeControl");
+                 this.innodaleDao.remove(hashMap);
+ 
++                hashMap.put("queryId", "orderMapper.removeControlBarcodeByControl");
++                this.innodaleDao.update(hashMap);
++
++                hashMap.put("queryId", "orderMapper.removeOutBarcodeByControl");
++                this.innodaleDao.update(hashMap);
++
+                 hashMap.put("queryId", "orderMapper.deleteControlRequestStock");
+                 this.innodaleDao.update(hashMap);
+             } else {
+@@ -466,6 +494,17 @@ public class OrderServiceImpl implements OrderService {
+                 hashMap.put("queryId", "orderMapper.updateDeliveryDt");
+                 this.innodaleDao.update(hashMap);
+ 
++                // 드리프트 A안(2026-07-14): 거래명세표에서 확정한 납품일을 매핑 사본에도 전파.
++                // 그리드 행의 다른 필드(접수번호·납기 등)가 의도치 않게 딸려가지 않도록 전용 맵으로 격리.
++                Map<String, Object> deliveryDtMap = new HashMap<String, Object>();
++                deliveryDtMap.put("ORDER_SEQ", hashMap.get("ORDER_SEQ"));
++                deliveryDtMap.put("DELIVERY_DT", hashMap.get("DELIVERY_DT"));
++                deliveryDtMap.put("LOGIN_USER_SEQ", userSeq);
++                deliveryDtMap.put("queryId", "orderMapper.updateControlPartOrderFromOrderManage");
++                this.innodaleDao.update(deliveryDtMap);
++                deliveryDtMap.put("queryId", "orderMapper.updateControlPartOrderMainFromOrderManage");
++                this.innodaleDao.update(deliveryDtMap);
++
+                 hashMap.put("queryId", "orderMapper.updatePackingCnt");
+                 this.innodaleDao.update(hashMap);
+             }
+@@ -1236,30 +1275,42 @@ public class OrderServiceImpl implements OrderService {
+             dataMap.put("LOGIN_COMP_MAIN_CD", loginCompMainCd);
+             String registNum = "";
+ 
+-            for (HashMap<String, Object> hashMap : addList) {
+-                hashMap.put("LOGIN_USER_ID", userId);
+-                hashMap.put("LOGIN_USER_SEQ", userSeq);
+-                hashMap.put("LOGIN_SYSTEM_ID", loginSystemId);
+-
++            // 접수번호 자동채번 직렬화 — createNewOrder와 동일한 락 키를 사용해 두 경로 간 동시 채번도 차단한다.
++            String numberingLockName = "TOMES_REGNUM_" + loginSystemId + "_" + loginCompMainCd;
++            boolean numberingLocked = false;
++            try {
+                 if ("Y".equals(autoNumCreateYn)) {
+-                    if ("".equals(registNum)) {
+-                        dataMap.put("queryId", "orderMapper.createRegistNum");
+-                        registMap = innodaleDao.getInfo(dataMap);
+-                        registNum = (String) registMap.get("REGIST_NUM");
+-                    } else {
+-                        dataMap.put("queryId", "orderMapper.createRegistNumForNext");
+-                        dataMap.put("ORDER_REGIST_NUM", registNum);
+-                        registMap = innodaleDao.getInfo(dataMap);
+-                        registNum = (String) registMap.get("REGIST_NUM");
++                    numberingLocked = acquireNumberingLock(numberingLockName);
++                }
++                for (HashMap<String, Object> hashMap : addList) {
++                    hashMap.put("LOGIN_USER_ID", userId);
++                    hashMap.put("LOGIN_USER_SEQ", userSeq);
++                    hashMap.put("LOGIN_SYSTEM_ID", loginSystemId);
++
++                    if ("Y".equals(autoNumCreateYn)) {
++                        if ("".equals(registNum)) {
++                            dataMap.put("queryId", "orderMapper.createRegistNum");
++                            registMap = innodaleDao.getInfo(dataMap);
++                            registNum = (String) registMap.get("REGIST_NUM");
++                        } else {
++                            dataMap.put("queryId", "orderMapper.createRegistNumForNext");
++                            dataMap.put("ORDER_REGIST_NUM", registNum);
++                            registMap = innodaleDao.getInfo(dataMap);
++                            registNum = (String) registMap.get("REGIST_NUM");
++                        }
++                        hashMap.put("REGIST_NUM", registNum);
++                        hashMap.put("queryId", "orderMapper.createOrderAuto");
++                    } else if (hashMap.get("REGIST_NUM") != null && !"".equals(hashMap.get("REGIST_NUM"))) {
++                        hashMap.put("queryId", "orderMapper.createOrder");
+                     }
+-                    hashMap.put("REGIST_NUM", registNum);
+-                    hashMap.put("queryId", "orderMapper.createOrderAuto");
+-                } else if (hashMap.get("REGIST_NUM") != null && !"".equals(hashMap.get("REGIST_NUM"))) {
+-                    hashMap.put("queryId", "orderMapper.createOrder");
++                    this.innodaleDao.create(hashMap);
++                    hashMap.put("queryId", "orderMapper.insertOutBarcode");
++                    this.innodaleDao.create(hashMap);
++                }
++            } finally {
++                if (numberingLocked) {
++                    releaseNumberingLock(numberingLockName);
+                 }
+-                this.innodaleDao.create(hashMap);
+-                hashMap.put("queryId", "orderMapper.insertOutBarcode");
+-                this.innodaleDao.create(hashMap);
+             }
+         }
+ 
+@@ -1294,10 +1345,35 @@ public class OrderServiceImpl implements OrderService {
+                     tempMap.put("queryId", "orderMapper.updateOrderFromOrderManage");
+                     this.innodaleDao.update(tempMap);
+ 
+-                    if (oldMap.containsKey("ORDER_DUE_DT") || oldMap.containsKey("REGIST_NUM")) {
++                    if (oldMap.containsKey("ORDER_DUE_DT") || oldMap.containsKey("REGIST_NUM")
++                            || oldMap.containsKey("DELIVERY_DT") || oldMap.containsKey("ITEM_NM")) {
+                         tempMap.put("queryId", "orderMapper.updateControlPartOrderFromOrderManage");
+                         this.innodaleDao.update(tempMap);
+                     }
++                    // _MAIN에는 접수번호 컬럼 전파가 없으므로 납기·납품일·품명 변경 시에만 갱신
++                    if (oldMap.containsKey("ORDER_DUE_DT") || oldMap.containsKey("DELIVERY_DT")
++                            || oldMap.containsKey("ITEM_NM")) {
++                        tempMap.put("queryId", "orderMapper.updateControlPartOrderMainFromOrderManage");
++                        this.innodaleDao.update(tempMap);
++                    }
++
++                    // 드리프트 A안(2026-07-14): 수량·단가 수정을 매핑 사본에 가드 전파.
++                    // 가드(쿼리 측) = 미마감 + 비병합(+수량은 단일 매핑) — 마감 조정 단가·병합 합산·분할 배정 보호.
++                    if (oldMap.containsKey("ORDER_QTY") && tempMap.get("ORDER_QTY") != null
++                            && !"".equals(tempMap.get("ORDER_QTY"))) {
++                        tempMap.put("queryId", "orderMapper.updateControlPartOrderQtyGuarded");
++                        this.innodaleDao.update(tempMap);
++
++                        tempMap.put("queryId", "orderMapper.updateControlPartOrderMainQtyGuarded");
++                        this.innodaleDao.update(tempMap);
++                    }
++                    if (oldMap.containsKey("UNIT_FINAL_AMT") || oldMap.containsKey("UNIT_FINAL_EST_AMT")) {
++                        tempMap.put("queryId", "orderMapper.updateControlPartOrderAmtGuarded");
++                        this.innodaleDao.update(tempMap);
++
++                        tempMap.put("queryId", "orderMapper.updateControlPartOrderMainAmtGuarded");
++                        this.innodaleDao.update(tempMap);
++                    }
+ 
+                     // 22.10.12 프로젝트 및 모듈 명이 변경 된 경우 Order 정보까지 업데이터 처리 한다.
+                     if (tempMap.containsKey("PROJECT_NM") || tempMap.containsKey("MODULE_NM")
+@@ -1420,10 +1496,10 @@ public class OrderServiceImpl implements OrderService {
+                 this.innodaleDao.create(hashMap);
+ 
+                 model.addAttribute("resCode", "SUCCESS");
+-            }
+ 
+-            if ("S34R10".equals(orderStatus)) {
+-                this.createNewControlForOrder(model, hashMap);
++                if ("S34R10".equals(orderStatus)) {
++                    this.createNewControlForOrder(model, hashMap);
++                }
+             }
+ 
+         }
+@@ -1477,20 +1553,29 @@ public class OrderServiceImpl implements OrderService {
+                         flag = true;
+                         message = "PDF확장자 파일 도면을 등록 후 다시 시도해주세요.";
+                     } else {
+-                        message = "";
+-                        tempMap.put("ORDER_STATUS", "S34R10");
+-                        tempMap.put("LOGIN_USER_ID", userId);
+-                        tempMap.put("LOGIN_USER_SEQ", userSeq);
+-                        tempMap.put("LOGIN_SYSTEM_ID", loginSystemId);
+-                        tempMap.put("AUTO_NUM_CREATE_YN", autoNumCreateYn);
+-
+-                        tempMap.put("queryId", "orderMapper.updateOrderStatus");
+-                        this.innodaleDao.update(tempMap);
++                        tempMap.put("queryId", "orderMapper.selectAliveControlNumByOrderSeq");
++                        Map<String, Object> aliveControlMap = this.innodaleDao.getInfo(tempMap);
+ 
+-                        tempMap.put("queryId", "orderMapper.createOrderProgress");
+-                        this.innodaleDao.create(tempMap);
++                        if (aliveControlMap != null) {
++                            flag = true;
++                            message = "이미 작업지시(" + aliveControlMap.get("CONTROL_NUM") + ")가 발행된 주문입니다. (접수번호: "
++                                    + tempMap.get("REGIST_NUM") + ")";
++                        } else {
++                            message = "";
++                            tempMap.put("ORDER_STATUS", "S34R10");
++                            tempMap.put("LOGIN_USER_ID", userId);
++                            tempMap.put("LOGIN_USER_SEQ", userSeq);
++                            tempMap.put("LOGIN_SYSTEM_ID", loginSystemId);
++                            tempMap.put("AUTO_NUM_CREATE_YN", autoNumCreateYn);
+ 
+-                        this.createNewControlForOrder(model, tempMap);
++                            tempMap.put("queryId", "orderMapper.updateOrderStatus");
++                            this.innodaleDao.update(tempMap);
++
++                            tempMap.put("queryId", "orderMapper.createOrderProgress");
++                            this.innodaleDao.create(tempMap);
++
++                            this.createNewControlForOrder(model, tempMap);
++                        }
+                     }
+                 } else {
+                     flag = true;
+@@ -1714,47 +1799,76 @@ public class OrderServiceImpl implements OrderService {
+             }
+         }
+ 
+-        if (updateList != null && updateList.size() > 0 && !flag) {
+-            for (HashMap<String, Object> hashMap : updateList) {
+-                hashMap.put("LOGIN_USER_ID", userId);
+-                hashMap.put("LOGIN_USER_SEQ", userSeq);
+-                hashMap.put("LOGIN_SYSTEM_ID", loginSystemId);
+-                hashMap.put("IN_UID", uuid);
++        // 작업지시번호 자동채번(MAX+1) 직렬화 — 채번~SP 발행까지 락을 유지해야
++        // 다음 요청의 채번 FOR UPDATE가 이번 발행분(TBL_CONTROL)에 막혀 같은 번호를 따지 못한다.
++        String numberingLockName = "TOMES_CTRLNUM_" + loginSystemId;
++        boolean numberingLocked = false;
++        try {
++            if ("Y".equals(autoNumCreateYn) && updateList != null && updateList.size() > 0 && !flag) {
++                numberingLocked = acquireNumberingLock(numberingLockName);
++            }
+ 
+-                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
+-                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer3");
+-                    if (this.orderDao.getFlag(hashMap)) {
+-                        flag = true;
+-                        message = "이미 존재하는 작업지시번호입니다.";
+-                    }
++            if (updateList != null && updateList.size() > 0 && !flag) {
++                for (HashMap<String, Object> hashMap : updateList) {
++                    hashMap.put("LOGIN_USER_ID", userId);
++                    hashMap.put("LOGIN_USER_SEQ", userSeq);
++                    hashMap.put("LOGIN_SYSTEM_ID", loginSystemId);
++                    hashMap.put("IN_UID", uuid);
+ 
+-                    // 여기서 control_num
+-                    // 저장을 눌렀을 때 autonumCreateYn이 Y이면 작업지시번호 생성해서 control 만들어주고
+-                    // n일 경우 control_num 있는지 체크해서 있으면 control만들고 없으면 order만 업데이트?
+-                    if ("Y".equals(autoNumCreateYn)) {
+-                        hashMap.put("queryId", "orderMapper.createControlNum");
+-                        Map<String, Object> controlNumMap = innodaleDao.getInfo(hashMap);
+-                        String controlNum = (String) controlNumMap.get("CONTROL_NUM");
+-                        hashMap.put("CONTROL_NUM", controlNum);
+-                    }
++                    if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
++                        hashMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer3");
++                        if (this.orderDao.getFlag(hashMap)) {
++                            flag = true;
++                            message = "이미 존재하는 작업지시번호입니다.";
++                        }
+ 
+-                    hashMap.put("queryId", "orderMapper.updateOrderFromCreateControl");
+-                    this.innodaleDao.update(hashMap);
++                        // 여기서 control_num
++                        // 저장을 눌렀을 때 autonumCreateYn이 Y이면 작업지시번호 생성해서 control 만들어주고
++                        // n일 경우 control_num 있는지 체크해서 있으면 control만들고 없으면 order만 업데이트?
++                        if ("Y".equals(autoNumCreateYn)) {
++                            hashMap.put("queryId", "orderMapper.createControlNum");
++                            Map<String, Object> controlNumMap = innodaleDao.getInfo(hashMap);
++                            String controlNum = (String) controlNumMap.get("CONTROL_NUM");
++                            hashMap.put("CONTROL_NUM", controlNum);
++                        }
+ 
+-                    hashMap.put("queryId", "orderMapper.createControlExcel");
+-                    this.innodaleDao.create(hashMap);
++                        hashMap.put("queryId", "orderMapper.updateOrderFromCreateControl");
++                        this.innodaleDao.update(hashMap);
+ 
++                        hashMap.put("queryId", "orderMapper.createControlExcel");
++                        this.innodaleDao.create(hashMap);
++
++                    }
+                 }
+             }
+-        }
+ 
+-        if (!flag) {
+-            tempMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+-            this.innodaleDao.create(tempMap);
+-        }
++            if (!flag) {
++                tempMap.put("queryId", "orderMapper.selectControlExcelAliveMappedOrderList");
++                List<Map<String, Object>> aliveMappedList = this.innodaleDao.getList(tempMap);
+ 
+-        tempMap.put("queryId", "orderMapper.deleteControlExcel");
+-        this.innodaleDao.remove(tempMap);
++                if (aliveMappedList.size() > 0) {
++                    flag = true;
++                    StringBuilder aliveMappedStr = new StringBuilder();
++                    for (Map<String, Object> aliveMap : aliveMappedList) {
++                        if (aliveMappedStr.length() > 0) {
++                            aliveMappedStr.append(", ");
++                        }
++                        aliveMappedStr.append(aliveMap.get("REGIST_NUM")).append("(").append(aliveMap.get("CONTROL_NUM")).append(")");
++                    }
++                    message = "이미 작업지시가 발행된 주문이 있습니다. : " + aliveMappedStr;
++                } else {
++                    tempMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
++                    this.innodaleDao.create(tempMap);
++                }
++            }
++
++            tempMap.put("queryId", "orderMapper.deleteControlExcel");
++            this.innodaleDao.remove(tempMap);
++        } finally {
++            if (numberingLocked) {
++                releaseNumberingLock(numberingLockName);
++            }
++        }
+ 
+         model.addAttribute("flag", flag);
+         model.addAttribute("message", message);
+@@ -1891,23 +2005,71 @@ public class OrderServiceImpl implements OrderService {
+         tempMap.put("LOGIN_SYSTEM_ID", loginSystemId);
+         String autoNumCreateYn = (String) map.get("AUTO_NUM_CREATE_YN");
+ 
+-        map.put("CONTROL_NUM", "");
+-        if ("Y".equals(autoNumCreateYn)) {
+-            map.put("queryId", "orderMapper.createControlNum");
+-            Map<String, Object> controlNumMap = innodaleDao.getInfo(map);
+-            String controlNum = (String) controlNumMap.get("CONTROL_NUM");
+-            map.put("CONTROL_NUM", controlNum);
+-        }
++        // 작업지시번호 자동채번 직렬화 — createNewControl과 동일한 락 키(테넌트 단위)
++        String numberingLockName = "TOMES_CTRLNUM_" + loginSystemId;
++        boolean numberingLocked = false;
++        try {
++            map.put("CONTROL_NUM", "");
++            if ("Y".equals(autoNumCreateYn)) {
++                numberingLocked = acquireNumberingLock(numberingLockName);
++                map.put("queryId", "orderMapper.createControlNum");
++                Map<String, Object> controlNumMap = innodaleDao.getInfo(map);
++                String controlNum = (String) controlNumMap.get("CONTROL_NUM");
++                map.put("CONTROL_NUM", controlNum);
++            }
+ 
+-        map.put("queryId", "orderMapper.createControlExcel");
+-        this.innodaleDao.create(map);
++            map.put("queryId", "orderMapper.createControlExcel");
++            this.innodaleDao.create(map);
+ 
+-        tempMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+-        this.innodaleDao.create(tempMap);
++            tempMap.put("queryId", "orderMapper.selectControlExcelAliveMappedOrderList");
++            List<Map<String, Object>> aliveMappedList = this.innodaleDao.getList(tempMap);
+ 
+-        tempMap.put("queryId", "orderMapper.deleteControlExcel");
+-        this.innodaleDao.remove(tempMap);
++            if (aliveMappedList.size() > 0) {
++                model.addAttribute("resCode", "CONTROL_EXISTS");
++            } else {
++                tempMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
++                this.innodaleDao.create(tempMap);
++            }
++
++            tempMap.put("queryId", "orderMapper.deleteControlExcel");
++            this.innodaleDao.remove(tempMap);
++        } finally {
++            if (numberingLocked) {
++                releaseNumberingLock(numberingLockName);
++            }
++        }
++
++    }
++
++    /**
++     * 채번(MAX+1) 직렬화용 DB 네임드락 획득. @Transactional 안에서 호출해야
++     * 락과 채번 쿼리가 같은 커넥션에서 실행된다. 획득 실패 시 예외로 저장을 중단한다.
++     */
++    private boolean acquireNumberingLock(String lockName) throws Exception {
++        Map<String, Object> lockMap = new HashMap<String, Object>();
++        lockMap.put("queryId", "orderMapper.acquireNumberingLock");
++        lockMap.put("LOCK_NAME", lockName);
++        Map<String, Object> resultMap = this.innodaleDao.getInfo(lockMap);
++        Object lockResult = resultMap != null ? resultMap.get("LOCK_RESULT") : null;
++        if (lockResult == null || ((Number) lockResult).longValue() != 1L) {
++            throw new ServiceNotValidException("채번 대기 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.");
++        }
++        return true;
++    }
+ 
++    /**
++     * 네임드락 해제. finally에서 호출되므로 원래 예외를 덮지 않도록 실패해도 로그만 남긴다.
++     * (해제 누락 시 풀 커넥션에 락이 잔류하므로 반드시 finally로 호출할 것)
++     */
++    private void releaseNumberingLock(String lockName) {
++        try {
++            Map<String, Object> lockMap = new HashMap<String, Object>();
++            lockMap.put("queryId", "orderMapper.releaseNumberingLock");
++            lockMap.put("LOCK_NAME", lockName);
++            this.innodaleDao.getInfo(lockMap);
++        } catch (Exception e) {
++            log.error("releaseNumberingLock fail: " + lockName, e);
++        }
+     }
+ 
+ }
+diff --git a/src/main/resources/sqlMaps/order.xml b/src/main/resources/sqlMaps/order.xml
+index 5d288eb..c7eb4ed 100644
+--- a/src/main/resources/sqlMaps/order.xml
++++ b/src/main/resources/sqlMaps/order.xml
+@@ -1009,6 +1009,27 @@
+           AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+     </delete>
+ 
++    <!-- 작업지시 삭제 전파: 컨트롤 단위 바코드 소프트 삭제 -->
++    <update id="removeControlBarcodeByControl" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_BARCODE
++        SET
++            DEL_YN = 'Y',
++            UPDATE_DT = NOW(),
++            UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE DEL_YN = 'N'
++            AND CONTROL_SEQ = #{CONTROL_SEQ}
++    </update>
++
++    <update id="removeOutBarcodeByControl" parameterType="java.util.HashMap">
++        UPDATE TBL_OUT_BARCODE
++        SET
++            DEL_YN = 'Y',
++            UPDATE_DT = NOW(),
++            UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE DEL_YN = 'N'
++            AND CONTROL_SEQ = #{CONTROL_SEQ}
++    </update>
++
+     <update id="updateControlPart" parameterType="java.util.HashMap">
+         UPDATE TBL_CONTROL_PART
+         SET
+@@ -1126,10 +1147,111 @@
+             <if test="(ORDER_STATUS == null or ORDER_STATUS == 'S34R20') and (REGIST_NUM != null and REGIST_NUM != '')">
+                 REGIST_NUM = UPPER(#{REGIST_NUM}),
+             </if>
++            <if test="DELIVERY_DT != null and DELIVERY_DT != ''">
++                DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
++            </if>
++            <if test="ITEM_NM != null">
++                ITEM_NM = #{ITEM_NM},
++            </if>
+             UPDATE_SEQ = CASE WHEN UPDATE_SEQ IS NOT NULL THEN UPDATE_SEQ ELSE NULL END
+         WHERE ORDER_SEQ = #{ORDER_SEQ}
+     </update>
+ 
++    <!-- 드리프트 A안(2026-07-14): 수주관리·거래명세표에서 주문 값 수정 시 _MAIN 사본 동기화 (납기·납품일·품명) -->
++    <update id="updateControlPartOrderMainFromOrderManage" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_PART_ORDER_MAIN
++        SET
++            <if test="ORDER_DUE_DT != null and ORDER_DUE_DT != ''">
++                ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
++            </if>
++            <if test="DELIVERY_DT != null and DELIVERY_DT != ''">
++                DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
++            </if>
++            <if test="ITEM_NM != null">
++                ITEM_NM = #{ITEM_NM},
++            </if>
++            UPDATE_DT = NOW(),
++            UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE ORDER_SEQ = #{ORDER_SEQ}
++    </update>
++
++    <!-- 드리프트 A안(2026-07-14): 수주관리 수량 수정의 가드 전파.
++         가드 = 살아있는 작업지시 + 비병합 + 미마감 + 주문의 살아있는 매핑이 1행일 때만(분할 배정 보호).
++         자기 테이블 서브쿼리는 파생테이블로 감싸 1093 회피. -->
++    <update id="updateControlPartOrderQtyGuarded" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_PART_ORDER A
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
++        SET A.ORDER_QTY = #{ORDER_QTY},
++            A.UPDATE_DT = NOW(),
++            A.UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
++          AND A.MERGE_CONTROL_SEQ IS NULL
++          AND NOT EXISTS (SELECT 1 FROM TBL_MONTH_CLOSE_ORDER M
++                WHERE M.ORDER_SEQ = A.ORDER_SEQ AND M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
++          AND A.ORDER_SEQ IN (SELECT T.ORDER_SEQ FROM (
++                SELECT Z.ORDER_SEQ FROM TBL_CONTROL_PART_ORDER Z
++                    INNER JOIN TBL_CONTROL ZC ON ZC.CONTROL_SEQ = Z.CONTROL_SEQ AND ZC.DEL_YN = 'N'
++                WHERE Z.ORDER_SEQ = #{ORDER_SEQ}
++                GROUP BY Z.ORDER_SEQ HAVING COUNT(*) = 1
++              ) T)
++    </update>
++
++    <!-- 드리프트 A안(2026-07-14): 수주관리 단가 수정의 가드 전파. 미마감 가드로 마감이력 조정 단가를 보호 -->
++    <update id="updateControlPartOrderAmtGuarded" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_PART_ORDER A
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
++        SET
++            <if test="UNIT_FINAL_EST_AMT != null">
++                A.UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
++            </if>
++            <if test="UNIT_FINAL_AMT != null">
++                A.UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
++            </if>
++            A.UPDATE_DT = NOW(),
++            A.UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
++          AND A.MERGE_CONTROL_SEQ IS NULL
++          AND NOT EXISTS (SELECT 1 FROM TBL_MONTH_CLOSE_ORDER M
++                WHERE M.ORDER_SEQ = A.ORDER_SEQ AND M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
++    </update>
++
++    <update id="updateControlPartOrderMainQtyGuarded" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_PART_ORDER_MAIN A
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
++            INNER JOIN TBL_CONTROL_PART_ORDER B ON B.CONTROL_SEQ = A.CONTROL_SEQ
++                AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND B.ORDER_SEQ = A.ORDER_SEQ
++        SET A.ORDER_QTY = #{ORDER_QTY},
++            A.UPDATE_DT = NOW(),
++            A.UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
++          AND B.MERGE_CONTROL_SEQ IS NULL
++          AND NOT EXISTS (SELECT 1 FROM TBL_MONTH_CLOSE_ORDER M
++                WHERE M.ORDER_SEQ = A.ORDER_SEQ AND M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
++          AND (SELECT COUNT(*) FROM TBL_CONTROL_PART_ORDER Z
++                INNER JOIN TBL_CONTROL ZC ON ZC.CONTROL_SEQ = Z.CONTROL_SEQ AND ZC.DEL_YN = 'N'
++                WHERE Z.ORDER_SEQ = A.ORDER_SEQ) = 1
++    </update>
++
++    <update id="updateControlPartOrderMainAmtGuarded" parameterType="java.util.HashMap">
++        UPDATE TBL_CONTROL_PART_ORDER_MAIN A
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
++            INNER JOIN TBL_CONTROL_PART_ORDER B ON B.CONTROL_SEQ = A.CONTROL_SEQ
++                AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND B.ORDER_SEQ = A.ORDER_SEQ
++        SET
++            <if test="UNIT_FINAL_EST_AMT != null">
++                A.UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
++            </if>
++            <if test="UNIT_FINAL_AMT != null">
++                A.UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
++            </if>
++            A.UPDATE_DT = NOW(),
++            A.UPDATE_SEQ = #{LOGIN_USER_SEQ}
++        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
++          AND B.MERGE_CONTROL_SEQ IS NULL
++          AND NOT EXISTS (SELECT 1 FROM TBL_MONTH_CLOSE_ORDER M
++                WHERE M.ORDER_SEQ = A.ORDER_SEQ AND M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
++    </update>
++
+     <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
+         UPDATE TBL_CONTROL_PART_ORDER
+         SET
+@@ -6483,6 +6605,16 @@
+           AND SYSTEM_ID = #{LOGIN_SYSTEM_ID}
+           AND REGIST_NUM LIKE CONCAT(DATE_FORMAT(NOW(), '%y%m'), '-', #{LOGIN_COMP_MAIN_CD}, '-%')
+           AND DEL_YN = 'N'
++        FOR UPDATE
++    </select>
++
++    <!-- 채번 직렬화용 네임드락 (2026-07-13 채번 원자화). 트랜잭션과 같은 커넥션에서 획득/해제해야 함 -->
++    <select id="acquireNumberingLock" parameterType="java.util.HashMap" resultType="java.util.HashMap">
++        SELECT GET_LOCK(#{LOCK_NAME}, 10) AS LOCK_RESULT
++    </select>
++
++    <select id="releaseNumberingLock" parameterType="java.util.HashMap" resultType="java.util.HashMap">
++        SELECT RELEASE_LOCK(#{LOCK_NAME}) AS LOCK_RESULT
+     </select>
+ 
+     <select id="createRegistNumForNext" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+@@ -6559,6 +6691,7 @@
+             AND DEL_YN = 'N'
+             AND EST_SEQ = #{EST_SEQ}
+             AND REGIST_NUM LIKE CONCAT(DATE_FORMAT(NOW(), '%y%m'), '-', #{LOGIN_COMP_MAIN_CD}, '-%')
++        FOR UPDATE
+     </select>
+ 
+     <select id="createControlNum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+@@ -6571,16 +6704,17 @@
+                        LPAD(COALESCE(MAX(CAST(SUBSTRING_INDEX(CONTROL_NUM, '-', -1) AS UNSIGNED)) + 1, 1), 4, '0')
+                    ) AS CONTROL_NUM
+         FROM (
+-                 SELECT CONTROL_NUM
++                 (SELECT CONTROL_NUM
+                  FROM TBL_CONTROL
+                  WHERE SYSTEM_ID = #{LOGIN_SYSTEM_ID}
+                    AND CONTROL_NUM LIKE CONCAT('C', DATE_FORMAT(NOW(), '%y'), '-', DATE_FORMAT(NOW(), '%m%d'), '-%')
+                    AND DEL_YN = 'N'
++                 FOR UPDATE)
+                  UNION ALL
+-                 SELECT CONTROL_NUM
++                 (SELECT CONTROL_NUM
+                  FROM TBL_CONTROL_EXCEL
+                  WHERE 1=1
+-                   AND CONTROL_NUM LIKE CONCAT('C', DATE_FORMAT(NOW(), '%y'), '-', DATE_FORMAT(NOW(), '%m%d'), '-%')
++                   AND CONTROL_NUM LIKE CONCAT('C', DATE_FORMAT(NOW(), '%y'), '-', DATE_FORMAT(NOW(), '%m%d'), '-%'))
+              ) AS X
+     </select>
+ 
+@@ -6839,5 +6973,23 @@
+         ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.TEMP_REGIST IS NULL ASC, B.TEMP_REGIST ASC, B.PART_NUM, C.ORDER_SEQ
+     </select>
+ 
++    <!-- 작업지시 발행 사전검사: 배치 스테이징 주문 중 이미 살아있는 작업지시에 매핑된 주문 (이중 매핑 방지) -->
++    <select id="selectControlExcelAliveMappedOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
++        SELECT DISTINCT X.ORDER_SEQ, X.REGIST_NUM, X.DRAWING_NUM, C.CONTROL_NUM
++        FROM TBL_CONTROL_EXCEL X
++            INNER JOIN TBL_CONTROL_PART_ORDER B ON B.ORDER_SEQ = X.ORDER_SEQ
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.DEL_YN = 'N'
++        WHERE X.JOB_SEQ_KEY = #{IN_UID}
++            AND IFNULL(X.WORK_TYPE, SPACE(0)) != 'S10R40' <!-- 재고작업은 SP가 신규 ORDER_SEQ 채번(기존 주문 미재사용)이라 제외 -->
++    </select>
++
++    <!-- 작업지시 발행 사전검사: 해당 주문이 이미 살아있는 작업지시에 매핑돼 있는지 단건 확인 -->
++    <select id="selectAliveControlNumByOrderSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
++        SELECT C.CONTROL_NUM
++        FROM TBL_CONTROL_PART_ORDER B
++            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.DEL_YN = 'N'
++        WHERE B.ORDER_SEQ = #{ORDER_SEQ}
++        LIMIT 1
++    </select>
+ 
+ </mapper>

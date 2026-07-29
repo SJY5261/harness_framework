@@ -1,0 +1,58 @@
+{
+  "verified_at": "2026-07-27T14:41:00+09:00",
+  "workspace": "D:\\harness_framework",
+  "product_revision": "c0ac256",
+  "verification_scope": "가공확정 페이지 비활성 이후 작업지시 재확정 예외",
+  "source_evidence": {
+    "personal_pc_original_found": false,
+    "note": "개인 PC에서 만들었던 2026-07-24 증적은 전달 폴더와 저장소에 없어, 현재 두 수정 파일의 조건을 기준으로 네 가지 화면 검사를 다시 구성했다."
+  },
+  "environment": {
+    "server": "http://smd.localhost:8081",
+    "profile": "local",
+    "java": "21.0.2",
+    "startup": "PASS",
+    "database_connection": "PASS"
+  },
+  "existing_automation": {
+    "test_id": "CD-FT-CTL-032",
+    "sheet_row": 374,
+    "result": "PASS",
+    "note": "확인창과 /managerControlStatus 요청 내용을 검사하되 실제 저장 요청은 전송하지 않았다."
+  },
+  "reconstructed_screen_cases": [
+    {
+      "screen": "작업관리 > 작업지시관리",
+      "case": "이미 작업지시확정 상태이고 가공확정 이력이 없는 비외주 파트",
+      "expected": "재확정 확인창 표시 및 /managerControlStatus 요청 준비",
+      "result": "PASS"
+    },
+    {
+      "screen": "작업관리 > 작업지시관리",
+      "case": "이미 작업지시확정 상태이고 가공확정 이력이 있는 파트",
+      "expected": "상태변경 불가 안내 후 저장 요청 차단",
+      "result": "PASS"
+    },
+    {
+      "screen": "작업지시 검토 창",
+      "case": "이미 작업지시확정 상태이고 가공확정 이력이 없는 비외주 파트",
+      "expected": "재확정 확인창 표시 및 /managerControlStatus 요청 준비",
+      "result": "PASS"
+    },
+    {
+      "screen": "작업지시 검토 창",
+      "case": "이미 작업지시확정 상태인 외주 파트",
+      "expected": "상태변경 불가 안내 후 저장 요청 차단",
+      "result": "PASS"
+    }
+  ],
+  "safety": {
+    "actual_status_update_sent": false,
+    "method": "실제 화면의 버튼 처리 코드를 실행하고 확인창·알림·저장 요청 함수를 검사용으로 교체해 데이터 변경을 막았다.",
+    "test_seed_note": "기존 자동화 실행 전 기준 데이터 정리 과정에서 테스트용 주문 데이터 18건의 상태·원가가 기준값으로 재설정됐다."
+  },
+  "remaining": [
+    "POP 바코드 스캐너 실기기 입력 검증",
+    "개인 PC 원본 2026-07-24 증적과의 항목 대조"
+  ]
+}

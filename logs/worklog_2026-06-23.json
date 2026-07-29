@@ -1,0 +1,286 @@
+{
+  "summary": "Redis 기준정보 캐시 검증·문서화, 정적 리소스 캐시로 메인 로드 단축, 단가검토 팝업 PPT 개편, 노션·하네스·QA 도구 정비",
+  "tasks": [
+    {
+      "task_ref": "t-0005",
+      "title": "기준정보 Redis 캐시 구현·검증",
+      "summary": "기준정보 캐시를 후순위 정리·런타임 실측·문서화하고 확장성까지 분석함",
+      "detail": "배경·목적 — 기준정보 조회 8종에 도입한 Redis 캐시를 커밋·검증하고 추천 등급에 맞게 정리하는 작업. 협업자가 같은 브랜치에 먼저 푸시해 분기된 상태에서 시작함.\n\n진행 — 협업자 커밋 3건을 rebase로 병합 후 푸시해 feature_caching_2606을 동기화함(b504ace). 분석에서 후순위로 분류했던 getCompanyStaffList·selectCompList가 그룹 단위 설계로 캐시에 휩쓸려 들어간 것을 제거하고, getCompanyStaffList는 COMP_CD를 키에서 빼고 sid 단일키로 전체 조회 후 메모리 필터하는 방식으로 재구현함. selectCompList는 캐시 제외 유지.\n\n검증 — 서버를 직접 기동해 test 계정 로그인 후 /json-list를 쿼리별 2회 호출하고 서버 SQL 로그로 DB 실행 횟수를 집계함. 캐시 대상 9종은 2번째 호출이 Redis 적중(DB 미실행), 제거한 2종은 매 호출 DB 직조회로 의도대로 동작함을 확인.\n\n문서화·확장 분석 — redis_query_cache MD와 1000테넌트·GC 분석 MD를 작성함. DS_WAREHOUSE는 '변경 경로 없음' 주석이 틀려 실제 창고 변경 경로가 있으나 evict 패턴 미일치로 최대 1시간 stale되는 결함을 발견함. 1000테넌트 관점에서 allEntries 전체 flush 무효화가 적중률을 붕괴시키며, 해법은 온힙(GC) 전환이 아니라 테넌트 단위 정밀 evict와 Redis maxmemory+LRU임을 정리함.",
+      "status": "진행 중",
+      "tech": [
+        "Redis — @Cacheable/@CacheEvict 서버 캐시",
+        "Spring AOP — 셀프호출 캐시 우회 진단",
+        "Playwright/requests — 캐시 적중·evict 실측",
+        "Git rebase — 협업 브랜치 분기 병합"
+      ],
+      "learnings": [
+        {
+          "title": "셀프호출 캐시 우회",
+          "detail": "같은 빈 내부에서 메서드를 직접 호출하면 Spring AOP 프록시를 우회해 @Cacheable이 적용되지 않음(getChargeList→getSessionCodeList)."
+        },
+        {
+          "title": "allEntries의 스케일 위험",
+          "detail": "전체 flush 방식 evict는 한 테넌트의 쓰기가 1000개 테넌트 캐시를 통째로 날려 적중률을 붕괴시킴."
+        },
+        {
+          "title": "GC 아닌 Redis 정책",
+          "detail": "온힙 캐시 전환은 GC 부담·노드 중복·무효화 붕괴를 부르고, 메모리 관리는 maxmemory+LRU가 정답."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "후순위 2개가 의도와 달리 캐시에 포함됨",
+          "solution": "그룹 단위 설계로 휩쓸린 getCompanyStaffList·selectCompList를 제거해 추천 등급(9종)에 맞춤"
+        },
+        {
+          "problem": "DS_WAREHOUSE evict 누락(최대 1h stale)",
+          "solution": "창고 변경 경로 존재를 코드로 확인, evict 패턴 미일치를 결함으로 식별(수정은 미실시)"
+        },
+        {
+          "problem": "git 브랜치·커밋 상태를 옛 스냅샷으로 단정",
+          "solution": "턴마다 현재 상태를 재확인해 71f034b(dangling)→b504ace 등으로 정정"
+        }
+      ],
+      "next": [
+        "DS_WAREHOUSE evict 배선",
+        "allEntries→테넌트 단위 정밀 evict 전환",
+        "NCP Redis maxmemory+allkeys-lru 설정 확인",
+        "getSystemInfo 캐시 재활성화 검토"
+      ],
+      "tags": [
+        "Redis",
+        "캐시",
+        "성능",
+        "멀티테넌트"
+      ]
+    },
+    {
+      "task_ref": "t-0004",
+      "title": "메인 로드 속도 개선",
+      "summary": "메인 로드 병목이 정적 리소스 no-store 재다운로드임을 규명하고 캐시 헤더로 단축함",
+      "detail": "배경·목적 — 메인 화면 로드 시간이 점점 늘어난다는 체감을 캐싱 전 기록과 비교 검증하는 데서 출발함. 06-22 분석이 병목을 정적 리소스로 결론낸 흐름을 실제로 해소하는 작업.\n\n원인 — 정적 리소스(/resource/**) 응답이 Cache-Control: no-store로 내려와 새로고침마다 약 150건·2.3MB를 전량 재다운로드함. 원인은 커스텀 리소스 핸들러가 yml 캐시 설정을 물려받지 못한 점과 Spring Security 기본 헤더라이터가 no-store를 기록한 점의 결합.\n\n수정 — WebContextConfig 핸들러에 setCacheControl(maxAge 365일, public)을 추가하고 SecurityConfig에 WebSecurityCustomizer로 /resource/**를 보안 필터에서 제외함. 헤더가 max-age=31536000, public으로 전환됨.\n\n결과·임팩트 — 동일 스크립트 reload×8 측정에서 새로고침 중앙값 15791ms→3177ms(약 -80%), 전송량 2297KB→60KB로 감소함. 콜드 첫 로드는 캐시가 비어 변화 없음. 분석·수정 내용은 static_resource_cache MD로 정리하고, 변경분은 stash를 거쳐 feature_caching_2606으로 이동함.",
+      "status": "진행 중",
+      "tech": [
+        "Spring WebMvc — ResourceHandler setCacheControl",
+        "Spring Security — WebSecurityCustomizer ignoring",
+        "Playwright — 로드 ms 전수 측정"
+      ],
+      "learnings": [
+        {
+          "title": "no-store의 출처",
+          "detail": "커스텀 리소스 핸들러는 spring.web.resources.cache yml 설정을 안 물려받고, 캐시 미설정 응답에 Security 기본 헤더라이터가 no-store를 기록함."
+        },
+        {
+          "title": "병목은 캐싱 아닌 정적",
+          "detail": "메인 로드 8~10초는 AJAX·DB가 아니라 정적 150건을 매번 재다운로드하는 HTTP/1.1 큐잉이 원인."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "dev에서만 HTTP/1.1 큐잉이 두드러짐",
+          "solution": "운영은 http2 활성이라 로컬 한정 현상으로 구분, 코드 수정은 전 프로필 공통으로 적용"
+        },
+        {
+          "problem": "수정한 config 변경이 브랜치 전환 중 사라짐",
+          "solution": "유실이 아니라 stash@{0}에 보관됨을 git으로 추적해 확인"
+        }
+      ],
+      "next": [
+        "운영 cache-busting(파일명·쿼리스트링 버저닝) 도입",
+        "feature_caching_2606 커밋"
+      ],
+      "tags": [
+        "성능",
+        "캐시",
+        "Spring",
+        "정적리소스"
+      ]
+    },
+    {
+      "task_ref": "t-0002",
+      "title": "노션 작업일지 자동화",
+      "summary": "일자 단위 일지를 '작업 트래커' DB의 작업 단위 행으로 전환하고 상세 서술을 보강함",
+      "detail": "배경·목적 — 평일 17:30 자동 일지를 별도 페이지가 아니라 기존 노션 '작업 트래커' DB에 적재하고, 일자 단위 통짜 기록을 작업 단위로 잘게 나누려는 개선.\n\n진행 — daily_worklog.py에 --style tracker를 추가하고 NOTION_TRACKER_DB_ID를 User 환경변수로 등록함. claude 요약을 tasks[] 작업 리스트로 출력해 작업마다 트래커 1행을 생성하도록 바꾸고, '기한 경과' 수식의 Past Due를 피하려 마감일은 비움. 이어 작업별 detail 필드를 추가해 본문에 구체적 서술을 넣고 보고서체 문체 규칙을 적용함.\n\n결과·임팩트 — 06-22 데이터로 7작업=7행 생성에 성공함(완료 3/진행 중 4). 06-23 17:30 자동 실행도 7건 정상 작성(스킵 0, exit 0)으로 확인함. 일자 단위 옛 테스트 행은 정리 대상으로 남음.",
+      "status": "진행 중",
+      "tech": [
+        "Notion API — 작업 트래커 DB 행 생성",
+        "Python — daily_worklog.py",
+        "Windows 작업 스케줄러 — 평일 17:30 무인 실행"
+      ],
+      "learnings": [
+        {
+          "title": "기한 경과 수식 회피",
+          "detail": "마감일이 과거면 상태와 무관하게 Past Due가 떠서, 날짜는 제목·본문에 두고 마감일 칸은 비움."
+        },
+        {
+          "title": "분할 후 상세화",
+          "detail": "한 줄 요약만으론 통짜로 비대했던 일지를 작업별 행으로 나누고 행마다 detail 본문을 채워 가독성을 높임."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "--no-claude 재실행이 JSON 백업을 빈 데이터로 덮어씀",
+          "solution": "원본 데이터로 복구하고 재실행 부작용을 인지"
+        }
+      ],
+      "next": [
+        "일자 단위 옛 테스트 행 정리"
+      ],
+      "tags": [
+        "자동화",
+        "Notion",
+        "Python"
+      ]
+    },
+    {
+      "task_ref": "t-0003",
+      "title": "표면처리 코드 미출력 분석",
+      "summary": "표면처리 코드 원문 노출의 동작·원인·개선방향을 인수인계 MD로 정리함",
+      "detail": "배경·목적 — 표면처리 종류·색상 코드가 화면에 원문으로 노출되는 문제를 동료에게 넘기기 위한 인수인계 문서 작성.\n\n진행 — 코드와 메모리를 대조해 현재 동작과 오류 원인을 확인하고 표면처리_인수인계.md를 작성함. 종류(D03)는 트랜잭션에 구코드(D03R10 등)가 잔존해 신 마스터에서 매핑 실패로 원문 노출, 색상(D04)은 그룹 자체가 폐지(마스터 0행)돼 드롭다운이 항상 빈다는 메커니즘을 정리함.\n\n결과·임팩트 — 현재 동작→오류 원인→개선 방향(데이터 마이그레이션 마무리 / 색상 JS 재설계) 순으로 구성함. DB 상태 수치(D04 0행 등)는 코드로 검증 불가하므로 '작업 기록 기반·반영 전 재집계' 단서를 본문에 명시함. 종류 데이터 잔존분과 색상 JS 재설계는 보류로 남음.",
+      "status": "진행 중",
+      "tech": [
+        "Markdown — 인수인계 문서",
+        "answer-reviewer — 행번호·함수명 사실 검증"
+      ],
+      "learnings": [
+        {
+          "title": "DB 상태는 코드로 미검증",
+          "detail": "D04 0행·구코드 잔존 같은 수치는 코드가 아닌 작업 기록 기반이라, 단정 대신 재집계 단서를 문서에 명시해야 함."
+        }
+      ],
+      "issues": [],
+      "next": [
+        "종류 데이터 마이그레이션 마무리",
+        "색상 D04 JS 재설계"
+      ],
+      "tags": [
+        "문서화",
+        "기준코드",
+        "표면처리"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "단가검토 팝업 화면 개편",
+      "summary": "견적·수주 단가검토 팝업을 PPT 상세검토 목업대로 전면 재작성하고 실화면 검증함",
+      "detail": "배경·목적 — 견적작성·수주관리의 단가검토 팝업을 PPT '단가검토 및 유사형상' 목업의 상세검토 화면으로 개편. 디자인 디테일은 퍼블리셔 담당, 화면 골격·기능 위주로 진행.\n\n진행 — 처음 대상을 similar_record.jsp로 오인해 작업 후 원복하고, 실제 대상인 estimate_unit_price_calculate.jsp·order_unit_price_calculate.jsp로 정정함. head·script·form·AJAX는 보존하고 본문 마크업만 목업대로 교체해 좌(기본정보+기록조회 아코디언)/중(도면 View)/우(가공실적·외주이력·단가입력·견적공급가) 3분할로 재구성함. 기록조회는 기존 drawingSameArchive 쿼리에 조건부 도면번호 필터를 추가해 재사용. 이후 목업 팔레트(초록 #187854·연파랑 #a8ccf0·노랑 #f0e4c0)와 표 구성, 헤더 페이저·식별자 필드, 테두리 박스 붙임 등 디테일을 반영함.\n\n결과·임팩트 — 기능 ID 체크리스트 대조로 누락 0(견적 53·수주 82)을 확인하고, Playwright 실화면으로 견적기록/발주기록 표시(예: 견적10·발주10)까지 검증함. JSP 구조 변경 반영을 위해 앱을 여러 차례 재기동했고, 부팅 실패 시 유실된 로컬 시크릿 설정을 복원함. Phase 3와 미바인딩 요소 연결은 후속.",
+      "status": "진행 중",
+      "tech": [
+        "JSP/JSTL — 팝업 본문 마크업",
+        "ParamQuery — 기록조회 그리드",
+        "MyBatis — 조건부 도면번호 필터",
+        "Playwright — 실화면 렌더·검증"
+      ],
+      "learnings": [
+        {
+          "title": "슬라이스 재배치로 기능 보존",
+          "detail": "head·script·form을 보존하고 본문만 교체하되 기존 기능 ID 블록을 슬라이스해 재배치, ID 체크리스트로 누락 0을 보장함."
+        },
+        {
+          "title": "JSP 구조 변경은 재시작 필요",
+          "detail": "development:true 설정에서도 구조 변경은 즉시 재컴파일 반영되지 않아 앱 재시작이 필요함."
+        },
+        {
+          "title": "head 경계 하드코딩 금지",
+          "detail": "라인번호 하드코딩은 style 증가로 head를 잘라 파일을 깨뜨림 → 본문 div 위치로 동적 계산해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "대상 파일을 similar_record.jsp로 오인",
+          "solution": "원복 후 실제 대상인 단가검토 팝업 2개로 정정"
+        },
+        {
+          "problem": "application-local.yml 유실로 부팅 실패",
+          "solution": "gitignore된 로컬 시크릿을 git 이력본(6c37383^)에서 복원"
+        }
+      ],
+      "next": [
+        "Phase 3(기록 클릭 시 우측 데이터 View 로딩 + Tab 원복)",
+        "가공실적·외주이력 데이터 연결",
+        "헤더 식별자·3D 썸네일 등 미바인딩 요소 연결"
+      ],
+      "tags": [
+        "JSP",
+        "화면개편",
+        "단가검토",
+        "ParamQuery"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "하네스 규칙·저장소 정리",
+      "summary": "테넌트 스케일 규칙 신설 등 CLAUDE.md를 정비하고 로그·설정 추적 위생을 점검함",
+      "detail": "배경·목적 — 기능 변경 시 테넌트 1000개 규모의 부하·확장성을 함께 검토하도록 하는 규칙을 추가하고, CLAUDE.md와 저장소 추적 위생을 점검.\n\n진행 — CLAUDE.md 아키텍처 규칙에 '확장성(테넌트 스케일) 고려' 소절(요청·쿼리 빈도/캐시 키 카디널리티/풀스캔·전역락/인덱스·페이지네이션 4관점)을 신설하고 메모리에도 저장함. 변경 후 build·테스트 검증 의무, DB UPDATE 전 백업+트랜잭션+검증 의무를 추가하고, 마이그레이션 완료로 소임이 끝난 SF_GET_CODE_NM 조항과 플러그인으로 대체된 세션 50% 규칙, 35자 잔재 문구를 삭제함.\n\n결과·임팩트 — 하네스 logs/ 41개 스크래치와 고아 build/test 로그가 추적 중이고 .gitignore에 logs/가 없음을 발견함. 팀 공유인 %클라우드는 이미 빌드·로그 산출물이 모두 제외돼 손댈 것 없음을 확인함. logs/ 추적 해제는 제안 단계로 사용자 확인 대기.",
+      "status": "진행 중",
+      "tech": [
+        "CLAUDE.md — 규칙 거버넌스",
+        ".gitignore — 추적 정책",
+        "answer-reviewer — 규칙 적용·코드 실태 검증"
+      ],
+      "learnings": [
+        {
+          "title": "한시적 규칙의 소임 종료",
+          "detail": "SF_GET_CODE_NM 조항은 기준코드 마이그레이션용 한시 가드라, 구조 확정 후엔 함수 당연 사용법일 뿐이라 삭제."
+        },
+        {
+          "title": "개인 설정은 추적 제외",
+          "detail": "커밋 안 한 변경은 브랜치에 묶이지 않으며, 개인 규칙(.claude/hooks·agents)은 추적하지 않는 게 맞음."
+        }
+      ],
+      "issues": [],
+      "next": [
+        "하네스 .gitignore에 logs/ 추가 + 스크래치 41개 git rm --cached(사용자 확인 후)"
+      ],
+      "tags": [
+        "하네스",
+        "CLAUDE.md",
+        "규칙",
+        "저장소위생"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "QA 하네스 배너 UX 개선",
+      "summary": "미커밋 QA 검증 도구를 개인 브랜치에 정리하고 테스트 배너를 하단 스트립으로 재구성함",
+      "detail": "배경·목적 — 동료가 공유한 %테스트 캐시 검증·전후비교 도구를 인지하고, 테스트 배너가 화면을 가리는 UX 문제를 개선.\n\n진행 — %테스트에 개인 브랜치 claude를 만들고 출처가 불명확하던 미커밋 변경(메트릭 패널·다운로드 fallback·오류복구·fit-screen)을 분석 후 커밋해 보존함. git 대조로 이 변경들이 브랜치 전환 누락이 아니라 처음부터 미커밋 로컬 작업물임을 확인함. 이후 상·하단 3개 오버레이를 화면 하단 116px 가로 스트립 하나로 통합하고, 본문을 잘라내던 방식을 전체 화면 축소(scale)로 바꿔 배너가 본문을 가리지 않게 함.\n\n결과·임팩트 — CD-FT-BIZ-013을 시트 우회 로컬 실행으로 headed 시연해 PASS를 확인하고, 본문과 배너가 겹치지 않음을 레이아웃 측정값으로 검증함. 변경은 3개 커밋(b8fbd77·bb92e6f·67dccf2)으로 정리됨. %테스트 대상이 폐기된 Tomes-BO에서 %클라우드로 바뀐 점, 시트 연동(gspread) 환경 미구성은 후속 과제.",
+      "status": "진행 중",
+      "tech": [
+        "Playwright — headed QA 실행·스크린샷",
+        "Test-Automize recipe_engine — 로컬 plan 실행",
+        "JavaScript — 오버레이 주입",
+        "Git — claude 개인 브랜치 관리"
+      ],
+      "learnings": [
+        {
+          "title": "overflow는 뷰포트로 전파",
+          "detail": "body overflow로는 본문이 안 잘려 배너 공간이 안 생김 → 컨테이너 scale로 전체를 축소해야 비가림이 성립."
+        },
+        {
+          "title": "F5 후 메인 복귀 함정",
+          "detail": "이 ERP는 새로고침 시 메인으로 돌아가, 화면을 안 열고 호출 0회만 세면 가짜 통과가 됨."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "미커밋 변경의 출처·유실 여부 불명",
+          "solution": "6개 브랜치 커밋 전수 검색으로 브랜치 누락이 아닌 미커밋 로컬 작업물임을 확인 후 커밋 보존"
+        },
+        {
+          "problem": "옛 startServer.bat이 폐기된 Tomes-BO WAR를 가리킴",
+          "solution": "대상을 최신 %클라우드 WAR로 전환하고 시트 우회 로컬 plan으로 시연"
+        }
+      ],
+      "next": [
+        "커밋 전후 비교 에이전트 검증",
+        "gspread 등 시트 연동 실행환경 구성"
+      ],
+      "tags": [
+        "QA",
+        "Playwright",
+        "Test-Automize",
+        "UI"
+      ]
+    }
+  ]
+}

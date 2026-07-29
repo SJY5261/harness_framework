@@ -1,0 +1,148 @@
+{
+  "summary": "견적 단가검토 스탭1-1과 채번 원자화·드리프트 분석을 마치고 매출현황 검색 고장 수정·그리드 컬럼순서 정리를 커밋함",
+  "tasks": [
+    {
+      "task_ref": "t-0025",
+      "title": "견적 단가검토 구현",
+      "summary": "로드맵 확정에 따라 세션 구현분을 원복하고 기록조회 최근 3년 조건·글귀를 복원해 11 PASS 검증함",
+      "detail": "배경·목적 — 사용자가 상세 견적검토 완성→기록조회→수주 단가검토의 3단계 로드맵을 확정 통지함. 이에 앞서 세션이 구현했던 가공실적·외주이력 연결, Tab 교차선택, 특수가공 NULL 방어 등은 지시에 따라 전량 원복하고 접근법(발주기록 CONTROL 키 재사용)만 스탭2 참고로 인수인계에 남김.\n\n수정 — v1/estmateCalculate.xml 기록조회 4쿼리에 최근 3년 조건(DATE_ADD(NOW(), INTERVAL -3 YEAR))을 재추가하고 JSP 타이틀에 '(최근 3년)' 글귀를 복원함. 확정 이력 없는 컨트롤 651건·발주일 NULL 59건이 실재해 발주기록·외주발주 기준일은 COALESCE로 보호하고, 발주기록 서브쿼리는 raw MIN(STATUS_DT)로 바꿔 정렬도 개선함.\n\n검증 — gradlew build 통과 후 runDev.local.bat으로 8081 재기동, verify_3yr.py 11 PASS: 조건을 -1DAY로 조여 필터 작동을 증명(5행→0행), EST 9213 4그리드 건수 회귀(2/5/0/2), 확정일 NULL 행 유지, 글귀 표시, JS에러 0. answer-reviewer 6항목 검토도 이상 없음. 크롭 캡처 육안 확인 완료.",
+      "status": "진행 중",
+      "tech": [
+        "MyBatis — 기록조회 4쿼리 최근 3년 조건 추가",
+        "MariaDB — DATE_ADD·COALESCE 기준일 NULL 보호",
+        "Spring Boot — runDev.local.bat으로 8081 재기동",
+        "Playwright — verify_3yr.py 실화면 11항목 검증"
+      ],
+      "learnings": [
+        {
+          "title": "기준일 NULL 보호",
+          "detail": "기간 필터 추가 시 기준일이 NULL인 살아있는 행(확정이력 없는 컨트롤 651건 등)이 탈락하지 않도록 COALESCE 대체 기준일을 둬야 함."
+        },
+        {
+          "title": "정렬은 raw datetime",
+          "detail": "DATE_FORMAT 문자열로 비교·정렬하지 말고 raw datetime을 유지한 채 표시 시점에만 포맷해야 조건과 정렬이 정확함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "현 DB에 3년 밖 데이터가 0건이라 조건 추가 전후 결과가 동일해 필터 작동을 증명할 수 없었음",
+          "solution": "조건을 -1DAY로 조인 변형에서 5행→0행이 됨을 실측해 필터가 실제 작동함을 증명"
+        },
+        {
+          "problem": "로드맵 통지 전 구현한 가공실적·외주이력·Tab 교차선택이 스탭 순서와 어긋남",
+          "solution": "사용자 지시로 전량 원복(세션 식별자 9종 grep 0건, JSP node --check 통과)하고 CONTROL 키 재사용 접근을 스탭2 참고로 HANDOFF에 기록"
+        }
+      ],
+      "next": [
+        "스탭2: 상세 견적검토 기반 기록조회 기능 구현(가공실적·외주이력 포함)",
+        "스탭1-3 단가입력 기능화는 착수 전 사용자 요청 필수(임의 착수 금지)",
+        "미커밋 estimate 3파일 커밋(사용자 몫)"
+      ],
+      "tags": [
+        "견적",
+        "단가검토",
+        "MyBatis"
+      ]
+    },
+    {
+      "task_ref": "t-0027",
+      "title": "작업관리 DB 결함 수정",
+      "summary": "채번(MAX+1) 레이스를 GET_LOCK+FOR UPDATE로 원자화하고 복사컬럼 드리프트 전면 분석 아티팩트를 산출함",
+      "detail": "배경·목적 — 7/9 감사에서 재현된 결함 중 ⓑ이중 매핑·ⓓ삭제 미전파는 7/10 수정을 마쳤고, 이번에는 ⓐ접수번호·작업지시번호 채번(MAX+1) 동시성 중복을 수정하고 보류 중이던 ⓒ복사컬럼 드리프트는 사용자 지시로 전면 분석을 진행함.\n\nⓐ 구현 — order.xml 채번 쿼리에 FOR UPDATE 잠금 읽기를 추가하되 인덱스 없는 TBL_CONTROL_EXCEL 스테이징 분기는 풀스캔 락이라 제외하고, GET_LOCK(10s) 네임드락 쿼리를 신설함. OrderServiceImpl 4곳과 EstimateServiceImpl의 자동채번~INSERT 구간을 테넌트 단위 락키로 직렬화하고 finally에서 해제함.\n\nⓐ 검증 — 8081 재기동 후 접수번호 동시생성 8라운드x2스레드=16건 전부 유일(수정 전엔 5라운드 내 재현), 작업지시 동시발행 6건 유일·데드락 없음, 파생테이블 갭락 실증, 락 잔류 0으로 ALL PASS. 검증 데이터 19건 소프트 삭제 정리, compileJava 통과.\n\nⓒ 분석 — 병렬 탐색 3방향(전파/소비처/진입점) 전수 분석으로 HTML 아티팩트를 산출·게시함. 사본 테이블이 _MAIN 포함 2개, 미전파 컬럼에 DELIVERY_DT·ITEM_NM 추가, 전역 수량 함수 29파일 253회 사용 등 신규 사실 7건과 7/10 결론 정정 2건을 확정하고 3단계 권고안(저위험 전파→수량·단가 A/B안→정책 정리)을 정리함. answer-reviewer 12주장 반박 0.",
+      "status": "진행 중",
+      "tech": [
+        "MariaDB — GET_LOCK 네임드락·FOR UPDATE 갭락",
+        "MyBatis — order.xml 채번·락 쿼리 추가",
+        "Java/Spring — OrderServiceImpl·EstimateServiceImpl 채번 직렬화",
+        "Python — 동시성 검증 스크립트 3종"
+      ],
+      "learnings": [
+        {
+          "title": "이중 잠금 채번",
+          "detail": "GET_LOCK으로 채번~INSERT 구간을 직렬화하고 FOR UPDATE로 락 해제~커밋 사이 틈을 막는 이중 구조가 MAX+1 채번 레이스를 차단함."
+        },
+        {
+          "title": "무인덱스 FOR UPDATE 주의",
+          "detail": "인덱스 없는 테이블에 잠금 읽기를 걸면 풀스캔 락으로 테넌트 격리가 깨지므로 해당 분기는 락 대상에서 제외해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "네임드락이 커넥션 스코프라 release 실패가 반복되면 풀 커넥션에 락이 잔류해 채번이 마비될 수 있음",
+          "solution": "acquire 실패 시 10초 대기 후 예외라는 안전한 방향으로 설계하고 IS_USED_LOCK 점검 절차를 인수인계에 기록"
+        },
+        {
+          "problem": "7/10의 '단가는 덮는 경로가 없어 전파가 가장 안전' 결론이 부정확했음",
+          "solution": "마감이력이 매핑 단가를 직접 조정하는 경로(updateControlPartFromCloseHistory)를 실코드로 확인해 정정하고 무가드 전파의 마감 조정값 파괴 위험을 아티팩트에 명시"
+        }
+      ],
+      "next": [
+        "%테스트 시드 upsert 교정 → NOT NULL 보정+DDL → SP NOT EXISTS 가드 순 진행",
+        "결함ⓒ 착수 여부·팀 확인 2문항(배정수량·마감 단가조정 운영 여부) 사용자 결정 대기",
+        "TBL_OUT_BARCODE CONTROL_SEQ 인덱스 DDL 결정"
+      ],
+      "tags": [
+        "DB결함",
+        "동시성",
+        "분석"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "매출현황 검색 고장 수정",
+      "summary": "마감취소·거래명세표 사용 후 수주관리 검색이 고장나던 전역 그리드 변수 충돌을 수정함",
+      "detail": "배경·목적 — 매출현황에서 마감취소 모달·거래명세표를 사용한 뒤 수주관리 검색이 동작하지 않는 결함을 수정함.\n\n원인·수정 — 공용 모달들이 전역 그리드 변수를 공유해 수주관리 그리드 참조를 덮어쓰던 것이 원인으로, transaction_statement.jsp·order-month-close-cancel-modal.jsp·sales-status.jsp·order-manage.js 4파일에서 그리드 변수를 분리함(665e504, +20/-14). 마감취소 모달 CSS는 부모 화면 head에서 로드하도록 이관함(26b6ac4).\n\n정리 — 어디에도 배선되지 않은 월마감 진행 모달 JSP 405줄을 삭제해 죽은 코드를 제거하고(4e95953), origin/main을 feat/sales-status-redesign 브랜치에 머지해 최신화함.",
+      "status": "완료",
+      "tech": [
+        "JSP — 매출현황·모달 화면 수정",
+        "JavaScript — 전역 그리드 변수 분리",
+        "Git — 원인수정·CSS이관·죽은코드 삭제 3커밋 분리"
+      ],
+      "learnings": [
+        {
+          "title": "전역 변수 격리",
+          "detail": "공용 모달이 부모 화면과 전역 그리드 변수를 공유하면 다른 화면의 그리드 참조를 덮어쓰므로 화면별 변수 분리가 필요함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "마감취소·거래명세표 실행 후 수주관리 검색 그리드가 동작하지 않음",
+          "solution": "모달과 화면이 공유하던 전역 그리드 변수를 4파일에 걸쳐 분리해 참조 덮어쓰기를 차단"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "버그수정",
+        "매출현황",
+        "모달"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "그리드 컬럼순서 저장 정리",
+      "summary": "사용자별 컬럼순서 저장의 파라미터 규약 통일과 프라임 전량조회 TTL 제한을 커밋함",
+      "detail": "배경·목적 — 사용자별 그리드 컬럼순서 저장 기능(feat/grid-column-order-per-user 브랜치)의 마감 정리 커밋 3건을 진행함.\n\n수정 — upsertUserGridSetting 요청 파라미터를 UPPER_SNAKE로 통일해 grid_common.xml 매퍼와 grid_common.js 호출부를 맞춤(54b0662). 컬럼순서 프라임 전량조회는 localStorage 스탬프(TTL 30분)로 제한해 매 진입 시 반복 호출을 차단함(bed412f).\n\n정리 — 컬럼순서 저장 헤더 주석을 간략화해 세부 규칙을 함수별 주석으로 위임하고(fdd1435), origin/main을 브랜치에 머지해 최신화함(8efaa2a).",
+      "status": "진행 중",
+      "tech": [
+        "MyBatis — grid_common.xml 파라미터 명명 통일",
+        "JavaScript — grid_common.js 프라임 조회 로직",
+        "localStorage — 전량조회 30분 TTL 스탬프"
+      ],
+      "learnings": [
+        {
+          "title": "LS 스탬프 TTL",
+          "detail": "매 진입마다 반복되던 컬럼순서 프라임 전량조회를 localStorage 타임스탬프(TTL 30분)로 제한해 불필요 호출을 줄임."
+        }
+      ],
+      "issues": [],
+      "next": [
+        "feat/grid-column-order-per-user 브랜치 리뷰·머지"
+      ],
+      "tags": [
+        "그리드",
+        "성능",
+        "리팩터링"
+      ]
+    }
+  ]
+}

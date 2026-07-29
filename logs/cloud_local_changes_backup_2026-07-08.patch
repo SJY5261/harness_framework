@@ -1,0 +1,394 @@
+diff --git a/src/main/resources/sqlMaps/estmateCalculate.xml b/src/main/resources/sqlMaps/estmateCalculate.xml
+index 61293b1..cb50f60 100644
+--- a/src/main/resources/sqlMaps/estmateCalculate.xml
++++ b/src/main/resources/sqlMaps/estmateCalculate.xml
+@@ -153,7 +153,7 @@
+     <select id="selectEstimateEtcProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+         SELECT
+             A.CALC_SEQ,
+-            SF_GET_ETC_NM('1096', A.ETC_FACTOR_CD) AS TYPE,
++            SF_GET_ETC_NM('1096', A.ETC_FACTOR_CD, #{LOGIN_SYSTEM_ID}) AS TYPE,
+             A.ETC_FACTOR_CD,
+             SF_GET_CODE_NM('1096', A.ETC_FACTOR_CD, #{LOGIN_LOCALE}, #{LOGIN_SYSTEM_ID}) AS ETC_FACTOR_NM,
+             A.CALC_METHOD_1,
+diff --git a/src/main/resources/sqlMaps/v1/estmateCalculate.xml b/src/main/resources/sqlMaps/v1/estmateCalculate.xml
+index ee58f6e..39c18ec 100644
+--- a/src/main/resources/sqlMaps/v1/estmateCalculate.xml
++++ b/src/main/resources/sqlMaps/v1/estmateCalculate.xml
+@@ -16,6 +16,7 @@
+                 ELSE SF_GET_DATE_F(B.INSERT_DT, 'YY', 'M')
+             END AS UPDATE_DT, <!-- 수정일시 -->
+             IFNULL(A.PROJECT_NM, SPACE(0)) AS PROJECT_NM, IFNULL(A.MODULE_NM, SPACE(0)) AS MODULE_NM, IFNULL(A.ITEM_NM, SPACE(0)) AS ITEM_NM,
++            IFNULL(A.MATERIAL_SUPPLY_YN, 'N') AS MATERIAL_SUPPLY_YN, -- 소재사급 (기본정보 '기타' 플래그) -->
+             CONCAT(IFNULL(SF_GET_COMP_NM(B.ORDER_COMP_CD), SPACE(0)), ' / ', IFNULL(SF_GET_STAFF_NM(B.ORDER_STAFF_SEQ, #{LOGIN_SYSTEM_ID}), SPACE(0))) AS EST_ORDER_CD_STAFF,
+             A.MATERIAL_DETAIL, SF_GET_CODE_NM('D01', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}, #{LOGIN_SYSTEM_ID}) AS MATERIAL_DETAIL_NM, -- 소재 종류 -->
+             IFNULL(A.UNIT_MATERIAL_AMT, 0) AS UNIT_MATERIAL_AMT,
+diff --git a/src/main/webapp/WEB-INF/views/common/estimate_unit_price_calculate.jsp b/src/main/webapp/WEB-INF/views/common/estimate_unit_price_calculate.jsp
+index 6a7735b..984216c 100644
+--- a/src/main/webapp/WEB-INF/views/common/estimate_unit_price_calculate.jsp
++++ b/src/main/webapp/WEB-INF/views/common/estimate_unit_price_calculate.jsp
+@@ -69,8 +69,8 @@
+                         <tr><th>소재종류</th><td id="MATERIAL_DETAIL_NM_html">AL6061</td></tr>
+                         <tr><th>표면처리</th><td><span id="SURFACE_TREAT_NM_html">아노다이징(경질)</span> <span id="SURFACE_TREAT_DETAIL_NM_html">블랙</span></td></tr>
+                         <tr><th>형태/수량</th><td id="BI_WORK_QTY_html">단품 / 24</td></tr>
+-                        <tr><th>기타</th><td>소재사급/열처리/긴급</td></tr>
+-                        <tr><th>접수번호</th><td>25-026F-001-001</td></tr>
++                        <tr><th>기타</th><td id="BI_ETC_html"></td></tr>
++                        <tr><th>접수번호</th><td></td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+@@ -78,10 +78,10 @@
+                     <div class="upc-sec-title upc-rec-title"><span><i class="xi-stop pr-1"></i>기록조회(동일 도면번호)</span> <span class="upc-sub">(최근 3년)</span></div>
+                     <%-- 견적 백엔드에 해당 목록/그리드 기능 없음 → 정적 패널(추후 연결). 목업 아코디언 토글 JS는 스크립트 미변경 정책상 미적용(기본 펼침으로 표시) --%>
+                     <div class="upc-accordion" id="recAccordion">
+-                        <div class="upc-acc-item upc-open"><div class="upc-acc-head"><span>견적기록(8)</span><span class="upc-arrow">&#9650;</span></div><div class="upc-acc-body"><div id="recEstGrid" class="upc-acc-grid"></div></div></div>
+-                        <div class="upc-acc-item upc-open"><div class="upc-acc-head"><span>발주기록(1)</span><span class="upc-arrow">&#9650;</span></div><div class="upc-acc-body"><div id="recOrderGrid" class="upc-acc-grid"></div></div></div>
+-                        <div class="upc-acc-item"><div class="upc-acc-head"><span>외주견적기록(2)</span><span class="upc-arrow">&#9660;</span></div><div class="upc-acc-body"><div id="recOutEstGrid" class="upc-acc-grid"></div></div></div>
+-                        <div class="upc-acc-item"><div class="upc-acc-head"><span>외주발주기록(3)</span><span class="upc-arrow">&#9660;</span></div><div class="upc-acc-body"><div id="recOutOrderGrid" class="upc-acc-grid"></div></div></div>
++                        <div class="upc-acc-item upc-open"><div class="upc-acc-head"><span>견적기록(0)</span><span class="upc-arrow">&#9650;</span></div><div class="upc-acc-body"><div id="recEstGrid" class="upc-acc-grid"></div></div></div>
++                        <div class="upc-acc-item upc-open"><div class="upc-acc-head"><span>발주기록(0)</span><span class="upc-arrow">&#9650;</span></div><div class="upc-acc-body"><div id="recOrderGrid" class="upc-acc-grid"></div></div></div>
++                        <div class="upc-acc-item"><div class="upc-acc-head"><span>외주견적기록(0)</span><span class="upc-arrow">&#9660;</span></div><div class="upc-acc-body"><div id="recOutEstGrid" class="upc-acc-grid"></div></div></div>
++                        <div class="upc-acc-item"><div class="upc-acc-head"><span>외주발주기록(0)</span><span class="upc-arrow">&#9660;</span></div><div class="upc-acc-body"><div id="recOutOrderGrid" class="upc-acc-grid"></div></div></div>
+                     </div>
+                 </div>
+             </div>
+@@ -112,8 +112,8 @@
+                         <%-- 라벨 폭: 1EA가공원가/품질검사기록=col1~3 합100, 합계=col5~6 합90, 값셀(col4·col7)=나머지 --%>
+                         <colgroup><col width="34"><col width="33"><col width="33"><col><col width="45"><col width="45"><col></colgroup>
+                         <tbody>
+-                        <tr><th colspan="3" class="upc-row-label">1EA 가공원가</th><td class="upc-fillcell font-weight-bold" id="UNIT_COST_PROCESS_AMT">13,700</td><th colspan="2" class="upc-row-label">합계</th><td class="upc-fillcell font-weight-bold" id="COST_PROCESS_SUM_AMT">328,800</td></tr>
+-                        <tr><th colspan="3" class="upc-row-label">품질검사 기록</th><td colspan="4" class="upc-fillcell upc-lcell font-weight-bold" id="INSPECT_GRADE_LIST">A</td></tr>
++                        <tr><th colspan="3" class="upc-row-label">1EA 가공원가</th><td class="upc-fillcell font-weight-bold" id="UNIT_COST_PROCESS_AMT"></td><th colspan="2" class="upc-row-label">합계</th><td class="upc-fillcell font-weight-bold" id="COST_PROCESS_SUM_AMT"></td></tr>
++                        <tr><th colspan="3" class="upc-row-label">품질검사 기록</th><td colspan="4" class="upc-fillcell upc-lcell font-weight-bold" id="INSPECT_GRADE_LIST"></td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+@@ -127,7 +127,7 @@
+                         <%-- 라벨 폭: 외주단가합계=col1~5 합180, 값셀(col6·col7)=나머지 --%>
+                         <colgroup><col width="36"><col width="36"><col width="36"><col width="36"><col width="36"><col><col></colgroup>
+                         <tbody>
+-                        <tr><th colspan="5" class="upc-row-label">외주 단가합계</th><td colspan="2" class="upc-fillcell">20,500</td></tr>
++                        <tr><th colspan="5" class="upc-row-label">외주 단가합계</th><td colspan="2" class="upc-fillcell"></td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+@@ -542,6 +542,16 @@
+ 		/* formid : form 아이디
+ 		/* data : json return data
+ 		*/
++    // 기본정보 '기타' 행 렌더: 소재사급(MATERIAL_SUPPLY_YN) / 특수처리(특수가공 목록 존재) / 열처리(열처리비>0 파생)
++    function fnRenderBiEtcFlags() {
++        var data = estimateDetailBasicDatasource || {};
++        var flags = [];
++        if (data.MATERIAL_SUPPLY_YN === 'Y') flags.push('소재사급');
++        if ((estimateDetailProcessEtcListDatasource || []).length > 0) flags.push('특수처리');
++        if ((data.UNIT_HEAT_AMT || 0) > 0 || (data.UNIT_HEAT_AUTO_AMT || 0) > 0) flags.push('열처리');
++        estimateCalculateFormid.find('#BI_ETC_html').html(flags.join(' / '));
++    }
++
+     let fnJsonEstimateDataToFormHtml = function () {
+         let estimateData = estimateDetailListDatasource[estimateDetailListIndex];
+         const parameter = {'url': '/json-info', 'data': {
+@@ -636,6 +646,10 @@
+             estimateCalculateFormid.find('#BI_SIZE_TXT_html').html(data.SIZE_TXT || '');
+             estimateCalculateFormid.find('#BI_WORK_QTY_html').html((data.WORK_TYPE_NM || '') + ' / ' + (data.ITEM_QTY != null ? data.ITEM_QTY.toLocaleString() : ''));
+ 
++            // 기타: 플래그성 항목을 텍스트로 표시 (소재사급/특수처리/열처리. 긴급은 견적 테이블에 원천 컬럼이 없어 미표시)
++            //  특수처리는 특수가공 목록 존재 여부로 파생 — fnGetEtcProcessItem 콜백에서도 재렌더되어 최신화됨
++            fnRenderBiEtcFlags();
++
+             // 종전단가 비동기 조회 (메인 쿼리에서 분리하여 성능 개선)
+             fnPostAjax(function (prevInfo) {
+                 let prevVal = (prevInfo && prevInfo.info) ? prevInfo.info.PREV_UNIT_FINAL_AMT_ITEM_QTY : '';
+@@ -794,6 +808,10 @@
+                 'EST_SEQ': estimateData.EST_SEQ, 'SEQ': estimateData.SEQ}
+         };
+         fnPostAjax(function (data) {
++            // 목록 대입·기타 플래그 갱신을 선두에서 처리 (아래 html 조립이 NULL 금액 행에서 실패해도 플래그는 유지되도록)
++            estimateDetailProcessEtcListDatasource = data.list;
++            fnRenderBiEtcFlags();
++
+             let html = null;
+             let totalAmt = 0;
+             $.each(data.list, function (idx,Item) {
+@@ -839,8 +857,6 @@
+             estimateCalculateFormid.find('#PROCESS_CALCULATE_TOTAL_html').html(totalAmt.toLocaleString());
+             estimateCalculateFormid.find('#UNIT_PROCESS_AUTO_AMT_html').html(totalAmt.toLocaleString());
+ 
+-            estimateDetailProcessEtcListDatasource = data.list;
+-
+         },parameter,'');
+     }
+ 
+@@ -1502,58 +1518,35 @@
+         return { title: '', dataIndx: 'CONTROL_NUM_BUTTON', width: 40, minWidth: 40, align: 'center', editable: false, render: recDetailRender, postRender: recDetailPostRender };
+     }
+ 
+-    /* 목업 데이터: 다운로드 image 기준(견적8/발주1/외주견적2/외주발주3). 실 "동일 도면번호" 쿼리 연결 시 dataModel.data 교체. */
++    /* 견적은 "동일 도면번호" 실쿼리가 없어 기록조회는 빈 그리드(colModel/shell 유지, strNoRows 표시). 실쿼리 연결 시 4번째 인자 data 교체. */
+     fnInitRecordGrid('#recEstGrid', [
+         { title: 'No', dataIndx: 'NO', width: 40, minWidth: 40, align: 'center' },
+         { title: '견적번호', dataIndx: 'EST_NUM', width: 230, align: 'center' },
+         { title: '등록일자', dataIndx: 'REG_DT', width: 75, minWidth: 75, align: 'center' }
+-    ], [
+-        { NO: 1, EST_NUM: 'EST-250530-117', REG_DT: '25-12-24' },
+-        { NO: 2, EST_NUM: 'EST-250530-116', REG_DT: '25-11-15' },
+-        { NO: 3, EST_NUM: 'EST-250530-115', REG_DT: '25-10-10' },
+-        { NO: 4, EST_NUM: 'EST-250530-112', REG_DT: '25-10-09' },
+-        { NO: 5, EST_NUM: 'EST-250530-101', REG_DT: '25-09-15' },
+-        { NO: 6, EST_NUM: 'EST-250530-009', REG_DT: '25-09-10' },
+-        { NO: 7, EST_NUM: 'EST-250530-104', REG_DT: '25-08-24' },
+-        { NO: 8, EST_NUM: 'EST-250530-223', REG_DT: '25-07-15' }
+-    ]);
++    ], []);
+     fnInitRecordGrid('#recOrderGrid', [
+         { title: 'No', dataIndx: 'NO', width: 40, minWidth: 40, align: 'center' },
+         { title: '접수번호', dataIndx: 'REGIST_NUM', width: 206, align: 'center' },
+         { title: '등록일자', dataIndx: 'REG_DT', width: 75, minWidth: 75, align: 'center' },
+         recDetailCol()
+-    ], [
+-        { NO: 1, REGIST_NUM: '25-026F-001-001', REG_DT: '25-12-24' }
+-    ]);
++    ], []);
+     fnInitRecordGrid('#recOutEstGrid', [
+         { title: 'No', dataIndx: 'NO', width: 40, minWidth: 40, align: 'center' },
+         { title: '외주견적번호', dataIndx: 'EST_NUM', width: 206, align: 'center' },
+         { title: '등록일자', dataIndx: 'REG_DT', width: 75, minWidth: 75, align: 'center' },
+         recDetailCol()
+-    ], [
+-        { NO: 1, EST_NUM: 'RFQ-00144', REG_DT: '25-12-24' },
+-        { NO: 2, EST_NUM: 'RFQ-00142', REG_DT: '25-11-15' }
+-    ]);
++    ], []);
+     fnInitRecordGrid('#recOutOrderGrid', [
+         { title: 'No', dataIndx: 'NO', width: 40, minWidth: 40, align: 'center' },
+         { title: '외주발주번호', dataIndx: 'ORDER_NUM', width: 206, align: 'center' },
+         { title: '등록일자', dataIndx: 'REG_DT', width: 75, minWidth: 75, align: 'center' },
+         recDetailCol()
+-    ], [
+-        { NO: 1, ORDER_NUM: 'SC-00234', REG_DT: '25-12-24' },
+-        { NO: 2, ORDER_NUM: 'SC-00232', REG_DT: '25-11-15' },
+-        { NO: 3, ORDER_NUM: 'SC-02223', REG_DT: '25-12-05' }
+-    ]);
++    ], []);
+ 
+     // 가공실적 / 외주이력 상단 목록 pqGrid 초기화 (dataModel local 목업 데이터)
+-    fnInitPerfGrid([
+-        { EQUIP_NM: 'MCT-01', WORK_USER: '홍길동', PROCESS_TYPE_NM: '밀링', WORKING_TIME: '02:30', FINISH_QTY: 24, ERROR_QTY: 1, COST_PROCESS_AMT: 8500, COST_PER_HOUR: 35000 },
+-        { EQUIP_NM: 'CNC-03', WORK_USER: '김철수', PROCESS_TYPE_NM: '선반', WORKING_TIME: '01:15', FINISH_QTY: 24, ERROR_QTY: 0, COST_PROCESS_AMT: 5200, COST_PER_HOUR: 28000 }
+-    ]);
+-    fnInitOutGrid([
+-        { OUT_ICON: '', VENDOR_NM: '에이탑', PROCESS_NM: '도금', SUPPLY_AMT: '12,000' },
+-        { OUT_ICON: '', VENDOR_NM: '대한열처리', PROCESS_NM: '열처리', SUPPLY_AMT: '8,500' }
+-    ]);
++    // 견적은 자기 CONTROL_SEQ가 없어 가공실적/외주이력 실데이터 없음 → 빈 그리드(shell만 유지).
++    fnInitPerfGrid([]);
++    fnInitOutGrid([]);
+ 
+     // 기록조회 그리드 width 100%: 생성 시 컨테이너가 좁게 측정돼 우측 공백이 남으므로,
+     // 레이아웃 확정 후 100% 폭으로 재측정/갱신(flex one이 마지막 컬럼을 채움).
+diff --git a/src/main/webapp/WEB-INF/views/common/transaction_statement.jsp b/src/main/webapp/WEB-INF/views/common/transaction_statement.jsp
+index 55de99a..753452c 100644
+--- a/src/main/webapp/WEB-INF/views/common/transaction_statement.jsp
++++ b/src/main/webapp/WEB-INF/views/common/transaction_statement.jsp
+@@ -39,9 +39,9 @@
+                     <h5 class="d-inline-block">기본정보</h5>
+                     <div class="d-inline-block right_float buttonWrap" style="overflow: hidden;">
+                         <div>
+-                            <button class="popupBtn" id="SALES_DRAWING_PRINT">영업도면출력</button>
++                            <button class="popupBtn" id="SALES_DRAWING_PRINT">납품도면 출력</button>
+                             <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
+-                            <button class="" id="TRANSACTION_STATEMENT_EXPORT"><img src="/resource/asset/images/common/export_excel.webp" alt="엑셀 이미지"></button>
++                            <button class="popupBtn" id="TRANSACTION_STATEMENT_EXPORT">거래명세서 출력</button>
+                             <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
+                             <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE"></button>
+                             <button class="popupBtn grayPopGra" id="TRANSACTION_STATEMENT_POPUP_CLOSE_BUTTON2" style="width: unset; height: unset;">닫기</button>
+@@ -96,6 +96,89 @@
+     </div>
+ </div>
+ 
++<%-- 라벨 출력 모달 (화면설계서 260629 슬라이드39) : S --%>
++<style>
++    #LABEL_PRINT_POPUP .label-print-table { width: 100%; border-collapse: collapse; }
++    #LABEL_PRINT_POPUP .label-print-table th,
++    #LABEL_PRINT_POPUP .label-print-table td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; height: 28px; box-sizing: border-box; }
++    #LABEL_PRINT_POPUP .label-print-table th { background: #eef0f4; font-weight: bold; height: 36px; }
++    #LABEL_PRINT_POPUP .label-print-table button.popupBtn { width: auto; height: 26px; padding: 2px 12px; line-height: 1; }
++    #LABEL_PRINT_POPUP .label-print-body { border: 1px solid #ccc; border-top: 0; min-height: 96px; }
++    #LABEL_PRINT_POPUP .label-print-body .label-print-table th,
++    #LABEL_PRINT_POPUP .label-print-body .label-print-table td { border-top: 0; }
++    #LABEL_PRINT_POPUP .label-print-table button { cursor: pointer; }
++</style>
++<div class="popup_container" id="LABEL_PRINT_POPUP" style="display: none;">
++    <div class="layerPopup" style="width: 620px; height: fit-content;">
++        <button type="button" id="LABEL_PRINT_CLOSE_X" style="position: absolute; top: 18px; right: 18px; border: 0; background: transparent; font-size: 20px; line-height: 1; cursor: pointer;">&times;</button>
++        <h3 style="margin-bottom: 10px;">라벨 출력</h3>
++        <hr>
++        <table class="tableL" style="margin-bottom: 12px;">
++            <colgroup>
++                <col style="width: 25%">
++                <col style="width: 25%">
++                <col style="width: 25%">
++                <col style="width: 25%">
++            </colgroup>
++            <tbody>
++            <tr>
++                <td class="headerDisable">접수번호</td>
++                <td id="LABEL_PRINT_REGIST_NUM" colspan="3"></td>
++            </tr>
++            <tr>
++                <td class="headerDisable">도면번호</td>
++                <td id="LABEL_PRINT_DRAWING_NUM" colspan="3"></td>
++            </tr>
++            <tr>
++                <td class="headerDisable">발주번호</td>
++                <td id="LABEL_PRINT_ORDER_NUM" colspan="3"></td>
++            </tr>
++            <tr>
++                <td class="headerDisable">출하대상수량</td>
++                <td id="LABEL_PRINT_TARGET_QTY"></td>
++                <td class="headerDisable">포장(라벨)수량</td>
++                <td id="LABEL_PRINT_LABEL_QTY"></td>
++            </tr>
++            </tbody>
++        </table>
++        <table class="label-print-table">
++            <colgroup>
++                <col style="width: 10%">
++                <col style="width: 22%">
++                <col style="width: 32%">
++                <col style="width: 18%">
++                <col style="width: 18%">
++            </colgroup>
++            <thead>
++            <tr>
++                <th>No</th>
++                <th>수량</th>
++                <th>출하실적</th>
++                <th><button type="button" class="popupBtn" id="LABEL_PRINT_ADD" style="background: #47566d; color: #fff; border-color: #47566d;">추가</button></th>
++                <th><button type="button" class="popupBtn blue" id="LABEL_PRINT_ALL">전체출력</button></th>
++            </tr>
++            </thead>
++        </table>
++        <div class="label-print-body">
++            <table class="label-print-table">
++                <colgroup>
++                    <col style="width: 10%">
++                    <col style="width: 22%">
++                    <col style="width: 32%">
++                    <col style="width: 18%">
++                    <col style="width: 18%">
++                </colgroup>
++                <tbody id="LABEL_PRINT_TBODY"></tbody>
++            </table>
++        </div>
++        <div class="btnWrap" style="margin-top: 14px;">
++            <button type="button" class="defaultBtn grayPopGra" id="LABEL_PRINT_CLOSE">닫기</button>
++            <button type="button" class="defaultBtn green" id="LABEL_PRINT_SAVE">저장</button>
++        </div>
++    </div>
++</div>
++<%-- 라벨 출력 모달 : E --%>
++
+ <%-- 엑셀 다운로드 폼 --%>
+ <form id="transaction_statement_excel_download" method="POST">
+     <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementInfoExcel:selectTransactionStatementInfo2Excel:selectTransactionStatementListExcel"/>
+@@ -145,6 +228,7 @@
+             {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 160},
+             {title: '접수번호', dataIndx: 'REGIST_NUM', width: 160},
+             {title: '발주번호', dataIndx: 'ORDER_NUM', width: 160},
++            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 140},
+             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+                 render: function (ui) {
+                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+@@ -158,15 +242,25 @@
+                     });
+                 }
+             },
+-            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 140},
+-            {title: '규격', dataIndx: 'SIZE_TXT', width: 100},
++            {title: '규격', dataIndx: 'SIZE_TXT', width: 100, minWidth: 85},
+             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 60},
+             {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY', width: 30},
+-            {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+-            {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
++            {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', width: 130},
++            {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', width: 130},
+             {
+-                title: '포장<br>수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true, width: 30,
+-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
++                title: '라벨수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: false, width: 60,
++                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
++                render: function (ui) {
++                    let cnt = ui.cellData == null ? 0 : ui.cellData;
++                    return '<span class="labelQtyLink" style="text-decoration: underline; font-weight: bold; cursor: pointer;">' + cnt + '</span>';
++                },
++                postRender: function (ui) {
++                    let grid = this,
++                        $cell = grid.getCell(ui);
++                    $cell.find('.labelQtyLink').bind('click', function () {
++                        fnOpenLabelPrintPopup(ui.rowData);
++                    });
++                }
+             },
+             {
+                 title: '납품<br>확인', width: 120, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
+@@ -175,10 +269,11 @@
+                 editable: true,
+             },
+             {
+-                title: '비고',
++                title: '거래명세표 비고',
+                 dataType: 'string',
+                 dataIndx: 'NOTE',
+                 editable: true,
++                width: 130, minWidth: 110,
+                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+             },
+             {title: 'LABEL_BARCODE_NUM', dataIndx: 'LABEL_BARCODE_NUM', hidden: true},
+@@ -483,6 +578,44 @@
+             }
+         });
+ 
++        /* 라벨 출력 모달 (화면 단계 — 분할 데이터 조회/저장/출력 배선은 후속) */
++        let fnOpenLabelPrintPopup = function (rowData) {
++            let targetQty = rowData.CONTROL_ORDER_QTY == null ? '' : rowData.CONTROL_ORDER_QTY;
++            let registNum = rowData.REGIST_NUM || '';
++
++            $('#LABEL_PRINT_REGIST_NUM').text(registNum + (registNum && targetQty !== '' ? ' (' + targetQty + ')' : ''));
++            $('#LABEL_PRINT_DRAWING_NUM').text(rowData.DRAWING_NUM || '');
++            $('#LABEL_PRINT_ORDER_NUM').text(rowData.ORDER_NUM || '');
++            $('#LABEL_PRINT_TARGET_QTY').text(targetQty);
++            $('#LABEL_PRINT_LABEL_QTY').text(rowData.PACKING_CNT == null ? 0 : rowData.PACKING_CNT);
++            $('#LABEL_PRINT_TBODY').empty();
++            $('#LABEL_PRINT_POPUP').modal('show');
++        };
++        let fnRenumberLabelRows = function () {
++            $('#LABEL_PRINT_TBODY tr').each(function (i) {
++                $(this).find('.label-row-no').text(i + 1);
++            });
++        };
++        $('#LABEL_PRINT_ADD').on('click', function () {
++            let row =
++                '<tr>' +
++                '<td class="label-row-no"></td>' +
++                '<td><label><input type="number" min="0" style="width: 90%; border: 0; text-align: center;" autocomplete="off"></label></td>' +
++                '<td></td>' +
++                '<td><button type="button" class="popupBtn red label-row-remove">제거</button></td>' +
++                '<td><button type="button" class="popupBtn label-row-print">출력</button></td>' +
++                '</tr>';
++            $('#LABEL_PRINT_TBODY').append(row);
++            fnRenumberLabelRows();
++        });
++        $('#LABEL_PRINT_TBODY').on('click', '.label-row-remove', function () {
++            $(this).closest('tr').remove();
++            fnRenumberLabelRows();
++        });
++        $('#LABEL_PRINT_CLOSE, #LABEL_PRINT_CLOSE_X').on('click', function () {
++            $('#LABEL_PRINT_POPUP').modal('hide');
++        });
++
+         const autoMerge = function (grid, refresh) {
+             let mergeCellList = [],
+                 colModelList = grid.getColModel(),

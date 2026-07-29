@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>%테스트 운영 규칙</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071018;
+      --surface: #0d1924;
+      --surface-2: #122231;
+      --line: rgba(189, 225, 255, .14);
+      --text: #f4f8fb;
+      --muted: #9bb0bf;
+      --cyan: #65d9ef;
+      --blue: #6e9cff;
+      --mint: #64e3b2;
+      --amber: #ffc96b;
+      --red: #ff7f86;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .32);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 12% -8%, rgba(48, 118, 176, .33), transparent 34rem),
+        radial-gradient(circle at 88% 4%, rgba(36, 142, 130, .19), transparent 27rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Pretendard, "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7, 16, 24, .82);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #061019;
+      font-weight: 950;
+      box-shadow: 0 8px 28px rgba(101, 217, 239, .22);
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .top-nav a {
+      padding: 8px 11px;
+      border-radius: 9px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .top-nav a:hover {
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 84px 0 54px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(101, 217, 239, .27);
+      border-radius: 999px;
+      background: rgba(101, 217, 239, .08);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 5px rgba(101, 217, 239, .1);
+    }
+
+    h1 {
+      max-width: 880px;
+      margin: 24px 0 18px;
+      font-size: clamp(40px, 7vw, 76px);
+      line-height: 1.08;
+      letter-spacing: -.055em;
+    }
+
+    h1 span {
+      color: transparent;
+      background: linear-gradient(90deg, var(--cyan), #9dbaff 58%, var(--mint));
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin: 0;
+      color: #b8c8d3;
+      font-size: clamp(17px, 2.2vw, 22px);
+      letter-spacing: -.01em;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .stat {
+      min-height: 108px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(19, 36, 51, .88), rgba(10, 22, 32, .75));
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--text);
+      font-size: 26px;
+      letter-spacing: -.04em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    section {
+      scroll-margin-top: 84px;
+      padding: 42px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(27px, 4vw, 42px);
+      line-height: 1.2;
+      letter-spacing: -.04em;
+    }
+
+    .section-head p {
+      max-width: 540px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      min-height: 230px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(13, 25, 36, .85);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      right: -52px;
+      bottom: -64px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: var(--glow, rgba(101, 217, 239, .11));
+      filter: blur(2px);
+    }
+
+    .card-number {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 37px;
+      height: 37px;
+      margin-bottom: 35px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .07);
+      color: var(--accent, var(--cyan));
+      font-weight: 900;
+    }
+
+    .card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 9px;
+      font-size: 21px;
+      letter-spacing: -.03em;
+    }
+
+    .card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .rule-stack {
+      display: grid;
+      gap: 10px;
+      counter-reset: priority;
+    }
+
+    .rule-row {
+      counter-increment: priority;
+      display: grid;
+      grid-template-columns: 46px 220px 1fr;
+      align-items: center;
+      gap: 18px;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: rgba(15, 29, 41, .74);
+    }
+
+    .rule-row::before {
+      content: counter(priority);
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(110, 156, 255, .13);
+      color: #a9c1ff;
+      font-weight: 900;
+    }
+
+    .rule-row strong { font-size: 15px; }
+    .rule-row span { color: var(--muted); font-size: 14px; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 170px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -17px;
+      z-index: 2;
+      transform: translateY(-50%);
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .flow-step small {
+      color: var(--cyan);
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .flow-step h3 {
+      margin: 14px 0 8px;
+      font-size: 18px;
+      letter-spacing: -.025em;
+    }
+
+    .flow-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .verdict {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(13, 25, 36, .86);
+    }
+
+    .verdict-icon {
+      display: grid;
+      place-items: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 14px;
+      background: rgba(100, 227, 178, .1);
+      color: var(--mint);
+      font-size: 22px;
+    }
+
+    .verdict h3 { margin: 0 0 7px; font-size: 18px; }
+    .verdict p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .warning {
+      margin-top: 14px;
+      padding: 19px 22px;
+      border: 1px solid rgba(255, 127, 134, .3);
+      border-radius: 16px;
+      background: rgba(255, 127, 134, .075);
+      color: #ffd2d4;
+    }
+
+    .warning strong { color: var(--red); }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(13, 25, 36, .85);
+    }
+
+    .panel h3 {
+      margin: 0 0 17px;
+      font-size: 21px;
+      letter-spacing: -.03em;
+    }
+
+    .plain-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .plain-list li {
+      position: relative;
+      padding-left: 25px;
+      color: #c2d0d9;
+      font-size: 14px;
+    }
+
+    .plain-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--mint);
+      font-weight: 900;
+    }
+
+    .plain-list.danger li::before {
+      content: "×";
+      color: var(--red);
+    }
+
+    .browser-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .browser-rule {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(15, 29, 41, .76);
+    }
+
+    .browser-rule strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--amber);
+      font-size: 16px;
+    }
+
+    .browser-rule span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .glossary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .term {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 18px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(13, 25, 36, .7);
+    }
+
+    .term code {
+      align-self: start;
+      color: var(--cyan);
+      font-family: Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .term span { color: var(--muted); font-size: 14px; }
+
+    .checklist-wrap {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(13, 25, 36, .88);
+    }
+
+    .progress-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 21px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .progress-head strong { font-size: 19px; }
+    .progress-head span { color: var(--cyan); font-weight: 900; }
+
+    .progress-track {
+      height: 4px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--mint));
+      transition: width .2s ease;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 76px;
+      padding: 18px 21px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: background .16s ease;
+    }
+
+    .check-item:hover { background: var(--surface-2); }
+
+    .check-item input {
+      appearance: none;
+      flex: 0 0 22px;
+      width: 22px;
+      height: 22px;
+      margin: 1px 0 0;
+      border: 1px solid rgba(189, 225, 255, .28);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, .035);
+      cursor: pointer;
+    }
+
+    .check-item input:checked {
+      border-color: var(--mint);
+      background:
+        linear-gradient(135deg, transparent 44%, #082016 44% 55%, transparent 55%) center / 9px 9px no-repeat,
+        var(--mint);
+    }
+
+    .check-item span {
+      color: #c3d1da;
+      font-size: 14px;
+    }
+
+    .check-item:has(input:checked) span {
+      color: #718795;
+      text-decoration: line-through;
+    }
+
+    footer {
+      padding: 56px 0 70px;
+      color: #708493;
+      font-size: 13px;
+    }
+
+    footer strong { color: #a7b8c3; }
+
+    @media (max-width: 900px) {
+      .top-nav { display: none; }
+      .principles { grid-template-columns: 1fr 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-step { min-height: auto; }
+      .flow-step:not(:last-child)::after {
+        content: "↓";
+        top: auto;
+        right: 24px;
+        bottom: -22px;
+        transform: none;
+      }
+      .browser-strip { grid-template-columns: 1fr 1fr; }
+      .glossary { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 24px, 1180px); }
+      .hero { padding-top: 56px; }
+      .hero-stats,
+      .principles,
+      .verdict-grid,
+      .two-column,
+      .browser-strip,
+      .checklist { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 10px; }
+      .rule-row { grid-template-columns: 38px 1fr; gap: 10px; }
+      .rule-row span { grid-column: 2; }
+      .term { grid-template-columns: 1fr; gap: 5px; }
+    }
+
+    @media print {
+      :root { color-scheme: light; }
+      body { background: #fff; color: #111; }
+      .topbar { display: none; }
+      .hero { padding-top: 30px; }
+      .card, .stat, .panel, .flow-step, .verdict, .browser-rule, .term,
+      .rule-row, .checklist-wrap {
+        break-inside: avoid;
+        border-color: #ddd;
+        box-shadow: none;
+        background: #fff;
+        color: #111;
+      }
+      p, span, .card p, .panel li, .flow-step p, .term span, footer {
+        color: #444 !important;
+      }
+      .checklist { background: #ddd; }
+      .check-item { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">%</div>
+        <span>테스트 운영 지도</span>
+      </div>
+      <nav class="top-nav" aria-label="문서 바로가기">
+        <a href="#principles">핵심 원칙</a>
+        <a href="#priority">규칙 순서</a>
+        <a href="#flow">판정 흐름</a>
+        <a href="#browser">화면 조작</a>
+        <a href="#data">데이터 안전</a>
+        <a href="#terms">용어</a>
+        <a href="#checklist">확인표</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell hero">
+      <div class="eyebrow">TEST-AUTOMIZE · OPERATING RULES</div>
+      <h1>실제로 확인한 결과만<br><span>통과로 기록한다.</span></h1>
+      <p class="hero-copy">
+        화면을 눌렀다는 사실이 아니라 사용자가 기대한 결과가 실제로 발생했는지 확인한다.
+        데이터를 바꿨다면 반드시 원래 상태로 되돌리고, 실패를 숨기려고 검사 기준을
+        약하게 만들지 않는다.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <strong>20건 이하</strong>
+          <span>한 번에 실행할 수 있는 최대 권장 범위</span>
+        </div>
+        <div class="stat">
+          <strong>기본 OFF</strong>
+          <span>인공지능 보조 실행은 사용자가 허용할 때만</span>
+        </div>
+        <div class="stat">
+          <strong>항상 원복</strong>
+          <span>저장·수정·삭제 테스트의 종료 조건</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="principles">
+      <div class="shell">
+        <div class="section-head">
+          <h2>여섯 가지 핵심 원칙</h2>
+          <p>이 여섯 항목만 기억해도 대부분의 잘못된 테스트 실행과 허위 통과를 막을 수 있다.</p>
+        </div>
+        <div class="principles">
+          <article class="card" style="--accent: var(--cyan); --glow: rgba(101,217,239,.13)">
+            <div class="card-number">01</div>
+            <h3>결과를 확인한다</h3>
+            <p>버튼 클릭, 주소 이동, 팝업 테두리만으로 통과시키지 않는다. 화면·목록·파일·DB 결과를 확인한다.</p>
+          </article>
+          <article class="card" style="--accent: var(--mint); --glow: rgba(100,227,178,.13)">
+            <div class="card-number">02</div>
+            <h3>바꾼 것은 되돌린다</h3>
+            <p>변경 전 값을 기록하고, 실행 후 원상복구한 다음 다시 조회해 복구 여부를 확인한다.</p>
+          </article>
+          <article class="card" style="--accent: var(--amber); --glow: rgba(255,201,107,.12)">
+            <div class="card-number">03</div>
+            <h3>검사를 약하게 만들지 않는다</h3>
+            <p>실패를 없애기 위해 기대값이나 확인 조건을 삭제하지 않는다. 실패는 원인을 찾으라는 신호다.</p>
+          </article>
+          <article class="card" style="--accent: #a9c1ff; --glow: rgba(110,156,255,.15)">
+            <div class="card-number">04</div>
+            <h3>정해진 절차부터 쓴다</h3>
+            <p>저장된 테스트 순서와 공통 실행 절차를 먼저 사용한다. 인공지능은 명시적으로 허용된 마지막 단계다.</p>
+          </article>
+          <article class="card" style="--accent: #dca5ff; --glow: rgba(201,128,255,.12)">
+            <div class="card-number">05</div>
+            <h3>사람이 만든 테스트를 보호한다</h3>
+            <p>사람이 직접 확정한 테스트 순서는 자동으로 덮어쓰지 않는다. 실패 시 별도 분석 대상으로 남긴다.</p>
+          </article>
+          <article class="card" style="--accent: var(--red); --glow: rgba(255,127,134,.13)">
+            <div class="card-number">06</div>
+            <h3>작게 실행하고 즉시 멈춘다</h3>
+            <p>1→5→10→20건으로 확대한다. 실패나 추가 분석 신호가 나오면 원인을 해결하기 전까지 범위를 늘리지 않는다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="priority">
+      <div class="shell">
+        <div class="section-head">
+          <h2>어떤 규칙을 먼저 따르나</h2>
+          <p>아래쪽 문서가 위쪽 규칙과 충돌하면 위쪽을 따른다. 과거 기록의 상태값은 다시 측정한다.</p>
+        </div>
+        <div class="rule-stack">
+          <div class="rule-row"><strong>현재 사용자의 지시</strong><span>이번 작업에서 실제로 요청한 범위와 결정</span></div>
+          <div class="rule-row"><strong>하네스 운영 규칙</strong><span>작업 순서, 권한, 기존 변경 보존, 완료 조건</span></div>
+          <div class="rule-row"><strong>프로젝트 안전 규칙</strong><span>테스트·제품·DB 변경과 필수 검증 명령</span></div>
+          <div class="rule-row"><strong>테스트 운영 지침</strong><span>통과 증거, 실행 단계, 사람이 만든 테스트 보호</span></div>
+          <div class="rule-row"><strong>브라우저 조작 지침</strong><span>TOMES 화면의 로그인·대기·메뉴·탭 조작 방법</span></div>
+          <div class="rule-row"><strong>과거 인계·분석 문서</strong><span>과거 판단의 근거로만 사용하고 현재 상태는 재확인</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow">
+      <div class="shell">
+        <div class="section-head">
+          <h2>통과 판정 흐름</h2>
+          <p>테스트가 끝났다는 것과 통과했다는 것은 다르다. 아래 순서를 모두 지나야 통과로 기록할 수 있다.</p>
+        </div>
+        <div class="flow">
+          <article class="flow-step">
+            <small>STEP 01</small>
+            <h3>요청 범위 확인</h3>
+            <p>어떤 화면과 기능을 확인하는지, 외부 기록이나 데이터 변경이 있는지 먼저 정한다.</p>
+          </article>
+          <article class="flow-step">
+            <small>STEP 02</small>
+            <h3>정해진 절차 실행</h3>
+            <p>저장된 테스트 순서와 공통 실행 절차를 사용해 작은 범위부터 실행한다.</p>
+          </article>
+          <article class="flow-step">
+            <small>STEP 03</small>
+            <h3>실제 결과 확인</h3>
+            <p>화면 상태, 목록 데이터, 다운로드 파일 또는 DB 값으로 사용자 효과를 확인한다.</p>
+          </article>
+          <article class="flow-step">
+            <small>STEP 04</small>
+            <h3>변경 내용 원복</h3>
+            <p>저장·수정·삭제가 있었다면 원래 상태로 되돌리고 재조회한다.</p>
+          </article>
+          <article class="flow-step">
+            <small>STEP 05</small>
+            <h3>증거와 함께 기록</h3>
+            <p>사용한 절차와 확인한 증거, 원복 결과를 설명에 포함해 통과 또는 실패를 기록한다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="verdict">
+      <div class="shell">
+        <div class="section-head">
+          <h2>기능별 통과 기준</h2>
+          <p>행동을 했는지가 아니라 행동의 결과가 실제로 발생했는지를 기준으로 판정한다.</p>
+        </div>
+        <div class="verdict-grid">
+          <article class="verdict">
+            <div class="verdict-icon">⌕</div>
+            <div><h3>검색·필터</h3><p>검색값이 입력됐고 목록 또는 입력 영역이 그 조건에 맞게 바뀌어야 한다.</p></div>
+          </article>
+          <article class="verdict">
+            <div class="verdict-icon">▣</div>
+            <div><h3>팝업</h3><p>올바른 팝업이 열리고 주요 값·목록·버튼이 사용할 수 있는 상태여야 한다.</p></div>
+          </article>
+          <article class="verdict">
+            <div class="verdict-icon">⇩</div>
+            <div><h3>다운로드</h3><p>실제 파일이 다운로드되거나 지정된 증적 폴더에 저장돼야 한다.</p></div>
+          </article>
+          <article class="verdict">
+            <div class="verdict-icon">↺</div>
+            <div><h3>저장·수정·삭제</h3><p>변경 결과와 원상복구 결과를 화면 또는 DB에서 모두 확인해야 한다.</p></div>
+          </article>
+        </div>
+        <div class="warning">
+          <strong>통과가 아닌 예:</strong>
+          버튼만 클릭함 · 팝업 테두리만 확인함 · 다운로드 주소만 확인함 · 가짜 선택지를 만든 뒤 성공함 ·
+          단순히 참 값을 반환하는 코드만 실행함
+        </div>
+      </div>
+    </section>
+
+    <section id="structure">
+      <div class="shell">
+        <div class="section-head">
+          <h2>테스트 절차 작성 규칙</h2>
+          <p>테스트 순서에는 무엇을 검증할지 적고, 실제 조작은 재사용 가능한 작은 절차로 나눈다.</p>
+        </div>
+        <div class="two-column">
+          <article class="panel">
+            <h3>권장하는 방식</h3>
+            <ul class="plain-list">
+              <li>이미 있는 공통 실행 절차를 먼저 찾는다.</li>
+              <li>화면 진입·검색·팝업 열기·본문 확인을 분리한다.</li>
+              <li>하나의 실행 절차는 한 가지 목적에 집중한다.</li>
+              <li>공통 팝업은 주요 필드와 버튼 구조로 구분한다.</li>
+              <li>기능 변경 시 기존 업무 조건을 새 검사에도 유지한다.</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>피해야 하는 방식</h3>
+            <ul class="plain-list danger">
+              <li>긴 자바스크립트 전체를 테스트 순서마다 복사한다.</li>
+              <li>실패하는 조건을 삭제해 테스트만 통과시킨다.</li>
+              <li>화면에 없는 선택지나 데이터를 임의로 생성한다.</li>
+              <li>사람이 직접 확정한 테스트를 자동으로 덮어쓴다.</li>
+              <li>실제 결과 없이 클릭 성공만 통과로 기록한다.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="browser">
+      <div class="shell">
+        <div class="section-head">
+          <h2>TOMES 화면 조작 규칙</h2>
+          <p>일반 웹사이트와 다른 jQuery·pqGrid·탭 화면의 특성을 고려한다.</p>
+        </div>
+        <div class="browser-strip">
+          <div class="browser-rule"><strong>로그인</strong><span>입력란 클릭 후 키보드 입력. 값을 한 번에 넣는 방식은 피한다.</span></div>
+          <div class="browser-rule"><strong>대기</strong><span>통신 종료가 아니라 필요한 버튼·입력란·목록 데이터가 나타나는지를 기다린다.</span></div>
+          <div class="browser-rule"><strong>메뉴</strong><span>상위 메뉴에 마우스를 올리고 클릭한 뒤 펼침 동작을 기다려 하위 메뉴로 이동한다.</span></div>
+          <div class="browser-rule"><strong>새로고침</strong><span>메인으로 돌아갈 수 있으므로 같은 화면에 다시 진입한 뒤 값을 측정한다.</span></div>
+          <div class="browser-rule"><strong>탭</strong><span>같은 식별자가 중복될 수 있어 현재 활성 탭 안에서만 요소를 찾는다.</span></div>
+          <div class="browser-rule"><strong>고정 대기</strong><span>짧은 초기화 보조용으로만 쓰고, 상태 확인을 대신하게 하지 않는다.</span></div>
+          <div class="browser-rule"><strong>계정</strong><span>주소와 계정은 환경 설정 파일에서 읽고 코드나 문서에 직접 적지 않는다.</span></div>
+          <div class="browser-rule"><strong>실패 대응</strong><span>위치·타이밍·활성 탭·테스트 데이터·브라우저 상태 순으로 원인을 확인한다.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="data">
+      <div class="shell">
+        <div class="section-head">
+          <h2>데이터와 외부 기록 안전</h2>
+          <p>되돌릴 수 없는 변경은 테스트 성공보다 위험하다. 실행 전에 복구 방법부터 확보한다.</p>
+        </div>
+        <div class="two-column">
+          <article class="panel">
+            <h3>DB 변경 전 정할 것</h3>
+            <ul class="plain-list">
+              <li>변경할 테이블과 대상 행의 고유 식별값</li>
+              <li>변경 전 값 또는 전체 백업 행</li>
+              <li>테스트로 생성할 데이터의 이름 범위</li>
+              <li>성공·실패와 관계없이 실행할 원상복구 방법</li>
+              <li>복구 후 정상 여부를 확인할 재조회 방법</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>구글 시트 기록</h3>
+            <ul class="plain-list">
+              <li>실제 통과·실패·오류만 결과와 날짜를 갱신한다.</li>
+              <li>추가 분석·사람 확인·사용자 결정은 설명만 기록한다.</li>
+              <li>자동화 실패로 기존 수동 통과 결과를 실패로 바꾸지 않는다.</li>
+              <li>통과 설명에 확인 증거와 원상복구 결과를 남긴다.</li>
+              <li>시트 기록 옵션은 외부 상태 변경임을 인식한다.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="terms">
+      <div class="shell">
+        <div class="section-head">
+          <h2>코드 용어를 쉬운 말로</h2>
+          <p>코드에서 이 이름을 만나면 오른쪽 뜻으로 이해하면 된다.</p>
+        </div>
+        <div class="glossary">
+          <div class="term"><code>tc_plans</code><span>테스트 한 건의 실행 순서를 적은 파일 모음</span></div>
+          <div class="term"><code>recipe</code><span>로그인·검색·팝업 확인처럼 재사용하는 공통 실행 절차</span></div>
+          <div class="term"><code>source=manual</code><span>사람이 직접 검토하고 확정해 자동 변경하면 안 되는 테스트</span></div>
+          <div class="term"><code>Stage4</code><span>정해진 규칙으로 처리하지 못했을 때만 사용하는 인공지능 보조 단계</span></div>
+          <div class="term"><code>evidence</code><span>화면·목록·파일·DB·원상복구 결과 같은 검증 증거</span></div>
+          <div class="term"><code>rollback</code><span>테스트 때문에 바뀐 데이터를 실행 전 상태로 되돌리는 작업</span></div>
+          <div class="term"><code>GWS</code><span>테스트 결과·날짜·설명을 기록하는 구글 스프레드시트</span></div>
+          <div class="term"><code>screen knowledge</code><span>화면의 버튼·입력란·목록·팝업 위치를 적은 정보 파일</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <div class="shell">
+        <div class="section-head">
+          <h2>작업 완료 확인표</h2>
+          <p>항목을 눌러 현재 작업이 운영 규칙을 만족하는지 직접 점검할 수 있다.</p>
+        </div>
+        <div class="checklist-wrap">
+          <div class="progress-head">
+            <strong>완료 조건</strong>
+            <span id="progressText">0 / 10</span>
+          </div>
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="checklist" id="checklistItems">
+            <label class="check-item"><input type="checkbox"><span>사용자 요청 범위 밖의 파일을 수정하지 않았다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>기존 수정·미추적 파일을 그대로 보존했다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>테스트를 통과시키기 위해 검사 기준을 약하게 만들지 않았다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>실제 화면·목록·파일·DB 결과를 확인했다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>데이터 변경이 있었다면 원상복구와 재조회까지 마쳤다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>사람이 직접 확정한 테스트를 덮어쓰지 않았다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>인공지능 보조 단계를 허가 없이 켜지 않았다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>외부 시트 기록 전에 실제 통과 증거를 확보했다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>전체 단위 테스트를 실행하고 결과를 구분했다.</span></label>
+            <label class="check-item"><input type="checkbox"><span>비밀번호·토큰·계정값이 파일이나 Git에 들어가지 않았다.</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <strong>%테스트 운영 규칙 시각화 아티팩트</strong><br>
+      현재 사용자 지시, 하네스 운영 규칙, 프로젝트 안전 규칙과 Test-Automize 운영 문서를
+      이해하기 쉬운 표현으로 재구성했다. 과거 문서의 경로·행 번호·서버 상태는 실행 전에 다시 확인한다.
+    </div>
+  </footer>
+
+  <script>
+    const boxes = [...document.querySelectorAll('#checklistItems input')];
+    const progressText = document.querySelector('#progressText');
+    const progressBar = document.querySelector('#progressBar');
+
+    function updateProgress() {
+      const checked = boxes.filter(box => box.checked).length;
+      progressText.textContent = `${checked} / ${boxes.length}`;
+      progressBar.style.width = `${(checked / boxes.length) * 100}%`;
+    }
+
+    boxes.forEach(box => box.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

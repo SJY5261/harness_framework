@@ -1,0 +1,141 @@
+{
+  "summary": "가공확정 영향분석, 노션 자동화 재활성화, 블루스크린 CPU열화 확정·인계자료 작성, 개인 PC 이관 패키징을 진행함",
+  "tasks": [
+    {
+      "task_ref": "new",
+      "title": "가공확정 폐지 영향분석",
+      "summary": "가공확정 페이지 폐지에 따른 영향 범위를 전수 조사하고 이력누락 결함의 실제 파급을 확정함",
+      "detail": "배경·목적 — Jira KAN-63(가공확정 삭제)에 따라 가공확정 페이지 폐지 시 영향 범위를 재점검함. 이전 조사에서 남아있던 진행상태 8구분(Q3) 미배정 값 문제와 소재주문취소 이력누락(Q4)을 이어서 확인하는 것이 목적이었음.\n\n진행 — 서브에이전트 3개를 병렬로 띄워 상태코드 로직(S53R14/S11R10 매핑), 화면·메뉴(work_confirm.jsp/process-confirm.jsp 신구 병존), 27개 관련 파일 전수분류를 조사함. answer-reviewer 검증에서 게이트의 실질 로직이 XML이 아니라 Java 4개 파일(PopServiceImpl, DrawingBoardController, MaterialServiceImpl, TvController)에 있다는 누락을 지적받아 보강함. 이후 사용자가 '가공확정 상태값은 유지하고 수동 확정/취소 페이지만 폐지한다'는 전제를 정정해, 작업 범위를 메뉴만 숨기고 코드·URL은 그대로 두는 방향으로 축소함.\n\n검증·결론 — Q4(소재주문취소 취소 시 이력 미기록)는 DB 함수 SF_GET_PART_STATUS_NM을 직접 조회해 현재값 컬럼을 읽는다는 사실을 확인, 화면 오표시가 없음을 확정함. 후속 게이트(POP·도면·검사)도 이력 존재 여부만 확인해 무해하며, 결함의 실제 파급은 이력테이블 완전성에만 국한됨을 결론지음. 조사 중 발견된 pop.xml(S50R2x)/v1(S53R2x) 소재입고 코드 이원화는 가공확정과 무관한 별개 선재 이슈로 분리해 백로그화함.\n\n임팩트 — 분석·결정 내용을 handoff/가공확정.md에 정리해, 향후 KAN-6·KAN-35·KAN-38 착수 시 동일 조사를 반복하지 않도록 함.",
+      "status": "진행 중",
+      "tech": [
+        "Jira — KAN-63/KAN-6/KAN-35/KAN-38 이슈 조회",
+        "MariaDB — SHOW CREATE FUNCTION으로 SF_GET_PART_STATUS_NM 직접 확인",
+        "Agent 서브에이전트 — 전수조사 병렬 위임 및 answer-reviewer 검증"
+      ],
+      "learnings": [
+        {
+          "title": "게이트 실질은 Java",
+          "detail": "XML은 CHE_S53R14 같은 플래그만 계산하고 실제 분기·차단은 Java 서비스단에 있어 조사 범위에서 빠지기 쉬움을 확인함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "가공확정 상태값 자체가 삭제되는 것으로 오해해 영향범위를 과대분석함",
+          "solution": "사용자가 '수동 확정/취소 페이지만 폐지, 상태값·게이트는 유지'로 전제를 정정해 분석 범위를 재조정함"
+        }
+      ],
+      "next": [
+        "handoff/가공확정.md 기준 KAN-6 라벨 정리 착수",
+        "가공확정 메뉴(TBL_MENU) 숨김 처리 실작업",
+        "pop.xml S50R2x/v1 S53R2x 코드 이원화 별도 조사"
+      ],
+      "tags": [
+        "가공확정",
+        "KAN-63",
+        "영향분석",
+        "DB결함"
+      ]
+    },
+    {
+      "task_ref": "t-0002",
+      "title": "노션 작업일지 자동화",
+      "summary": "예약작업 DailyWorklog가 전체 비활성 상태임을 확인하고 재활성화한 뒤 후속 업로드 체인을 대기시킴",
+      "detail": "확인 — 예약작업 DailyWorklog의 Settings.Enabled=False, 트리거(평일 17:30)는 Enabled=True로 스케줄이 아니라 작업 자체가 꺼져 있음을 실측함. 마지막 실행이 7/14 17:30(성공) 이후 끊겨, 7/15 BIOS 업데이트 간섭 방지로 비활성화한 뒤 예정된 7/16 재활성화가 누락된 채 계속 멈춰 있었음을 확인함. NextRunTime 표시가 실제 발화와 무관하다는 점도 짚음.\n\n처리 — Enable-ScheduledTask로 즉시 재활성화함. 이어서 다른 세션이 종료되면 daily_worklog.py를 실행해 노션 업로드 성공을 확인한 뒤 5분 후 PC를 종료하는 체인을 준비해 신호 대기 상태로 둠.\n\n결과 — 예약작업은 재활성화 완료(다음 트리거 7/22 17:30). 노션 업로드와 PC 종료는 오늘 다른 작업 종료를 신호로 실행되도록 대기 중이며 이번 세션 자료에서는 실행 완료가 확인되지 않음.",
+      "status": "진행 중",
+      "tech": [
+        "Windows 작업 스케줄러 — Get/Enable-ScheduledTask로 상태 조회·재활성화",
+        "daily_worklog.py — 노션 백필 업로드 스크립트"
+      ],
+      "learnings": [],
+      "issues": [
+        {
+          "problem": "Disable-ScheduledTask가 '하루만 스킵'이 아니라 무기한 비활성으로 걸려 7일간 노션 작업일지가 누락됨",
+          "solution": "Enable-ScheduledTask로 즉시 재활성화하고, 이후 재활성 기한을 명확히 관리하도록 함"
+        }
+      ],
+      "next": [
+        "다른 세션 종료 확인 후 노션 업로드 실행",
+        "업로드 성공 확인 후 PC 종료 예약 실행"
+      ],
+      "tags": [
+        "자동화",
+        "Windows 작업스케줄러",
+        "노션"
+      ]
+    },
+    {
+      "task_ref": "t-0065",
+      "title": "블루스크린 원인 진단",
+      "summary": "덤프·WHEA 로그를 직접 파싱해 CPU 코어 열화를 확정하고 수리점 인계 문서·덤프를 준비함",
+      "detail": "배경 — BIOS 최신화(V1.18) 이후에도 7/21·7/22 블루스크린(0x139)이 재발해, 근본원인을 재확인하고 수리 인계 자료를 완성할 필요가 있었음.\n\n진단 — 관리자 권한을 확보(VS Code 관리자 재실행)한 뒤 WinDbg/cdb로 미니덤프 5건을 실제 파싱해 이벤트로그(BugCheck 1001)와 100% 일치를 확인함. 0x139 3건 모두 파라미터 0xA(LIST_ENTRY 손상)였고, WHEA 이벤트(Id 19/2)에서 동일 APIC ID 33 코어의 정정형 머신체크(TLB·parity error)가 5주간 반복됨을 확인함. 마이크로코드가 이미 0x132(인텔 안정화 패치 0x12B 이후)임에도 재발해 CPU 물리적 열화로 결론지음.\n\n배제 조치 — chkdsk C:/E: 문제없음, sfc 손상없음, DISM RestoreHealth 성공으로 디스크·시스템파일 원인을 배제함. PredatorSense에서 오버클럭 옵션 자체가 이 기종에 노출되지 않음을 확인해 오버클럭 원인도 배제함.\n\n인계자료 — 실측 데이터를 바탕으로 `블루스크린_분석_노트북수리_20260722.md`(+PDF)를 작성하고, 미니덤프 5개와 함께 바탕화면 `노트북수리` 폴더에 모았음. 이후 덤프를 재차 직접 열어 문서 내용과 교차검증까지 완료해 수리점 전달 준비를 마침.",
+      "status": "완료",
+      "tech": [
+        "WinDbg/cdb — 미니덤프 !analyze 및 헤더 직접 파싱",
+        "이벤트 뷰어 — WHEA(Id 19/2)·BugCheck(1001) 조회",
+        "chkdsk/sfc/DISM — 디스크·시스템파일 무결성 점검",
+        "Chrome headless — MD→PDF 변환"
+      ],
+      "learnings": [
+        {
+          "title": "마이크로코드 최신화의 한계",
+          "detail": "인텔 13/14세대 완화 마이크로코드(0x12B 이후 0x132)가 적용돼도 이미 진행된 CPU 물리적 열화는 되돌리지 못함을 확인함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "일반 권한으로 Minidump 폴더·WinDbg 설치 접근이 막힘",
+          "solution": "VS Code를 관리자 권한으로 재실행해 세션 전체를 승격시켜 해결함"
+        }
+      ],
+      "next": [
+        "노트북 수리점에 노트북수리 폴더(MD+PDF+덤프5개) 전달",
+        "인텔 13/14세대 RMA·보증 대상 여부 수리점에 확인 요청"
+      ],
+      "tags": [
+        "블루스크린",
+        "하드웨어진단",
+        "WinDbg",
+        "BIOS"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "개인 PC 이관 환경 구성",
+      "summary": "노트북 수리 기간 대체 PC에서 동일 개발환경을 재현하도록 저장소·설정을 이관 패키징함",
+      "detail": "배경·목적 — 블루스크린으로 노트북을 수리 맡기며 수리 기간 개인 PC에서 작업을 이어갈 수 있도록, git 이력·미추적 파일·git 밖 설정을 모두 옮길 준비가 필요했음.\n\n저장소 처리 — harness_framework는 커밋(a23da2c) 후 원 저장소(jha0313) 푸시 권한이 없어 403이 발생, gh CLI로 본인 계정(SJY5261) 포크를 만들어 feat-code-cache를 포크에 푸시함. Test-Automize는 커밋(44c14cc) 후 origin/claude에 정상 푸시함. Tomes-Cloud는 미커밋 추적 변경(DB결함 4파일, 단가검토 3파일)이 보류분이라 커밋 없이 두고, 미추적 3파일(.claude/settings.json, 견적 단가검토 분석 MD, runDev.local.bat)만 별도 보존함.\n\n패키징 — 하네스 미추적 100개 파일과 git 번들(harness_repo.bundle)을 바탕화면 `업무용` 폴더에 구성함. 클라우드 미커밋 변경을 기능별(채번락·수동입력차단·이중발행방지·매핑사본전파·바코드삭제전파 vs 단가검토 화면개편)로 분류해 스테이지 파일은 DB결함, 미스테이지 파일은 단가검토임을 확인함. 홈 `.claude`(로그인자격 제외, memory 36개 포함)와 gitignore된 `application-local.yml`까지 담아 원클릭 `setup.ps1`을 작성함.\n\n검증·결과 — 리뷰에서 클라우드 브랜치(feature-control-0713)가 원격에 없어 fresh clone 시 체크아웃이 실패하는 버그와, settings.json의 이중 백슬래시 경로 치환이 매칭되지 않는 버그를 발견해 수정·재검증함. 최종적으로 3저장소·미추적파일·홈설정을 담은 이관 패키지와 안내 MD(`파일배치_가이드_2026-07-22.md`)를 완성함.",
+      "status": "완료",
+      "tech": [
+        "gh CLI — GitHub 포크 생성·푸시",
+        "git bundle — 오프라인 저장소 이력 백업",
+        "PowerShell — setup.ps1 원클릭 셋업 스크립트",
+        "robocopy — 미추적 파일 구조보존 복사"
+      ],
+      "learnings": [
+        {
+          "title": "git만으론 환경복원 불가",
+          "detail": "application-local.yml·Notion 토큰·Claude 로그인자격 등 실행 필수 요소가 git 추적 밖에 있어 별도 이관이 필요함을 확인함"
+        }
+      ],
+      "issues": [
+        {
+          "problem": "harness_framework 원격에 push 권한이 없어 403 발생",
+          "solution": "본인 GitHub 계정으로 포크한 뒤 그 원격으로 푸시함"
+        },
+        {
+          "problem": "setup.ps1의 클라우드 체크아웃과 notify 경로 치환에 버그 존재",
+          "solution": "원격에 없는 로컬 브랜치는 origin/Danga-order 기준으로 생성하도록, 경로치환은 이중 백슬래시 매칭으로 수정 후 재검증함"
+        }
+      ],
+      "next": [
+        "개인 PC에서 setup.ps1 실행 검증",
+        "저장소 밖 항목(E:\\Tool, JDK, 로컬 DB/Redis) 별도 이관"
+      ],
+      "tags": [
+        "환경이관",
+        "Git",
+        "백업",
+        "PowerShell"
+      ]
+    }
+  ]
+}

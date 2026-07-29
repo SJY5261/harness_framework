@@ -1,0 +1,202 @@
+{
+  "summary": "단가검토 팝업 UI·기록조회·가공실적 개선과 정적 리소스 캐시 PR 리뷰를 병행함",
+  "tasks": [
+    {
+      "task_ref": "t-0007",
+      "title": "단가검토 팝업 UI 개선",
+      "summary": "견적·수주 단가검토 팝업에 order 디자인 이식, 목록적재 결함 수정, 기본정보 행별 갱신·목업 제거를 적용함",
+      "detail": "배경·목적 — order(수주) 재구성본이 견적(estimate) 마감본보다 앞서 있어 그 디자인 갭을 견적에 이식하고 양쪽에 공통 개선을 반영할 필요가 있었음.\n\n진행 — estimate_unit_price_calculate.jsp/.css에 색·단가입력 라벨 분리(파랑/크림)·보류셀 단색·도면 cover를 적용하고, setEstimateRowSelect에 페이저·헤더 도면번호 배선을 추가해 목록적재 결함을 수정함. 기본정보 규격/소재/표면/형태·수량/등록일자를 행별로 바인딩(중복 회피용 BI_ id 분리)하고 최초 로딩 하드코딩 목업을 제거함. 외주이력 2행+스크롤, 도면번호 박스 빈값 크기유지를 추가하고 수주(order)에도 동일 적용함.\n\n결과·임팩트 — 라이브 8081에서 EST_SEQ=12195 / CONTROL_DETAIL_SEQ=92000013로 검증해 데이터 적재 정상·JS에러 0·중복 id 0을 확인함. 커밋 성격은 데이터 이전이 아닌 UI 재구성이라 feat로 정리했고, 단가검토 작업 브랜치는 Danga-order로 단일화함. 전부 미커밋(커밋은 사용자 몫).",
+      "status": "진행 중",
+      "tech": [
+        "JSP — 팝업 마크업 재구성",
+        "CSS — 색·레이아웃 스타일",
+        "pqGrid — 기록조회 그리드",
+        "Playwright — 라이브 렌더 검증",
+        "Spring Boot — bootRun dev 서버"
+      ],
+      "learnings": [
+        {
+          "title": "변경 반영 기준",
+          "detail": "CSS는 src 직접 서빙이라 하드리로드면 반영되고, JSP·Java·매퍼XML·yml은 서버 재시작이 필요함을 규칙으로 메모리에 저장함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "데이터가 담겨도 페이저가 0/0·헤더가 샘플로 고정돼 목록이 안 담긴 것처럼 보임",
+          "solution": "order에는 있고 견적엔 누락됐던 페이저·헤더 도면번호 배선을 setEstimateRowSelect에 추가함"
+        }
+      ],
+      "next": [
+        "기타·접수번호 빈 셀 처리(백엔드 컬럼 추가 또는 행 제거) 결정",
+        "변경분 커밋"
+      ],
+      "tags": [
+        "단가검토",
+        "JSP",
+        "UI",
+        "pqGrid"
+      ]
+    },
+    {
+      "task_ref": "t-0010",
+      "title": "단가검토 우측 비율 재현",
+      "summary": "PPTX image4 기준으로 우측 컴포넌트 비율을 맞추고 해상도 적응형 flex로 재구성함",
+      "detail": "배경·목적 — 가공실적 블록이 남는 높이를 독식해 PPTX 비율(가공실적24/외주16/단가36/공급20)과 달랐고, 1920 고정값으로 잡아 1536×864 등 낮은 해상도에서 footer가 잘림.\n\n진행 — 사용자 제공 캡처 2장과 PPTX 원본 이미지를 측정해 비율을 산출함. 행 높이를 줄였다가 측정 결과 34px가 PPTX 행당 비율에 부합함을 확인하고 행 축소를 원복했으며, 진짜 원인인 가공실적 슬랙 독식만 잡음. 우측 섹션을 flex grow 가중치(perf 24·out 16·공급 20, max 캡)로 가변화하고 grid-box를 flex:1, col-right에 overflow-y:auto를 둠.\n\n결과·임팩트 — 라이브 DOM 측정에서 1080 비율이 23.9/16.3/33.2/19.8로 PPTX(24/16/36/20)에 근사함. 1920×1080·1600×900·1536×864는 footer 보임·overflow 없음, 1366×768만 스크롤로 안전 처리. estimate CSS만 변경하고 order는 미변경.",
+      "status": "완료",
+      "tech": [
+        "CSS flex — 가변 비율 레이아웃",
+        "Python — PPTX 이미지 추출·밴드 측정",
+        "Playwright — DOM 비율 실측"
+      ],
+      "learnings": [
+        {
+          "title": "비율 진단법",
+          "detail": "라벨 색·비율은 그룹 추정이 아닌 셀별 픽셀 샘플로 확정해야 하며, 하단 공백의 원인은 행 높이가 아니라 한 섹션의 슬랙 독식이었음."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "1920 고정값이 저해상도에서 footer를 잘라냄",
+          "solution": "고정 px 대신 flex grow 가중치로 가변화하고 overflow 안전장치를 둠"
+        }
+      ],
+      "next": [
+        "1366×768 무스크롤 추가 압축(선택)"
+      ],
+      "tags": [
+        "CSS",
+        "반응형",
+        "PPTX",
+        "단가검토"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "정적 리소스 캐시 PR 리뷰",
+      "summary": "정적 리소스 캐시 커밋을 PR 리뷰용 MD로 정리하고 CSRF·캐시버스팅 개념을 설명함",
+      "detail": "배경·목적 — feature_caching_2606의 정적 리소스 캐시 설정 커밋을 리뷰하고, 팀 공유를 위해 캐시 동작 원리를 이론적으로 정리할 필요가 있었음.\n\n진행 — 커밋 c3c13fe를 대조해 WebContextConfig가 /resource/** 핸들러에 setCacheControl(maxAge 1d, public)을 걸고 SecurityConfig가 web.ignoring으로 보안 필터에서 제외한 구조를 확인함. 보고서의 365d가 실제 1d임을 정정하고, 커스텀 핸들러에 yml이 미적용되는 원리·Security 기본 no-store·CSRF disable·캐시버스팅 부재(버전 쿼리 0건)·JSP의 Jasper 핫리로드를 설명함.\n\n결과·임팩트 — 상세·요약 PR 리뷰 MD 2개를 작성하고 answer-reviewer 전수 검증을 통과함. dev는 Disable cache/하드리로드, 운영은 쿼리스트링 버저닝 도입을 권고함. main 브랜치 실행 시 no-store가 보이는 것은 수정 미머지 때문임을 규명함.",
+      "status": "완료",
+      "tech": [
+        "Spring Security — WebSecurityCustomizer/web.ignoring",
+        "Cache-Control — max-age·public 헤더",
+        "MyBatis/Jasper — 서버 사이드 반영"
+      ],
+      "learnings": [
+        {
+          "title": "yml 캐시 적용 범위",
+          "detail": "yml 캐시 설정은 자동 구성 핸들러에만 적용되고, addResourceHandlers로 수동 등록한 커스텀 핸들러는 setCacheControl을 직접 호출해야 캐시 헤더가 붙음."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "보고서의 max-age=365d가 실제 커밋(1d)과 불일치하고, main 실행이라 no-store가 보임",
+          "solution": "실커밋 기준으로 1d로 정정하고, 검증은 feature_caching_2606 재빌드·재기동 기준임을 명시함"
+        }
+      ],
+      "next": [
+        "운영용 캐시버스팅 도입(쿼리스트링 버저닝 또는 VersionResourceResolver)"
+      ],
+      "tags": [
+        "캐시",
+        "Spring Boot",
+        "PR리뷰",
+        "보안"
+      ]
+    },
+    {
+      "task_ref": "t-0007",
+      "title": "기록조회 그리드 목업",
+      "summary": "다운로드 image 기준으로 견적·수주 좌측 기록조회 4그리드를 목업 채우고 작업상세 아이콘을 추가함",
+      "detail": "배경·목적 — 단가검토 좌측 '기록조회(동일 도면번호)' 4그리드를 image.png 기준으로 채우고, 그리드 내 아이콘을 작업상세정보 팝업(g_item_detail_pop_view)을 여는 shareIcon으로 구현할 필요가 있었음.\n\n진행 — 아코디언 헤더에 건수(견적8/발주1/외주견적2/외주발주3)를 표기하고 fnInitRecordGrid 4호출에 image 기준 샘플을 주입함. recDetailCol 팩토리(매 그리드 새 객체)+recDetailRender(shareIcon)+recDetailPostRender(클릭→팝업)를 발주·외주견적·외주발주에만 부여하고 견적기록은 아이콘 없음으로 image와 일치시킴. bottom.js 미로드라 클릭 핸들러를 typeof 가드로 감쌈.\n\n결과·임팩트 — 견적 팝업을 라이브 실렌더 검증해 헤더 건수·행수·강제펼침 후 아이콘 수(0/1/2/3)가 image와 일치함을 확인하고 캡처로 대조함. 수주 JSP도 동일 코드 적용. 데이터는 로컬 샘플로 실 쿼리는 미연결.",
+      "status": "진행 중",
+      "tech": [
+        "pqGrid — colModel render/postRender",
+        "JSP — 아코디언·그리드 초기화",
+        "Playwright — 팝업 실렌더 캡처"
+      ],
+      "learnings": [
+        {
+          "title": "Jasper 재컴파일",
+          "detail": "기존 PID가 옛 JSP를 서빙해 변경이 미반영됨 → bootRun 재기동으로 Jasper를 새로 컴파일해야 신규 마크업이 반영됨."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "그리드 변경이 화면에 반영되지 않음",
+          "solution": "옛 JSP를 서빙하던 기존 서버를 종료하고 bootRun으로 재기동함"
+        }
+      ],
+      "next": [
+        "실 '동일 도면번호' 쿼리 연결(dataModel.data 교체 + rowData에 CONTROL_SEQ/CONTROL_DETAIL_SEQ 채우고 g_item_detail_pop_view 로드)"
+      ],
+      "tags": [
+        "단가검토",
+        "pqGrid",
+        "JSP"
+      ]
+    },
+    {
+      "task_ref": "t-0007",
+      "title": "가공실적 컴포넌트 1단계",
+      "summary": "견적 가공실적을 order 기준 구조+배선으로 이식하고 pqGrid 전환 설계를 합의함",
+      "detail": "배경·목적 — 세 팝업(견적/수주/유사형상)의 가공실적 컴포넌트를 동일화하는 작업으로, PPTX image4=image6이 픽셀 동일하고 order가 이미 그 레이아웃과 일치해 사용자 지시에 따라 order 기준 1단계(구조+배선)만 진행함.\n\n진행 — 가공실적 데이터가 TBL_MCT_WORK·CONTROL키 기반 생산실적이라 견적엔 자기 실적이 원천적으로 없음을 쿼리로 확인함. estimate JSP의 그리드 tbody에 id, 요약 셀에 UNIT_COST_PROCESS_AMT/COST_PROCESS_SUM_AMT/INSPECT_GRADE_LIST를 부여하고 order 채우기 로직을 fnGetEstimateProcessItem으로 이식하되 CONTROL_SEQ 가드로 빈 상태를 유지함. 이어 가공실적/외주이력을 pqGrid로 전환하는 설계(공유 그리드+팝업별 하단 스크립트, 기존 쿼리 무수정)를 코드 근거로 합의함.\n\n결과·임팩트 — 라이브 EST_SEQ=12195에서 신규 id 4개·헤더 PPTX 일치·JS에러 0·가드 정상(빈 그리드)을 검증함. bootRun에 --spring.profiles.active=local --server.port=8081 인자가 필수임을 규명함. 미커밋.",
+      "status": "진행 중",
+      "tech": [
+        "JSP — 가공실적 마크업·채우기 함수",
+        "MyBatis — selectInspectionListV1·selectInspectionArchiveDataList",
+        "pqGrid — summary 집계",
+        "Spring Boot — bootRun 프로파일"
+      ],
+      "learnings": [
+        {
+          "title": "가공실적 데이터 출처",
+          "detail": "가공실적은 CONTROL키 기반 실제 가공 로그라 견적 단계엔 키가 없어 빈 상태이고, 그리드 전환 시 기존 쿼리 결과를 그대로 dataModel에 넣어 쿼리 수정 없이 가능함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "bootRun이 banner 직후 exit 1로 종료",
+          "solution": "application.yml이 비어 있어 local 기본포트가 80이므로 local 프로파일과 server.port=8081 인자를 명시해 기동함"
+        }
+      ],
+      "next": [
+        "2단계 데이터 피드(유사형상에서 고른 과거 주문 CONTROL키 되먹임)",
+        "유사형상 요약을 PPTX 기준으로 통일",
+        "가공실적/외주이력 pqGrid 전환(order부터)"
+      ],
+      "tags": [
+        "가공실적",
+        "pqGrid",
+        "MyBatis",
+        "단가검토"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "컴포넌트 쿼리·동작 문서화",
+      "summary": "견적·수주 단가검토 7개 컴포넌트의 조회 쿼리·동작·연결상태를 PR 리뷰 MD로 정리함",
+      "detail": "배경·목적 — 두 팝업의 7개 컴포넌트(기본정보/기록조회/도면view/가공실적/외주이력/단가입력/견적공급가)가 각각 어떤 쿼리로 조회되고 어떻게 동작하는지 정리한 PR 리뷰 문서가 필요했음.\n\n진행 — 양 팝업 컴포넌트를 파일·라인 단위로 전수 추적해 매퍼 네임스페이스 해석, queryId·키 필드·연결상태를 매핑함. 기록조회는 양쪽 모두 로컬 샘플(미연결), 가공실적은 견적이 CONTROL키 부재로 빈 상태이고 수주는 실연결, 견적공급가는 견적이 보류·수주가 활성(S10R50만 비활성) 등 견적↔수주 차이를 정리함.\n\n결과·임팩트 — PR 리뷰 MD를 작성하고 answer-reviewer가 10개 핵심 주장을 코드와 대조해 일치 확인함. 사용자 요청한 보여주기식 데모 화면(전 컴포넌트 목업 하드코딩+실 도면 이미지)은 커밋 이후 진행하기로 대기함.",
+      "status": "완료",
+      "tech": [
+        "MyBatis — 매퍼 네임스페이스·queryId 추적",
+        "JSP — 컴포넌트 채움 흐름 추적"
+      ],
+      "learnings": [
+        {
+          "title": "queryId 매핑 기준",
+          "detail": "JS의 queryId는 파일명이 아니라 매퍼 namespace로 매핑되므로(예: drawingSameArchive.* → orderSameArchive.xml) namespace로 확인해야 함."
+        }
+      ],
+      "issues": [],
+      "next": [
+        "보여주기식 데모 화면 작업(전 컴포넌트 목업 하드코딩 후 실데이터 로딩 + 실 도면 이미지 반영) — 커밋 이후 진행"
+      ],
+      "tags": [
+        "문서화",
+        "PR리뷰",
+        "MyBatis",
+        "단가검토"
+      ]
+    }
+  ]
+}

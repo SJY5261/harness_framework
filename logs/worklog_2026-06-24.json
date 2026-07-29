@@ -1,0 +1,194 @@
+{
+  "summary": "단가검토 화면 재현·롤백, 노션 일지 템플릿 개선, 하네스 규칙 정비, 정적 캐시 원인 분석을 진행함",
+  "tasks": [
+    {
+      "task_ref": "t-0002",
+      "title": "노션 작업일지 자동화",
+      "summary": "작업일지 detail 서술을 라벨형 문단으로 개선하고 인기 템플릿을 조사해 노션 비교 예시를 구성함",
+      "detail": "배경·목적 — 자동 생성된 작업일지 detail이 줄바꿈 없는 한 덩어리로 렌더돼 가독성이 떨어지고 배운점·이슈 항목이 빈약했음. 서류 제출 수준의 서술 품질로 재정비가 필요했음.\n\n진행 — daily_worklog.py에 _detail_block 렌더러를 추가해 '소제목 — 본문'을 굵은 파란 소제목+본문으로 분리하고 노션 23일 7개 행을 재갱신함. PROMPT_TMPL에 라벨형 detail 규칙을 반영하고, 인기 개발자 일지 템플릿(STAR·PPP·Brag·4Ls 등)을 조사해 worklog_templates.md를 작성함. 노션 '템플릿 예시용' 페이지에 색상코딩·아이콘·폰트크기 위계를 적용한 변형 예시를 반복 생성해 최종 10종을 만들고 #10(타임라인형)을 작업일지 템플릿으로 선정함.\n\n결과·임팩트 — detail이 소제목/본문으로 구분 렌더됨을 확인하고 안 쓰는 예시 목록을 정리함. 노션 링크를 notion:// 앱 스킴으로 출력하도록 변경함. 사용자가 추가 5개 요구(다일 이어쓰기, 제목 날짜 제거, 보고서체, 17:40 스케줄 기준, 전 세션 적용)를 제시해 후속 반영 대상으로 정리함.",
+      "status": "진행 중",
+      "tech": [
+        "Python — daily_worklog.py 렌더러·프롬프트",
+        "Notion API — 트래커 DB·예시 페이지 생성",
+        "웹 검색 — 인기 일지 템플릿 조사"
+      ],
+      "learnings": [
+        {
+          "title": "노션 폰트크기",
+          "detail": "노션은 인라인 글자 크기를 못 정하고 헤딩 블록(H2/H3/본문)으로만 크기 위계를 만들 수 있음."
+        },
+        {
+          "title": "앱 스킴 링크",
+          "detail": "notion:// 스킴을 쓰면 브라우저가 아닌 데스크톱 앱에서 페이지가 열림."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "'노션 템플릿' 요청을 repo MD 파일로 잘못 생성함",
+          "solution": "노션 '템플릿 예시용' 페이지에 하위 페이지로 재생성함"
+        },
+        {
+          "problem": "소제목 구분을 굵기·콜론으로 시도했으나 폰트크기 차등 요구였음",
+          "solution": "H2/H3/본문 헤딩 위계로 크기 차이를 구현함"
+        }
+      ],
+      "next": [
+        "daily_worklog.py에 다일 이어쓰기·제목 날짜 제거·보고서체·17:40 스케줄·전 세션 적용 5개 요구 반영",
+        "트래커 DB 클릭형 템플릿 등록"
+      ],
+      "tags": [
+        "노션",
+        "자동화",
+        "작업일지",
+        "템플릿"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "단가검토 디자인 재현 실험",
+      "summary": "PPTX image6 단가 상세검토 화면을 세션별 다른 방식으로 HTML/CSS 재현해 비교 디렉토리로 구성함",
+      "detail": "배경·목적 — 디자인 생성 방식별 장단점을 파악하기 위해 여러 세션이 동일 화면(단가검토 및 유사형상 PPTX 6번 = 단가 상세검토)을 서로 다른 참고자료로 재현하고, 바탕화면 예시\\단가검토 폴더에 세션별 폴더로 모아 비교 가능하게 구성함.\n\n진행 — image6을 영역별 확대·픽셀 샘플링으로 라벨·색·아이콘을 판독하고 도면은 PPTX 래스터를 잘라 자산화함. 3단 레이아웃(좌 기본정보+기록조회 아코디언 / 중앙 도면 View / 우 가공실적·외주이력·단가입력·견적/공급가)을 구성하고, index.html/style.css 분리·인라인 스타일 제거·시맨틱 table화·section.panel 공통 래퍼·1920×1080 유동 레이아웃·아코디언 최대 2개 FIFO JS(app.js)를 적용함. 가공실적/외주이력 푸터를 본문과 독립된 비율 테이블로 분리하고 셀 구분선과 아이콘(계산기·↳·외부링크)을 보정함.\n\n결과·임팩트 — 헤드리스 Chrome 1920×1080 렌더로 원본과 영역별 대조해 스크롤 제거·셀 구분·도면 채움·아코디언 동작을 검증함. 각 세션 결과를 하위 폴더(참고-PPTX원본이미지, session-16100667 등)와 METHOD.md로 정리해 방식별 비교가 가능한 상태를 확보함.",
+      "status": "진행 중",
+      "tech": [
+        "HTML/CSS — 화면 재현·분리",
+        "JavaScript — 아코디언 토글(app.js)",
+        "헤드리스 Chrome/Playwright — 1920×1080 렌더 검증",
+        "이미지 추출 — PPTX image6 판독"
+      ],
+      "learnings": [
+        {
+          "title": "가는 선 검증",
+          "detail": "축소 스크린샷은 1px 옅은 보더가 다운샘플로 사라짐. 원본 해상도 크롭과 computed style 측정을 병행해야 함."
+        },
+        {
+          "title": "실제 해상도",
+          "detail": "raw 1080이 아닌 브라우저 가용높이(~940)에서 검증해야 박스 스크롤을 잡음."
+        },
+        {
+          "title": "td flex 주의",
+          "detail": "td에 display:flex를 직접 주면 table-cell 동작이 깨져 colspan이 무시됨. flex는 내부 div에 적용해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "다른 세션 산출물을 자기 작업인 양 보고함",
+          "solution": "파일 md5·클래스 네이밍 대조로 독립 재현임을 확인하고 false-completion 방지 규칙을 메모리에 저장함"
+        },
+        {
+          "problem": "디스크에 PPTX가 있는데 '원본 없음'으로 단정해 임의 생성함",
+          "solution": "디스크를 탐색해 image6을 찾고 기준 이미지대로 전면 재작성함"
+        }
+      ],
+      "next": [
+        "세션별 생성 방식 장단점 비교 정리"
+      ],
+      "tags": [
+        "디자인",
+        "HTML/CSS",
+        "단가검토",
+        "검증"
+      ]
+    },
+    {
+      "task_ref": "t-0008",
+      "title": "하네스 규칙·저장소 정리",
+      "summary": "산출물 저장·지적사항 회고 규칙을 CLAUDE.md에 신설하고 컨텍스트 신선도 개선안을 세션 간 협의로 합의함",
+      "detail": "배경·목적 — 반복된 검증 실패(표면만 보고 단정, stale 스냅샷 신뢰)와 산출물 위치 혼선을 막기 위해 하네스 규칙을 정비함. 산출물 저장 위치 규칙과 지적사항 근본원인 회고 규칙을 신설하고, 로드된 규칙 스냅샷이 최신 파일과 어긋나는 문제의 개선안을 도출하는 것이 목표였음.\n\n진행 — CLAUDE.md에 '산출물 파일 저장 규칙'(scratchpad 금지, MD→바탕화면 MD, 기타→예시 폴더)을 신설하고 '지적사항 대응: 근본원인+검증방법 회고' 절을 추가함. 컨텍스트 신선도 문제(세션 시작 1회 스냅샷, 변경 신호의 부분성)를 분석하고, 두 세션이 SESSION_DIALOGUE.md를 append-only 턴제로 자율 협의해 M1(UserPromptSubmit 훅)·M2(execute.py step별 재로딩)·P1·P2·N1 합의안을 도출함. 상대 주장은 settings.json·execute.py 원본 파일을 직접 대조해 검증함.\n\n결과·임팩트 — 산출물·지적사항 규칙은 CLAUDE.md에 반영 완료함. 신선도 합의안은 설계까지 확정하고 적용은 사용자 승인 후로 둠. 별도 세션이 두 세션 합의 완료와 노션 자동화 완료를 확인한 뒤 PC 종료를 예약해 작업을 마무리함.",
+      "status": "진행 중",
+      "tech": [
+        "CLAUDE.md — 하네스 규칙 정의",
+        "SESSION_DIALOGUE.md — 세션 간 협의 채널",
+        "settings.json/execute.py — 신선도 메커니즘 검증",
+        "메모리 — 규칙 영속화"
+      ],
+      "learnings": [
+        {
+          "title": "스냅샷은 stale",
+          "detail": "세션 시작 컨텍스트·부분 diff를 전부/최신으로 단정하지 말고 판단 전 원본을 재대조해야 함."
+        },
+        {
+          "title": "파일 경유 협의",
+          "detail": "세션 간 직접 메시징은 불가하며 append-only 파일+STATUS 턴 신호로만 비동기 협의가 가능함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "백그라운드 감시가 자기 글의 '[합의]' 문자열에 걸려 상대 응답으로 오인함",
+          "solution": "STATUS 마지막 순번 변경을 감지하도록 조건을 교정함"
+        },
+        {
+          "problem": "STATUS만 선반영되고 본문 append 전 상태에서 합의 확정 위험",
+          "solution": "본문 헤더가 실제로 등장할 때까지 대기하도록 변경함"
+        }
+      ],
+      "next": [
+        "M1/M2/P1/P2 신선도 개선안을 사용자 승인 후 적용"
+      ],
+      "tags": [
+        "하네스",
+        "CLAUDE.md",
+        "검증",
+        "세션협업"
+      ]
+    },
+    {
+      "task_ref": "t-0004",
+      "title": "메인 로드 속도 개선",
+      "summary": "정적 리소스 no-store가 의도적 보안 차단이 아니라 설정 충돌임을 규명하고 분석 MD를 작성함",
+      "detail": "배경·목적 — 메인 로드 시 정적 리소스에 찍히는 no-store가 SecurityConfig의 의도적 보안 차단인지 단순 설정 충돌인지 판단이 필요했음. 보안 이슈로 막아둔 흔적인지 확인이 목적이었음.\n\n원인 — 세 프로필 yml(develop 49~51·local 58~61·production 53~55)이 전부 정적 캐싱(max-age 365d, cache-public, production은 immutable)을 명시해 차단 의도와 모순됨. 실제 고장은 2단으로, WebContextConfig 커스텀 핸들러가 setCacheControl을 호출하지 않아 Cache-Control 헤더가 누락되고, 그 빈자리를 Spring Security 기본 CacheControlHeadersWriter가 no-store로 채운 것임. 프로젝트 코드 어디에도 정적 no-store를 명시한 곳은 없음.\n\n결과·임팩트 — 의도적 보안 차단이 아닌 설정 충돌로 결론지음. 현재 워킹트리(staged·미커밋)에 setCacheControl 추가와 /resource/** 필터 제외가 들어있음을 확인하고, web.ignoring가 보안 필터를 전부 우회한다는 주의점을 정리함. 분석을 바탕화면 MD 폴더에 문서화하고 'MD 생성=MD 폴더' 규칙을 메모리에 추가함.",
+      "status": "완료",
+      "tech": [
+        "Spring Security — CacheControlHeadersWriter 기본 동작",
+        "Spring Boot — spring.web.resources.cache 적용 범위",
+        "Git — 워킹트리·diff 확인"
+      ],
+      "learnings": [
+        {
+          "title": "no-store 발생 조건",
+          "detail": "Spring Security는 응답에 Cache-Control이 없을 때만 no-store 기본값을 씀. yml 캐시 설정은 자동 핸들러에만 적용되고 커스텀 핸들러엔 미적용됨."
+        }
+      ],
+      "issues": [],
+      "next": [],
+      "tags": [
+        "Spring",
+        "캐시",
+        "보안",
+        "분석"
+      ]
+    },
+    {
+      "task_ref": "t-0007",
+      "title": "단가검토 팝업 화면 개편",
+      "summary": "어제 재작성한 단가검토 팝업 JSP를 마이그레이션 전 원본으로 되돌리고 부수 변경도 파기함",
+      "detail": "배경·목적 — 단가검토 팝업 작업을 틀>구체적 디자인>기능 순서로 다시 진행하기로 결정함. 어제 본문 마크업을 재작성한 두 JSP가 미커밋 상태로 워킹트리에만 있어 마이그레이션 전으로 되돌릴 필요가 있었음.\n\n진행 — estimate_unit_price_calculate.jsp(562줄)·order_unit_price_calculate.jsp(686줄) 변경을 patch로 백업한 뒤 HEAD 원본으로 복원함. 기록조회 도면번호 필터를 넣었던 orderSameArchive.xml도 백업 후 파기함(조건부 if·queryId 불변이라 하위호환). estimate-register.jsp 버튼 레이블 변경은 명령과 무관하게 사라진 것을 reflog 흔적으로 추정 보고함.\n\n결과·임팩트 — 어제 단가검토 흔적(두 JSP+XML+레이블)이 모두 워킹트리에서 제거돼 정적 캐시 작업(SecurityConfig/WebContextConfig)만 남음. 단계적 재작업의 출발점을 확보했고 모든 변경은 patch 백업으로 복구 가능함.",
+      "status": "진행 중",
+      "tech": [
+        "Git — checkout·reflog·patch 백업",
+        "JSP — 단가검토 팝업 마크업",
+        "MyBatis XML — orderSameArchive 필터"
+      ],
+      "learnings": [
+        {
+          "title": "미커밋 변경 소실",
+          "detail": "미스테이지 워킹트리 변경은 외부 git 조작 시 추적 없이 사라질 수 있음. 되돌리기 전 patch 백업이 필수임."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "estimate-register.jsp 변경이 명령과 무관하게 소실됨",
+          "solution": "reflog의 외부 브랜치 체크아웃 흔적으로 원인을 추정하고 dangling blob 복구 가능성을 안내함"
+        }
+      ],
+      "next": [
+        "틀>디자인>기능 순서로 단가검토 팝업 재작성"
+      ],
+      "tags": [
+        "Git",
+        "JSP",
+        "단가검토",
+        "롤백"
+      ]
+    }
+  ]
+}

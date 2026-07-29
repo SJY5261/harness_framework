@@ -13,3 +13,13 @@ Projects/
 
 # python bytecode cache
 __pycache__/
+
+# local agent/editor runtime settings
+.claude/settings.local.json
+
+# runtime logs and machine-specific recovery snapshots
+*.log
+artifacts/acl_before_codex_sandbox_fix_*.txt
+
+# independently versioned Sites projects
+sites/

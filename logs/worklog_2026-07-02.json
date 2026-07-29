@@ -1,0 +1,245 @@
+{
+  "summary": "도면팝업·수주현황 UI 수정과 브랜치 분리·CSS 분리·PR 문서화를 마치고 견적 상세검토 전수 감사와 라벨 모달 분석을 진행함",
+  "tasks": [
+    {
+      "task_ref": "new",
+      "title": "수주현황 아이콘·배지",
+      "summary": "수주현황 그리드 헤더에 아이콘을 렌더하고 구분 컬럼을 상태 배지로 교체함",
+      "detail": "배경·목적 — 화면설계서(260629 PPTX) 슬라이드 40의 수주현황 설계를 반영. title이 공백인 아이콘 컬럼의 헤더에도 아이콘을 표시하고, 긴급/반품/불량 그리드의 구분 컬럼을 상태칩으로 바꾸는 것이 목표였음.\n\n진행 — pqGrid 11 소스(createHeaderCell 9411행)가 title을 escape 없이 raw HTML로 렌더함을 확인하고 business-status.jsp의 아이콘 컬럼 6곳 title에 shareIcon/fileSearchIcon span을 삽입함. 인라인 style은 사용자 지시로 제거하고 클래스만 유지. 구분 컬럼은 바탕화면 badges.html 기준으로 render를 반품(파랑)/불량(노랑)/긴급(빨강) 배지 span으로 교체함.\n\n정렬 문제 해결 — 배지가 우측으로 치우쳐 잘리는 원인을 computed style 실측으로 특정: pqGrid 셀의 이중 div 구조에서 안쪽 div의 padding 3px 5px가 문제였고, admin 화면에 이미 로드된 .badge 규칙과의 충돌도 발견함. 클래스를 .business-status-badge로 개명하고 셀 패딩 제거 CSS를 추가해 해결함.\n\n결과·임팩트 — 라이브(8081) 실데이터 18행에서 셀 중심과 배지 중심 일치·넘침 0·JS 에러 0을 실측했고, 사용자가 실화면 확인 후 승인함. 커밋 5b3ee62로 반영돼 설계서의 상태칩·헤더 아이콘 요구가 충족됨.",
+      "status": "완료",
+      "tech": [
+        "pqGrid 11 — 그리드 헤더 title HTML 렌더·셀 render 커스터마이징",
+        "JSP — business-status.jsp 수정",
+        "Playwright — 라이브 화면 computed style 실측 검증"
+      ],
+      "learnings": [
+        {
+          "title": "pqGrid title은 raw HTML",
+          "detail": "createHeaderCell이 title을 escape 없이 concat하므로 아이콘 span을 문자열로 넣으면 헤더에 그대로 렌더됨. 문자열 외에 함수도 허용."
+        },
+        {
+          "title": "pqGrid 셀 이중 DOM 구조",
+          "detail": "셀은 바깥 pq-grid-cell과 안쪽 div의 이중 구조라 render의 style은 바깥에만 적용됨. 정렬 문제는 추측 대신 computed style 실측으로 원인을 확정해야 함."
+        },
+        {
+          "title": "약어는 모듈 약어와 충돌 확인",
+          "detail": "biz는 이 저장소에서 견적관리 모듈(pages/biz) 약어로 이미 사용 중이라 business 축약으로 재사용 불가. 클래스명은 페이지 파일명 풀네임으로 지음."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "배지가 셀에서 우측으로 치우쳐 잘림 — 두 차례 패딩 수정이 빗나감",
+          "solution": "실화면 computed style 측정으로 안쪽 div 패딩과 기존 .badge 규칙 충돌을 특정, 클래스 개명(.business-status-badge)과 셀 패딩 제거 CSS로 해결함"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "pqGrid",
+        "UI개선",
+        "수주현황"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "도면팝업 썸네일 수정",
+      "summary": "공통 도면 미리보기 팝업의 창 크기를 고정하고 썸네일 비율깨짐을 해결함",
+      "detail": "배경·목적 — 설계서 슬라이드 5의 대상인 공통 도면 미리보기 팝업(#common_quick_drawing_popup)에서 썸네일이 자주 깨지는 문제가 있었음. 디자인 리뉴얼은 사용자가 보류해 기능 수정만 진행함.\n\n원인 — 인라인 height:100%와 고도화 때 추가된 app.css 전역 img max-width:100%가 조합돼 높이 고정+폭 클램프 상태에서 기본 fill로 눌려 왜곡됨. 서버(ImageView.java)가 세로 도면을 270도 회전해 가로로 긴 이미지로 내려줘 발생 빈도가 높았고, 디코드 실패 404 시 onerror 부재로 깨진 아이콘이 노출됨.\n\n수정 — bottom.js의 resizable을 false로 바꿔 테두리 드래그 리사이즈를 금지(이동은 유지)하고, bottom.jsp img에 object-fit:contain과 중앙 배치(display:block; margin:0 auto), onerror blank.jpg 폴백을 추가함.\n\n결과·임팩트 — 관리자 CSS 전체를 복제한 재현 하네스로 4개 비율+404 케이스 전후 대조, 실서버(8081) 재고관리에서 팝업 5건 실측으로 비율 보존·중앙 배치·넘침 0을 확인함. 커밋 64627d9로 반영돼 어떤 비율의 도면이든 왜곡 없이 표시됨.",
+      "status": "완료",
+      "tech": [
+        "CSS object-fit — 이미지 비율 보존 렌더",
+        "jQuery UI dialog — 팝업 resizable 옵션 제어",
+        "Playwright — 재현 하네스·실서버 전후 대조 검증"
+      ],
+      "learnings": [
+        {
+          "title": "PPTX 이미지는 슬라이드 순서",
+          "detail": "사용자가 말하는 'N번 이미지'는 media/imageN.png가 아니라 슬라이드 순서 기준. media 번호로 착각해 엉뚱한 화면(도면등록/교체)을 분석하는 시행착오가 있었음."
+        },
+        {
+          "title": "전역 reset CSS의 부작용",
+          "detail": "전역 img 규칙(max-width:100%)이 오래된 인라인 height 고정과 만나 fill 왜곡을 유발함. 인라인이 지정하지 않은 속성의 빈자리를 전역 규칙이 채우는 충돌 패턴."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "dev 환경 썸네일이 전부 1520x1074 규격이라 극단 비율 실도면 검증 불가, 원본을 잘라 만든 인공 입력이 '도면이 잘린다'는 오해를 유발",
+          "solution": "오해 소지 스크린샷 2장을 삭제하고 테두리가 온전히 보이는 합성 테스트 도면 캡처를 극단 비율 증거로 대체함"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "CSS",
+        "도면팝업",
+        "버그수정"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "publishing CSS 분리",
+      "summary": "도면팝업·수주현황 변경 스타일을 화면별 CSS 파일로 분리해 publishing 폴더에 배치함",
+      "detail": "배경·목적 — 도면 미리보기와 수주현황에서 변경된 style을 화면 JSP명과 동일한 CSS 파일로 분리해 resource/asset/css/publishing/ 신규 폴더에 두라는 지시. 각 작업은 해당 기능 브랜치에서 진행함.\n\n진행 — feature_drawing_popup_260702 브랜치에서 bottom.css를 신설해 #drawingImage의 object-fit·display·margin 3속성을 이동하고 bottom.jsp에 link를 추가함(기존 인라인 height:100%와 onerror는 JSP 유지). feature_business_status_260702 브랜치에서 business-status.css를 신설해 배지 4규칙+셀패딩 규칙을 이동하고 JSP의 style 블록을 제거함.\n\n결과·임팩트 — 라이브 검증에서 두 CSS 모두 HTTP 200 로드, computed style이 외부 CSS로 동일 적용, JSP 내 잔존 style 0, JS 에러 0을 확인함. 커밋 27f4d78·c820996으로 반영돼 인라인/JSP 내장 스타일이 퍼블리싱 CSS 체계로 정리됨.",
+      "status": "완료",
+      "tech": [
+        "CSS — publishing 폴더 신설·화면별 파일 분리",
+        "Playwright — 외부 CSS 적용 여부 computed style 검증"
+      ],
+      "learnings": [
+        {
+          "title": "화면 자동화 플레이크 대응",
+          "detail": "수주현황 탭 콘텐츠 래퍼(span.addTapPage)가 display:none으로 남아 그리드가 0x0으로 잡히는 플레이크가 있음. 검증 시 탭 재클릭+강제표시+resize 폴링이 필요함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "검증 자동화에서 탭 콘텐츠가 숨김 상태로 남아 그리드 기하 측정이 0으로 나옴",
+          "solution": "탭 재클릭·span 강제표시·resize로 우회하고, CSS 규칙 내용이 이동 전과 byte 동일함을 근거로 기존 정렬 검증 유효로 판단함"
+        }
+      ],
+      "next": [],
+      "tags": [
+        "CSS",
+        "리팩터링",
+        "퍼블리싱"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "브랜치 분리·PR 문서",
+      "summary": "미커밋 변경을 main 기반 기능 브랜치 2개로 분리·푸시하고 PR 본문 2건을 작성함",
+      "detail": "배경·목적 — 새 작업마다 브랜치를 분리해야 하는데 여러 작업(도면팝업·수주현황·단가검토)이 Danga-order 한 브랜치의 미커밋 변경으로 섞여 있어 작업별 분리가 필요했음.\n\n시행착오 — 브랜치 구성 질문에 무응답인 상태에서 stash·브랜치 생성을 자의 실행해 사용자 질책을 받고 전량 원복함(커밋·삭제 0건, 4파일 원상복귀). 재발 방지 규칙(깃 상태 변경은 명시 지시 시에만)을 메모리에 저장함. 조회 과정에서 origin/main이 로컬 main보다 29커밋 앞서고 Danga-order가 PR #19로 이미 머지된 사실을 확인함.\n\n진행 — 사용자 확정 플랜(브랜치명 feature_특징_YYMMDD)대로 실행. 구 main은 estimate JSP 881줄 차이로 switch 불가라 git fetch origin main:main으로 체크아웃 없이 fast-forward 갱신 후, feature_drawing_popup_260702(64627d9)·feature_business_status_260702(5b3ee62)를 생성·커밋하고 origin에 푸시함. 이후 %하네스의 PR_작성규칙.md 템플릿대로 PR 본문 2건을 작성했고, CSS 분리 커밋까지 나오자 변경량·설계 원칙을 갱신해 재작성함.\n\n결과·임팩트 — 두 브랜치 원격 푸시 완료(원격 해시=로컬 커밋 일치 확인), 미커밋은 estimate JSP 1건만 잔존. 작업별 브랜치 체계가 잡혀 리뷰·머지가 독립적으로 가능해짐.",
+      "status": "완료",
+      "tech": [
+        "Git — fetch refspec을 이용한 무체크아웃 브랜치 갱신·stash·브랜치 분리·푸시",
+        "answer-reviewer — 깃 플랜·PR 본문 저장소 대조 검증"
+      ],
+      "learnings": [
+        {
+          "title": "fetch refspec 갱신",
+          "detail": "git fetch origin main:main으로 워킹트리를 건드리지 않고 로컬 브랜치를 fast-forward할 수 있음. 미커밋 변경이 있어 switch가 불가한 상황의 우회책."
+        },
+        {
+          "title": "무응답은 승인이 아님",
+          "detail": "질문 타임아웃을 실행 허가로 취급해 깃 상태를 바꾼 것이 실책. 민감 조작은 명시 지시 시에만 실행하는 규칙을 메모리에 저장함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "구성 확정 전 자의로 stash·브랜치 생성을 실행해 저장소 상태를 바꿈",
+          "solution": "지시받아 전량 원복(브랜치 삭제·stash 재적용) 후, 사용자 확정 플랜을 받아 단계별 검증하며 재실행함"
+        },
+        {
+          "problem": "5b3ee62 커밋 메시지에 실제 diff에 없는 '13px 축소' 문구가 포함됨",
+          "solution": "force-push 없이 커밋은 유지하고 PR 본문의 '알려진 사항'에 해명을 명시해 리뷰어 혼동을 방지함"
+        }
+      ],
+      "next": [
+        "두 브랜치 PR 생성 여부·estimate JSP 커밋 시점 결정 대기"
+      ],
+      "tags": [
+        "Git",
+        "브랜치전략",
+        "PR"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "라벨출력 모달 분석",
+      "summary": "거래명세표 라벨 출력 모달의 코드 흐름과 DB를 분석했으나 기능 이슈로 홀딩됨",
+      "detail": "배경·목적 — 스크린샷 기반 '라벨 출력' 모달 구현 요구. 현재는 거래명세표 팝업의 라벨 출력 버튼이 fnConfirm 확인창 후 전량 출력하는 구조라, 수정 전 코드 구조 파악을 먼저 지시받음.\n\n진행 — 팝업 진입 2경로(TRANSACTION_STATEMENT 버튼/INV No. 클릭 → window.open)와 라벨 출력 로직(selectOutgoingLabelType4 → fnConfirm → fnBarcodePrint 전량 출력)을 추적하고, 구현 필요 목록(사전 결정 6건·프론트·백엔드 조회/저장·검증)을 리스트업함. DB 실측(SHOW COLUMNS)으로 TBL_OUT_BARCODE에 라벨별 수량 컬럼이 없고 TBL_OUT에 PACKING_NUM/OUT_QTY/OUT_DT가 있어 출하실적은 조인으로 조달 가능함을 확인함.\n\n결과·임팩트 — 그릴링 중 사용자 지적으로 수량이 출하실적 표시 전용이면 DDL이 불필요해지는 방향까지 좁혔으나, 기능적 이슈로 홀딩 결정. 코드·DB 무변경으로 분석 결과를 HANDOFF에 남겼고, 이후 재요청이 접수돼 요구사항 청취 대기 상태임.",
+      "status": "진행 중",
+      "tech": [
+        "MyBatis sqlMaps — inspection/order.xml 라벨·출하 쿼리 분석",
+        "MySQL — SHOW COLUMNS로 TBL_OUT_BARCODE/TBL_OUT 스키마 실측"
+      ],
+      "learnings": [
+        {
+          "title": "전제부터 그릴링",
+          "detail": "'수량 편집' 전제로 검증 규칙을 물었다가 수량이 표시 전용일 가능성을 지적받음. 검증 규칙보다 데이터 의미(편집 대상인지)를 먼저 확정해야 블로커가 줄어듦."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "라벨별 수량을 저장할 컬럼이 TBL_OUT_BARCODE에 없어 DDL 필요 여부가 블로커였음",
+          "solution": "TBL_OUT의 PACKING_NUM/OUT_QTY/OUT_DT 조인으로 출하실적 표시가 가능함을 확인해 표시 전용 시 DDL 불필요 방향으로 정리함"
+        }
+      ],
+      "next": [
+        "홀딩 사유였던 기능적 이슈와 신규 요청사항 내용 확인 후 재개"
+      ],
+      "tags": [
+        "분석",
+        "거래명세표",
+        "모달"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "dev 서버 Redis 장애 조치",
+      "summary": "8081 dev 서버 기동 후 Redis 커넥션 끊김으로 인한 접속 불가를 재기동으로 해결함",
+      "detail": "증상 — 서버 기동 요청으로 8081 Tomcat을 올렸으나 페이지가 열리지 않음. 기동 약 5분 뒤부터 원격 Redis 커넥션이 끊긴 채 복구되지 않아 세션 저장소 접근이 막혀 모든 요청이 1분 대기 후 실패함(Redis command timed out 15회 누적).\n\n원인·조치 — Redis 서버 자체는 PING 즉시 응답으로 정상이고 앱 쪽 Lettuce 커넥션만 죽은 상태임을 확인, 프로세스를 내리고 재기동해 정상화함(3회 연속 HTTP 200).\n\n결과·임팩트 — 서비스 접속 복구로 이후 라이브 검증 작업이 가능해짐. 유휴 커넥션이 중간 장비에서 끊기는 패턴으로 추정돼, 재발 시 keepalive 설정 검토가 남음.",
+      "status": "완료",
+      "tech": [
+        "Spring Boot — bootRun 백그라운드 기동·로그 확인",
+        "Redis/Lettuce — 커넥션 상태 진단(PING 대조)"
+      ],
+      "learnings": [
+        {
+          "title": "서버 생존≠서비스 정상",
+          "detail": "프로세스와 포트는 살아 있어도 세션 저장소 커넥션이 죽으면 전 요청이 실패함. 접속 불가 시 의존 커넥션(로그의 타임아웃 누적)까지 확인해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "기동 후 몇 분 뒤 Redis 커넥션이 끊긴 채 복구되지 않아 전 페이지 접속 불가",
+          "solution": "Redis 서버 정상(PING)을 확인해 앱 커넥션 문제로 좁히고 프로세스 재기동으로 정상화함"
+        }
+      ],
+      "next": [
+        "재발 시 local.yml에 Lettuce keepalive·타임아웃 설정 추가 검토"
+      ],
+      "tags": [
+        "Redis",
+        "서버운영",
+        "장애대응"
+      ]
+    },
+    {
+      "task_ref": "new",
+      "title": "견적 상세검토 전수 감사",
+      "summary": "견적 상세검토 팝업을 컴포넌트 단위로 점검하며 전 테이블 데이터 유입을 전수 감사함",
+      "detail": "배경·목적 — 견적 상세검토 팝업(Danga-order)의 마무리 단계로, 컴포넌트 단위로 처음부터 표시+배선을 완결하며 점검하는 방침을 그릴링으로 확정함(헤더→기본정보→기록조회→도면View→가공실적→외주이력→단가입력→견적/공급가→footer 순).\n\n진행 — 라이브 8081(EST_SEQ=12195)에서 전 테이블 데이터 유입을 전수 감사함. 정상: 헤더·기본정보 11행·단가입력·견적/공급가·도면View(실이미지 200 응답). 누락 8건 특정: 기본정보 기타/접수번호(td id·쿼리 컬럼 없음), 기록조회 4그리드(쿼리 자체 없음, 신규 쿼리 4개 필요), 가공실적 그리드·요약(견적은 CONTROL_SEQ 부재로 항상 빈값), 외주이력(조회 호출 없음).\n\n쿼리 설계 근거 — 외주 원천 테이블 구조를 확인해 외주견적은 TBL_OUTSIDE_ESTIMATE_DETAIL(EST_SEQ 직접 조인, DRAWING_NUM은 디테일에만 존재), 외주발주는 TBL_OUTSIDE_REQUEST_DETAIL(CONTROL 키 연결)로 기록조회 4그리드를 도면번호 기준으로 설계 가능함을 검증함. 고객사 행이 '/'로만 뜨는 원인도 쿼리의 CONCAT 하드코딩 구분자+해당 건 데이터 부재로 규명함.\n\n결과·임팩트 — 남은 배선 대상이 8건 목록으로 확정돼 이후 작업 범위가 명확해짐. 그릴링 Q2(기타·접수번호 처리, 권장안 행 보존+빈 유지) 답변 대기 상태로 마감함.",
+      "status": "진행 중",
+      "tech": [
+        "Playwright — 라이브 화면 데이터 유입 감사 스크립트(audit_tables.py)",
+        "MyBatis sqlMaps — estmateCalculate/out.xml 쿼리·조인 구조 분석",
+        "answer-reviewer — 감사 리포트·테이블 구조 주장 검증"
+      ],
+      "learnings": [
+        {
+          "title": "동일 namespace 병합 동작",
+          "detail": "견적 쿼리는 sqlMaps/estmateCalculate.xml과 v1/ 하위 파일이 동일 namespace로 병합돼 동작함. 쿼리 추가 위치 판단 시 두 파일을 함께 봐야 함."
+        },
+        {
+          "title": "도면번호는 디테일 테이블",
+          "detail": "TBL_OUTSIDE_ESTIMATE 마스터에는 DRAWING_NUM이 없고 디테일에만 존재함. 도면번호 기준 기록조회 쿼리는 디테일 테이블을 원천으로 설계해야 함."
+        }
+      ],
+      "issues": [
+        {
+          "problem": "점검 대상 '테이블'을 DB 테이블로 해석했으나 사용자 의도는 기본정보 컴포넌트의 tr/td 매칭 여부였음",
+          "solution": "기본정보 13개 tr 기준으로 재정리해 껍데기 행이 기타·접수번호 2개뿐임을 확인하고 처리안(Q2)을 제시함"
+        }
+      ],
+      "next": [
+        "Q2(기타·접수번호 처리) 답변 후 기본정보 완결, 기록조회 4그리드 신규 쿼리 설계 진행",
+        "가공실적·외주이력 데이터 소스(동일 도면번호 발주 실적·유사형상 연동) 결정",
+        "estimate JSP 목업 제거 변경 커밋(사용자 몫) 확인"
+      ],
+      "tags": [
+        "견적",
+        "데이터배선",
+        "감사"
+      ]
+    }
+  ]
+}

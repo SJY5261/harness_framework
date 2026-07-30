@@ -8,8 +8,9 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 - UserPromptSubmit 훅은 현재 해시가 신뢰·활성화된 상태다.
 - 사용자 설치 개발 도구의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터·캐시 정본은 `D:\ToolData`, 실행 로그 정본은 `D:\LOGS`다.
 - Python·Git·GitHub CLI·Node/npm·Java·VS Code 본체·Claude Code 실파일·DBeaver·IntelliJ·MariaDB는 D: 실행을 확인했다.
-- VS Code 사용자 터미널 환경의 `PATH`·`CODEX_INSTALL_DIR`와 실행 중 세션이 먼저 찾는 C: 호환 shim은 `D:\Tool\nodejs`를 가리키며, 현재 세션에서도 `codex-cli 0.145.0` 실행을 확인했다.
-- 2026-07-30 작업 도구 데이터 D: 이관은 즉시 항목 완료, 실행 중 항목 자동 완료 대기 상태다.
+- VS Code 사용자 터미널 환경의 `PATH`·`CODEX_INSTALL_DIR`는 `D:\Tool\nodejs`를 가리키며, 현재 세션에서도 D: `codex-cli 0.146.0` 실행을 확인했다.
+- Playwright·npm·pip·Python 사용자 기반·GitHub CLI·JetBrains·Next.js·Unreal·Gradle 데이터는 D: 이관과 C: 원본 제거를 완료했고, 필요한 C: 기본 경로에는 D: 대상 junction만 남겼다.
+- VS Code 사용자 데이터 자동 복사가 재실행 경쟁 조건으로 실패해 VS Code·Copilot·Codex·SourceTree·DBeaver·Git 후속 이관과 최종 환경 변수 전환은 대기 상태다.
 
 이전 전환 경위와 상세 검증 기록은
 [`logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md`](../logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md)에 보존한다.
@@ -72,12 +73,53 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 - npm cache, pip cache, Python user base, GitHub CLI config: 사용자 환경과 실제 명령에서 D: 확인.
 - GitHub CLI 인증: D: 설정 경로에서 keyring 로그인 확인.
 - C:의 즉시 이관 원본 경로는 D: 대상 junction으로 확인.
-- VS Code 사용자 설정의 `terminal.integrated.env.windows`는 D: Node/Codex를 PATH 최우선과 `CODEX_INSTALL_DIR`로 지정했고, 기존 C: Codex shim도 D: 래퍼를 호출한다. 현재 프로세스의 `codex --version`은 `codex-cli 0.145.0`으로 통과했다.
-- Gradle 사전 복사는 실행 중 daemon의 잠긴 파일 때문에 완료하지 않았으며 C: 원본을 유지했다. 최종 자동 이관에서 daemon 종료 후 다시 동기화·검증한다.
+- VS Code 사용자 설정의 `terminal.integrated.env.windows`는 D: Node/Codex를 PATH 최우선과 `CODEX_INSTALL_DIR`로 지정했다. 현재 프로세스의 `codex --version`은 D: `codex-cli 0.146.0`으로 통과했다.
+- Gradle 사용자 홈은 2,137개 파일 검증 후 `D:\ToolData\Gradle`로 이관됐고 C: 원본 대신 D: 대상 junction이 남아 있다.
+
+## 2026-07-30 재검증 및 C: 원본 정리
+
+### 현상
+
+- 자동 이관 로그는 Gradle 사용자 홈 2,137개 파일 검증과 D: 이관을 완료한 뒤, VS Code 사용자 데이터 복사에서 `robocopy` 종료 코드 9로 중단됐다.
+- 완료된 데이터 항목의 C: 경로는 모두 D: 정본을 가리키는 junction이며 C: 실파일 원본은 남아 있지 않았다.
+- C:에는 실행 본체 `bin\codex.js`가 빠진 Codex 0.145.0 설치가 남아 있었고 D: 정본은 정상 동작하는 0.146.0이었다.
+- D: Python의 콘솔 실행기 21개는 제거된 C: Python 실행 경로를 내장해 `pip.exe` 같은 직접 실행이 종료 코드 1로 실패한다. `python -m pip`과 Python 모듈 실행은 정상이다.
+
+### 원인
+
+- 자동 이관은 시작 전에만 차단 프로세스를 확인했다. 15:20:11에 이관을 시작한 뒤 Gradle 복사 도중 15:20:36에 VS Code가 다시 실행됐고, 항목별 재확인 없이 열린 VS Code DB·캐시 복사를 시작해 실패했다.
+- C: Codex는 부분 삭제된 이전 0.145.0 코드이고 D: Codex는 이후 0.146.0으로 갱신돼 완전 중복 버전 비교 조건을 만족하지 않았다.
+- Python 패키지와 실행기를 D:에 보존하는 과정에서 Windows 콘솔 실행기 내부의 절대 C: Python 경로는 다시 생성되지 않았다.
+
+### 해결
+
+- C: Codex 설치는 정확한 예상 경로, 허용된 코드 항목만 존재, D:와 래퍼 3개 해시 일치, C: 실행 본체 부재, 사용 프로세스 0건을 확인한 뒤 실파일 폴더를 제거했다.
+- 삭제 직후 `D:\Tool\nodejs\codex.cmd --version`으로 `codex-cli 0.146.0` 정상 실행을 재확인했다.
+- 미완료 도구 데이터의 C: 원본과 자동 재시도 Run 항목은 보존했다. VS Code의 불완전한 D: 복사본도 후속 비교·정리 전에는 삭제하지 않았다.
+
+### 채택 이유
+
+- 완료 항목의 C: 실파일만 제거하고 기본 경로 호환에 필요한 junction을 유지하면 중복 저장 공간을 없애면서 업데이트·기존 경로 계약을 보존할 수 있다.
+- C: Codex에는 고유 설정·사용자 데이터가 없고 실행할 수 없는 이전 코드만 남아 있어, 동작하는 D: 정본을 검증한 뒤 제거하는 편이 버전이 다른 불완전 사본을 유지하는 것보다 안전하다.
+- 현재 사용 중인 도구 데이터는 강제로 이동하지 않아 미저장 작업과 설정 손실을 피했다.
+
+### 결과와 미완료 영역
+
+- 완료·C: 원본 제거: Playwright 브라우저, npm 캐시, Next.js 데이터, pip 캐시, Gradle 사용자 홈, Python 사용자 기반, GitHub CLI 설정·local data, JetBrains roaming·local, Unreal Engine local data.
+- VS Code: 사용자 데이터, profile·확장, shared data가 C: 원본 상태다. 첫 복사의 D: 부분 산출물 정리와 항목별 프로세스 재확인 보완 후 재시도가 필요하다.
+- GitHub Copilot: 사용자 데이터가 C: 원본 상태다.
+- Codex: 실행 파일은 D: 완료, C: 이전 설치는 제거 완료. 개인 홈과 전용 임시 폴더는 C: 원본 상태이며 `CODEX_HOME` 전환이 남았다.
+- DBeaver: 사용자 데이터와 Eclipse 데이터가 C: 원본 상태다.
+- SourceTree: 앱, local·roaming 데이터가 C: 원본 상태이며 D: 시스템 Git 전환도 남았다.
+- Git: 전역 `.gitconfig`의 D: 이관과 `GIT_CONFIG_GLOBAL` 전환이 남았다.
+- Python: D: Python과 모듈은 정상이나 콘솔 실행기 21개의 옛 C: 절대 경로를 D: 호환 포인터 또는 실행기 재생성으로 보완해야 한다.
+- 마무리: 사용자 환경의 `CODEX_HOME`, `VSCODE_EXTENSIONS`, `GIT_CONFIG_GLOBAL`, `GRADLE_USER_HOME` 전환, 자동 재시도 Run 항목 제거, 완료 로그 확인이 남았다.
 
 ## 다음 단계
 
-- [ ] 사용자가 VS Code·Codex·SourceTree·DBeaver와 C: Gradle daemon을 종료하면 숨김 이관 프로세스가 나머지를 완료한다.
+- [ ] 자동 이관 스크립트에 각 후속 항목 직전 차단 프로세스 재확인과 `robocopy` 오류 증적을 추가한다.
+- [ ] VS Code·Codex·SourceTree·DBeaver가 종료된 안전한 시점에 불완전한 VS Code D: 복사본을 검증·정리하고 나머지 이관을 재시도한다.
+- [ ] Python 콘솔 실행기 21개의 제거된 C: Python 경로를 D: 호환 포인터 또는 실행기 재생성으로 복구한다.
 - [ ] 새 VS Code/Codex 세션에서 `CODEX_HOME`, 확장 경로, 사용자 데이터, Git·Gradle·DBeaver·SourceTree 경로를 재검증한다.
 - [ ] 완료 로그 `D:\LOGS\work-tools-d-migration-20260730.log`와 사용자 Run 항목 제거를 확인한다.
 

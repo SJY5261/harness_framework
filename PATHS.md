@@ -1,6 +1,6 @@
 # 경로 안내
 
-경로는 가능한 한 저장소 상대 경로를 사용한다. 현재 업무 PC의 하네스 루트는 `D:\harness_framework`이며 실행 시에는 `git rev-parse --show-toplevel`로 다시 확인한다. 설치 위치를 선택할 수 있는 사용자 앱·개발 도구·런타임·CLI의 정본은 `D:\Tool`이고 로그 정본은 `D:\LOGS`다. C: 사용자 설치를 발견하면 D: 중복 확인 또는 이관·실행 검증을 끝낸 뒤 C: 원본을 제거한다. 과거 문서의 `E:\harness_framework`와 개인 PC의 `D:\tomes\harness-framework`는 현재 루트로 재해석한다.
+경로는 가능한 한 저장소 상대 경로를 사용한다. 현재 업무 PC의 하네스 루트는 `D:\harness_framework`이며 실행 시에는 `git rev-parse --show-toplevel`로 다시 확인한다. 설치 위치를 선택할 수 있는 사용자 앱·개발 도구·런타임·CLI의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터 정본은 `D:\ToolData`, 로그 정본은 `D:\LOGS`다. C: 사용자 설치나 도구 데이터를 발견하면 D: 중복 확인 또는 이관·실행 검증을 끝낸 뒤 C: 원본을 제거하고 필요할 때만 D: 대상 호환 junction을 둔다. 과거 문서의 `E:\harness_framework`와 개인 PC의 `D:\tomes\harness-framework`는 현재 루트로 재해석한다.
 
 | 약칭/역할 | 저장소 기준 경로 |
 |---|---|
@@ -15,6 +15,7 @@
 | 사용자 전달 PR·리뷰·보고서 | `C:\Users\<사용자>\Desktop\PR` |
 | Codex 공용 설정 | `.codex/` |
 | 사용자 설치 앱·도구·런타임·CLI | `D:\Tool` |
+| 확장·브라우저·설정·캐시·도구 임시 데이터 | `D:\ToolData` |
 | 로컬 실행 로그 | `D:\LOGS` |
 | 하네스 실행기 | `scripts/execute.py` |
 | 작업일지 자동화 | `scripts/daily_worklog.py` |

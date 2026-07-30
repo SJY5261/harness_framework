@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$sourceRoot = 'C:\Users\User\AppData\Local\Programs\OpenAI Codex CLI'
+$sourceRoot = Join-Path $env:LOCALAPPDATA 'Programs\OpenAI Codex CLI'
 $destinationRoot = 'D:\Tool\nodejs'
 $sourcePackage = Join-Path $sourceRoot 'node_modules\@openai\codex'
 $destinationPackage = Join-Path $destinationRoot 'node_modules\@openai\codex'
@@ -14,7 +14,7 @@ $logPath = 'D:\LOGS\codex-c-install-cleanup-20260729.log'
 $autoRunPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $autoRunName = 'TomesCodexCInstallCleanup'
 $expectedSourceRoot = [System.IO.Path]::GetFullPath(
-    'C:\Users\User\AppData\Local\Programs\OpenAI Codex CLI'
+    (Join-Path $env:LOCALAPPDATA 'Programs\OpenAI Codex CLI')
 )
 
 function Write-CleanupLog {
@@ -106,11 +106,23 @@ if (
 
 $sourceManifest = Get-PackageManifest $sourcePackage
 $destinationManifest = Get-PackageManifest $destinationPackage
+$destinationByPath = @{}
+foreach ($entry in $destinationManifest) {
+    $destinationByPath[$entry.RelativePath] = $entry
+}
 $manifestDifferences = @(
-    Compare-Object $sourceManifest $destinationManifest -Property RelativePath, Length, Sha256
+    $sourceManifest | Where-Object {
+        $destinationEntry = $destinationByPath[$_.RelativePath]
+        -not $destinationEntry -or
+        $destinationEntry.Length -ne $_.Length -or
+        $destinationEntry.Sha256 -ne $_.Sha256
+    }
 )
 if ($manifestDifferences.Count -gt 0) {
-    throw "Package manifests differ in $($manifestDifferences.Count) entries"
+    throw (
+        "The D: package is missing or differs from " +
+        "$($manifestDifferences.Count) C: package entries"
+    )
 }
 
 foreach ($wrapperName in @('codex', 'codex.cmd', 'codex.ps1')) {
@@ -147,6 +159,7 @@ if ($AuditOnly) {
         Package = "$($sourceMetadata.name)@$($sourceMetadata.version)"
         PackageFiles = $sourceManifest.Count
         ManifestDifferences = $manifestDifferences.Count
+        DestinationExtraFiles = $destinationManifest.Count - $sourceManifest.Count
         MatchingWrappers = 3
         SourceProcesses = $sourceProcesses.Count
         ReadyToRemove = $sourceProcesses.Count -eq 0

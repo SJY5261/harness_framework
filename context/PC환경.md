@@ -1,6 +1,6 @@
 # PC 환경
 
-_최종 시스템 확인: 2026-07-29 / 현재 업무 PC_
+_최종 시스템 확인: 2026-07-30 / 현재 업무 PC_
 
 ## 하드웨어와 운영체제
 
@@ -26,10 +26,18 @@ GPU 메모리는 Windows WMI 값이 실제 전용 메모리를 정확히 표현�
 
 - 현재 하네스 루트: `D:\harness_framework`
 - 사용자 설치 개발 도구 정본: `D:\Tool`
+- 변경 가능한 작업 도구 데이터 정본: `D:\ToolData`
 - 로컬 실행 로그 정본: `D:\LOGS`
 - 과거 `E:\harness_framework`와 개인 PC의 `D:\tomes\harness-framework` 기록은 현재 업무 PC에서 그대로 실행 경로로 사용하지 않는다.
 
 세부 경로와 제품 하위 구조는 `PATHS.md`를 정본으로 사용한다.
+
+## D: 권한 해석
+
+- 일반 Windows 사용자 권한 기준으로 D: 루트는 `Authenticated Users` 수정 권한이 있어 현재 사용자가 쓸 수 있다.
+- Codex의 Windows 샌드박스는 일반 사용자 토큰과 다른 제한 토큰·ACL 경계를 사용한다. C: 사용자 프로필에는 샌드박스 접근 ACE가 있고 `D:\harness_framework`에는 `CodexSandboxUsers` 수정 권한이 별도로 있어 쓰기가 가능했다.
+- 기존 `D:\Tool` 밖의 새 D: 폴더에는 샌드박스용 ACE가 없어 일반 앱은 쓸 수 있어도 Codex 도구 호출은 접근 거부될 수 있었다.
+- `D:\ToolData` 한 곳은 D: 루트의 넓은 `Authenticated Users` 상속을 끊고 현재 사용자·SYSTEM·관리자는 전체 권한, `CodexSandboxUsers`는 수정 권한만 하위 상속하도록 제한했다. D: 전체 권한은 변경하지 않는다.
 
 ## 재확인이 필요한 경우
 

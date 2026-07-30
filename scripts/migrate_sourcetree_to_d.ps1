@@ -6,13 +6,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$sourceRoot = 'C:\Users\User\AppData\Local\SourceTree'
+$sourceRoot = Join-Path $env:LOCALAPPDATA 'SourceTree'
 $destinationRoot = 'D:\Tool\SourceTree'
 $logPath = 'D:\LOGS\sourcetree-d-migration-20260729.log'
 $autoRunPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $autoRunName = 'TomesSourceTreeDMigration'
 $expectedSourceRoot = [System.IO.Path]::GetFullPath(
-    'C:\Users\User\AppData\Local\SourceTree'
+    (Join-Path $env:LOCALAPPDATA 'SourceTree')
 )
 $expectedDestinationRoot = [System.IO.Path]::GetFullPath(
     'D:\Tool\SourceTree'
@@ -157,7 +157,7 @@ if ($sourceProcesses.Count -gt 0) {
 
 New-Item -ItemType Directory -Force -Path $destinationRoot | Out-Null
 & robocopy.exe $sourceRoot $destinationRoot /E /COPY:DAT /DCOPY:DAT /R:2 /W:1 `
-    /XJ /NP /NJH /NJS | Out-Null
+    /XJ /NP /NJH /NJS /NFL /NDL | Out-Null
 $robocopyExitCode = $LASTEXITCODE
 if ($robocopyExitCode -ge 8) {
     throw "SourceTree copy failed with robocopy exit code $robocopyExitCode"

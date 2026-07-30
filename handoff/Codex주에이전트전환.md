@@ -8,6 +8,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 - UserPromptSubmit 훅은 현재 해시가 신뢰·활성화된 상태다.
 - 사용자 설치 개발 도구의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터·캐시 정본은 `D:\ToolData`, 실행 로그 정본은 `D:\LOGS`다.
 - Python·Git·GitHub CLI·Node/npm·Java·VS Code 본체·Claude Code 실파일·DBeaver·IntelliJ·MariaDB는 D: 실행을 확인했다.
+- VS Code 사용자 터미널 환경의 `PATH`·`CODEX_INSTALL_DIR`와 실행 중 세션이 먼저 찾는 C: 호환 shim은 `D:\Tool\nodejs`를 가리키며, 현재 세션에서도 `codex-cli 0.145.0` 실행을 확인했다.
 - 2026-07-30 작업 도구 데이터 D: 이관은 즉시 항목 완료, 실행 중 항목 자동 완료 대기 상태다.
 
 이전 전환 경위와 상세 검증 기록은
@@ -71,6 +72,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 - npm cache, pip cache, Python user base, GitHub CLI config: 사용자 환경과 실제 명령에서 D: 확인.
 - GitHub CLI 인증: D: 설정 경로에서 keyring 로그인 확인.
 - C:의 즉시 이관 원본 경로는 D: 대상 junction으로 확인.
+- VS Code 사용자 설정의 `terminal.integrated.env.windows`는 D: Node/Codex를 PATH 최우선과 `CODEX_INSTALL_DIR`로 지정했고, 기존 C: Codex shim도 D: 래퍼를 호출한다. 현재 프로세스의 `codex --version`은 `codex-cli 0.145.0`으로 통과했다.
 - Gradle 사전 복사는 실행 중 daemon의 잠긴 파일 때문에 완료하지 않았으며 C: 원본을 유지했다. 최종 자동 이관에서 daemon 종료 후 다시 동기화·검증한다.
 
 ## 다음 단계

@@ -12,7 +12,7 @@ _최종 갱신: 2026-08-01_
 ## 활성 작업
 
 - [SiteAdmin_재질표면처리매핑] **1~7단계 구현·개발 DB 125건 반영·격리 전체 빌드 완료 / UI·기존 데이터 정책 대기** — 슬라이드 15 기준 다대다 테이블, 조회·저장 API, 공통코드 응답·필터·캐시 무효화를 구현했다. 구형 D03 데이터 18,954건과 신형 매핑 불일치 13건은 변경하지 않았고, Site Admin 코드 정본 29↔51 불일치와 함께 8단계 전 결정이 필요하다 — [상세](handoff/SiteAdmin_재질표면처리매핑.md)
-- [Codex주에이전트전환] **D: Python·Codex 등 핵심 실행기 정상 / VS Code·Codex·SourceTree·DBeaver·Git 후속 이관 대기** — Python 3.14.6 본체와 D: `py.exe`, pip·pytest를 복구해 Codex 훅 회귀 테스트 8개를 통과했다. Playwright·npm·pip·Python 사용자 기반·GitHub CLI·JetBrains·Next.js·Unreal·Gradle은 D: 이관과 C: 원본 제거를 확인했고, 나머지 도구 데이터와 기존 Python 패키지 콘솔 실행기 경로 보완이 남아 있다 — [상세](handoff/Codex주에이전트전환.md)
+- [Codex주에이전트전환] **현재 PC 핵심 개발·테스트 기능 호환 완료 / GUI 도구 데이터 이관 대기** — 버전·설치 위치의 완전 복제 대신 실제 업무 명령을 기준으로 D: Python 3.14.6, 테스트 의존성, Playwright 1.61.0·Chromium, 제품 웹루트 junction을 복구했다. Codex 훅 8 PASS, Chromium 실행 PASS, `%테스트` 191 PASS/기존 3 FAIL로 업무 PC 기준과 일치하며 Git 원격·Gradle도 정상이다. VS Code·Codex 개인 홈·SourceTree·DBeaver·Git 전역 데이터 이관은 별도 대기 — [상세](handoff/Codex주에이전트전환.md)
 - [업무PC복귀인계] **주요 복구·Codex 훅·실화면 재검증 완료 / 개발 DB TLS 결정·미전달 원본 대기·POP 실기기 보류** — 개발 런타임·경로·Windows `workspace` 샌드박스 복구와 Codex 훅 상태 전이 검증을 완료했다. 개발 DB 서버는 TLS가 비활성이고 Connector/J도 기본 비SSL 연결이며, 로컬 MariaDB 설정에는 존재하지 않는 `E:` 플러그인 경로가 남아 있어 적용 방침 결정이 필요하다. POP 바코드 스캐너 실기기 검증은 2026-07-29 사용자 결정으로 보류했다. 하네스 60 PASS, 제품 빌드 PASS, `%테스트` 191 PASS/기존 계획 불일치 3 FAIL — [상세](handoff/업무PC복귀인계.md)
 - [가공확정] **KAN-63 / KAN-6 구현·빌드 완료, KAN-35 DB 반영 완료, KAN-38 화면·POP 실기기 검증 보류** — 재확정 예외를 작업트리에 복원하고 작업상세정보의 가공확정 일시·진행상태 표시를 제거했다. 제조원가 분석 메뉴 8행은 영구 백업 후 숨김 처리·검증·COMMIT 완료. 작업지시 현황추적 화면과 POP 바코드 스캐너 실기기 검증은 사용자 결정에 따라 보류 — [상세](handoff/가공확정.md)
 - [단가검토] **사용자 결정 대기** — 단가입력 개편 검증 완료. 배송비 컬럼명·견적→주문 복사 여부 결정 후 DDL 및 기록조회 후속 작업 — [상세](handoff/단가검토.md)

@@ -85,6 +85,14 @@ _시작: 2026-07-24 / 최종 갱신: 2026-08-01_
 - C:에는 실행 본체 `bin\codex.js`가 빠진 Codex 0.145.0 설치가 남아 있었고 D: 정본은 정상 동작하는 0.146.0이었다.
 - D: Python의 콘솔 실행기 21개는 제거된 C: Python 실행 경로를 내장해 `pip.exe` 같은 직접 실행이 종료 코드 1로 실패한다. `python -m pip`과 Python 모듈 실행은 정상이다.
 
+## 2026-08-01 현재 PC 기능 호환 복구
+
+- 도구 버전과 설치 위치를 업무 PC와 완전히 복제하지 않고 실제 업무 명령의 성공을 완료 기준으로 삼았다.
+- D: Python 3.14.6에 `%테스트/requirements.txt`, Playwright 1.61.0, Chromium을 설치하고 `PLAYWRIGHT_BROWSERS_PATH=D:\ToolData\Playwright\Browsers`를 사용자 환경에 설정했다.
+- 테스트 코드가 기대하는 `D:\GITHUB\tomes-cloud-v1-master`를 현재 `%클라우드%/src/main/webapp`으로 연결하는 junction을 만들었다. 하네스 호환 경로 `D:\harness_framework`도 현재 저장소를 가리킨다.
+- Chromium headless 실제 실행 PASS, Codex 훅 8 PASS, `%테스트` 전체 191 PASS/기존 OSR-173 계획 불일치 3 FAIL로 업무 PC 기준과 일치했다.
+- Git 원격 읽기, `%클라우드` Gradle 8.14.3 help와 앞선 전체 build는 PASS다. dev 서버·개발 DB 연결은 이번 기능 호환 점검에서 재실행하지 않았다.
+
 ### 원인
 
 - 자동 이관은 시작 전에만 차단 프로세스를 확인했다. 15:20:11에 이관을 시작한 뒤 Gradle 복사 도중 15:20:36에 VS Code가 다시 실행됐고, 항목별 재확인 없이 열린 VS Code DB·캐시 복사를 시작해 실패했다.

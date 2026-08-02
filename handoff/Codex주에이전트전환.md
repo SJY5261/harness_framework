@@ -1,6 +1,6 @@
 # Codex 주 에이전트 전환
 
-_시작: 2026-07-24 / 최종 갱신: 2026-08-01_
+_시작: 2026-07-24 / 최종 갱신: 2026-08-03_
 
 ## 현재 상태
 
@@ -11,6 +11,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-08-01_
 - VS Code 사용자 터미널 환경의 `PATH`·`CODEX_INSTALL_DIR`는 `D:\Tool\nodejs`를 가리키며, 현재 세션에서도 D: `codex-cli 0.146.0` 실행을 확인했다.
 - Playwright·npm·pip·Python 사용자 기반·GitHub CLI·JetBrains·Next.js·Unreal·Gradle 데이터는 D: 이관과 C: 원본 제거를 완료했고, 필요한 C: 기본 경로에는 D: 대상 junction만 남겼다.
 - VS Code 사용자 데이터 자동 복사가 재실행 경쟁 조건으로 실패해 VS Code·Copilot·Codex·SourceTree·DBeaver·Git 후속 이관과 최종 환경 변수 전환은 대기 상태다.
+- PC 환경은 저장소 경로나 junction으로 추정하지 않고 `D:\ToolData\Harness\pc-profile.json`과 `scripts/pc_profile.ps1`로 구분한다. 현재 PC는 `work`, 사용자 전달 산출물 루트는 현재 사용자 바탕화면의 `PR`로 새 프로세스에서 확인했다.
 
 이전 전환 경위와 상세 검증 기록은
 [`logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md`](../logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md)에 보존한다.
@@ -122,6 +123,34 @@ _시작: 2026-07-24 / 최종 갱신: 2026-08-01_
 - Git: 전역 `.gitconfig`의 D: 이관과 `GIT_CONFIG_GLOBAL` 전환이 남았다.
 - Python: D: Python과 모듈은 정상이나 콘솔 실행기 21개의 옛 C: 절대 경로를 D: 호환 포인터 또는 실행기 재생성으로 보완해야 한다.
 - 마무리: 사용자 환경의 `CODEX_HOME`, `VSCODE_EXTENSIONS`, `GIT_CONFIG_GLOBAL`, `GRADLE_USER_HOME` 전환, 자동 재시도 Run 항목 제거, 완료 로그 확인이 남았다.
+
+## 2026-08-03 업무용·개인 PC 프로필 분리
+
+### 현상
+
+- 개인 PC용 `Desktop\Tomes\PR` 경로가 공용 `PATHS.md`와 `PR_작성규칙.md`에 고정돼 현재 업무 PC에도 적용되는 상태였다.
+- 개인 PC에는 `D:\harness_framework` 호환 junction이 있어 저장소 경로만으로 두 PC를 안전하게 구분할 수 없었다.
+
+### 원인
+
+- PC별 로컬 상태를 나타내는 정본이 없었고, 한 PC에서 확인한 절대경로를 공용 문서에 직접 기록했다.
+
+### 해결
+
+- `scripts/pc_profile.ps1`을 추가해 저장소 밖 `D:\ToolData\Harness\pc-profile.json`의 `work`/`personal` 값을 읽도록 했다.
+- `work`는 `Desktop\PR`, `personal`은 `Desktop\Tomes\PR`을 `artifact_root`로 반환한다. 미등록·손상 마커는 `unknown`과 종료 코드 2를 반환해 PC별 쓰기를 추측으로 진행하지 않는다.
+- `AGENTS.md`, `PATHS.md`, `PR_작성규칙.md`, `context/PC환경.md`를 프로필 판정 기준으로 연결했다.
+- 현재 업무 PC 마커를 `work`로 등록했다. 마커에는 스키마 버전과 프로필만 있으며 호스트명·계정명·장치·네트워크 식별자는 없다.
+
+### 채택 이유
+
+- 명시적 로컬 마커는 두 PC에 같은 저장소 경로나 junction이 있어도 판정이 흔들리지 않고, 저장소에는 PC별 값을 남기지 않는다.
+- 미설정 상태를 자동 추론하지 않아 새 PC나 복구 직후 잘못된 경로에 산출물을 만드는 문제를 차단한다.
+
+### 결과
+
+- 새 PowerShell 프로세스에서 `profile=work`, `artifact_root=현재 사용자 바탕화면\PR`을 확인했다.
+- 프로필 단위 테스트 4개와 하네스 전체 76개가 통과했고 `git diff --check`, UTF-8 BOM 없음 검증도 통과했다.
 
 ## 다음 단계
 

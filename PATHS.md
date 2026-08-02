@@ -1,6 +1,27 @@
 # 경로 안내
 
-경로는 가능한 한 저장소 상대 경로를 사용한다. 현재 업무 PC의 하네스 루트는 `D:\harness_framework`이며 실행 시에는 `git rev-parse --show-toplevel`로 다시 확인한다. 설치 위치를 선택할 수 있는 사용자 앱·개발 도구·런타임·CLI의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터 정본은 `D:\ToolData`, 로그 정본은 `D:\LOGS`다. C: 사용자 설치나 도구 데이터를 발견하면 D: 중복 확인 또는 이관·실행 검증을 끝낸 뒤 C: 원본을 제거하고 필요할 때만 D: 대상 호환 junction을 둔다. 과거 문서의 `E:\harness_framework`와 개인 PC의 `D:\tomes\harness-framework`는 현재 루트로 재해석한다.
+경로는 가능한 한 저장소 상대 경로를 사용한다. PC별 절대경로가 필요하면 먼저 `scripts/pc_profile.ps1 -Json`을 실행하고 반환된 프로필과 경로를 사용한다. 저장소 경로는 호환 junction일 수 있으므로 PC 판정 근거로 사용하지 않는다. 설치 위치를 선택할 수 있는 사용자 앱·개발 도구·런타임·CLI의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터 정본은 `D:\ToolData`, 로그 정본은 `D:\LOGS`다. C: 사용자 설치나 도구 데이터를 발견하면 D: 중복 확인 또는 이관·실행 검증을 끝낸 뒤 C: 원본을 제거하고 필요할 때만 D: 대상 호환 junction을 둔다.
+
+## PC 프로필
+
+```powershell
+# 현재 프로필 조회
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pc_profile.ps1 -Json
+
+# 새 PC에서 사용자 확인 후 한 번만 등록
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pc_profile.ps1 -SetProfile work -Json
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pc_profile.ps1 -SetProfile personal -Json
+```
+
+| 프로필 | 환경 | 하네스 기본 루트 | 사용자 전달 산출물 루트 |
+|---|---|---|---|
+| `work` | 업무용 PC | `D:\harness_framework` | `C:\Users\<사용자>\Desktop\PR` |
+| `personal` | 개인 PC | `D:\tomes\harness-framework` | `C:\Users\<사용자>\Desktop\Tomes\PR` |
+| `unknown` | 미등록·손상 마커 | 추정 금지 | 쓰기 전 사용자 확인 |
+
+- 로컬 정본 마커는 `D:\ToolData\Harness\pc-profile.json`이며 저장소와 Git에는 넣지 않는다.
+- 마커에는 스키마 버전과 `work`/`personal` 값만 저장한다. 호스트명·계정명·장치·네트워크 식별자는 저장하지 않는다.
+- 스크립트가 반환하는 `artifact_root`가 보고서·PR 리뷰의 실제 기본 저장 루트다.
 
 | 약칭/역할 | 저장소 기준 경로 |
 |---|---|
@@ -12,7 +33,9 @@
 | 현재 작업 인덱스 | `HANDOFF.md` |
 | 세컨브레인 구조 | `docs/SECOND_BRAIN.md` |
 | 사용자 환경 지식 | `context/` |
-| 사용자 전달 PR·리뷰·보고서 | `C:\Users\<사용자>\Desktop\Tomes\PR` |
+| PC 프로필 판정·설정 | `scripts/pc_profile.ps1` |
+| PC 프로필 로컬 마커 | `D:\ToolData\Harness\pc-profile.json` |
+| 사용자 전달 PR·리뷰·보고서 | `pc_profile.ps1`의 `artifact_root` |
 | Codex 공용 설정 | `.codex/` |
 | 사용자 설치 앱·도구·런타임·CLI | `D:\Tool` |
 | 확장·브라우저·설정·캐시·도구 임시 데이터 | `D:\ToolData` |

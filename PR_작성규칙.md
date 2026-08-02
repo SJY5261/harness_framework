@@ -88,10 +88,14 @@ PR 리뷰는 2절의 헤더 메타와 섹션 순서를 따른다. 표는 HTML이
 
 ## 5. 저장과 게시
 
-별도 경로 지시가 없으면 다음 작업별 폴더에 정확히 두 파일을 둔다. 요약에 `/`가 있으면 `.`로 바꾼다.
+별도 경로 지시가 없으면 먼저 다음 명령으로 PC 프로필을 확인하고 반환된 `artifact_root` 아래 작업별 폴더에 정확히 두 파일을 둔다. 프로필별 경로 매핑의 정본은 `PATHS.md`다. 요약에 `/`가 있으면 `.`로 바꾼다.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pc_profile.ps1 -Json
+```
 
 ```text
-C:\Users\USER\Desktop\Tomes\PR\[MM.DD 요약]\
+{artifact_root}\[MM.DD 요약]\
 ├── [MM.DD 요약].md
 └── [MM.DD 요약].html
 ```
@@ -101,7 +105,7 @@ C:\Users\USER\Desktop\Tomes\PR\[MM.DD 요약]\
 - 수정은 MD에 먼저 반영하고 같은 내용으로 HTML을 다시 생성한다.
 - `아티팩트.html`, `아티팩트.url` 같은 추가 파일을 만들지 않는다.
 - 사용자가 다른 기준 경로를 지정하면 그 경로를 우선하되 작업별 폴더와 MD·HTML 두 파일 구조는 유지한다.
-- 기본 사용자 전달 경로는 바탕화면의 `Tomes\PR`이며, 바탕화면 바로 아래 `PR` 폴더를 새로 만들지 않는다.
+- 프로필이 `unknown`이거나 마커가 손상됐으면 과거 경로나 junction으로 추정하지 않고 사용자에게 PC 종류를 확인한 뒤 프로필을 등록한다.
 - 2026-07-20 이전의 폴더 없는 단일 MD는 사용자가 요청할 때만 소급 변환한다.
 - Sites 게시는 사용자가 명시적으로 요청한 경우에만 한다. 게시할 때 `.openai/hosting.json`의 `project_id`를 보존하고 사이트를 중복 생성하지 않는다.
 - 게시 URL은 결과 보고에서 사용자에게 전달한다.

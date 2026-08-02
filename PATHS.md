@@ -12,7 +12,7 @@
 | 현재 작업 인덱스 | `HANDOFF.md` |
 | 세컨브레인 구조 | `docs/SECOND_BRAIN.md` |
 | 사용자 환경 지식 | `context/` |
-| 사용자 전달 PR·리뷰·보고서 | `C:\Users\<사용자>\Desktop\PR` |
+| 사용자 전달 PR·리뷰·보고서 | `C:\Users\<사용자>\Desktop\Tomes\PR` |
 | Codex 공용 설정 | `.codex/` |
 | 사용자 설치 앱·도구·런타임·CLI | `D:\Tool` |
 | 확장·브라우저·설정·캐시·도구 임시 데이터 | `D:\ToolData` |

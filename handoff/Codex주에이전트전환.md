@@ -1,13 +1,13 @@
 # Codex 주 에이전트 전환
 
-_시작: 2026-07-24 / 최종 갱신: 2026-07-30_
+_시작: 2026-07-24 / 최종 갱신: 2026-08-01_
 
 ## 현재 상태
 
 - Codex가 기본 에이전트이며 별도 지시가 없으면 Codex 단독으로 작업한다.
 - UserPromptSubmit 훅은 현재 해시가 신뢰·활성화된 상태다.
 - 사용자 설치 개발 도구의 실행 파일 정본은 `D:\Tool`, 변경 가능한 도구 데이터·캐시 정본은 `D:\ToolData`, 실행 로그 정본은 `D:\LOGS`다.
-- Python·Git·GitHub CLI·Node/npm·Java·VS Code 본체·Claude Code 실파일·DBeaver·IntelliJ·MariaDB는 D: 실행을 확인했다.
+- Python·Git·GitHub CLI·Node/npm·Java·VS Code 본체·Claude Code 실파일·DBeaver·IntelliJ·MariaDB는 D: 실행을 확인했다. Python은 `D:\Tool\Python\Python314` 본체와 `D:\Tool\Python\Launcher\py.exe`를 복구해 Codex 훅 회귀 테스트 8개를 통과했다.
 - VS Code 사용자 터미널 환경의 `PATH`·`CODEX_INSTALL_DIR`는 `D:\Tool\nodejs`를 가리키며, 현재 세션에서도 D: `codex-cli 0.146.0` 실행을 확인했다.
 - Playwright·npm·pip·Python 사용자 기반·GitHub CLI·JetBrains·Next.js·Unreal·Gradle 데이터는 D: 이관과 C: 원본 제거를 완료했고, 필요한 C: 기본 경로에는 D: 대상 junction만 남겼다.
 - VS Code 사용자 데이터 자동 복사가 재실행 경쟁 조건으로 실패해 VS Code·Copilot·Codex·SourceTree·DBeaver·Git 후속 이관과 최종 환경 변수 전환은 대기 상태다.
@@ -85,6 +85,14 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 - C:에는 실행 본체 `bin\codex.js`가 빠진 Codex 0.145.0 설치가 남아 있었고 D: 정본은 정상 동작하는 0.146.0이었다.
 - D: Python의 콘솔 실행기 21개는 제거된 C: Python 실행 경로를 내장해 `pip.exe` 같은 직접 실행이 종료 코드 1로 실패한다. `python -m pip`과 Python 모듈 실행은 정상이다.
 
+## 2026-08-01 현재 PC 기능 호환 복구
+
+- 도구 버전과 설치 위치를 업무 PC와 완전히 복제하지 않고 실제 업무 명령의 성공을 완료 기준으로 삼았다.
+- D: Python 3.14.6에 `%테스트/requirements.txt`, Playwright 1.61.0, Chromium을 설치하고 `PLAYWRIGHT_BROWSERS_PATH=D:\ToolData\Playwright\Browsers`를 사용자 환경에 설정했다.
+- 테스트 코드가 기대하는 `D:\GITHUB\tomes-cloud-v1-master`를 현재 `%클라우드%/src/main/webapp`으로 연결하는 junction을 만들었다. 하네스 호환 경로 `D:\harness_framework`도 현재 저장소를 가리킨다.
+- Chromium headless 실제 실행 PASS, Codex 훅 8 PASS, `%테스트` 전체 191 PASS/기존 OSR-173 계획 불일치 3 FAIL로 업무 PC 기준과 일치했다.
+- Git 원격 읽기, `%클라우드` Gradle 8.14.3 help와 앞선 전체 build는 PASS다. dev 서버·개발 DB 연결은 이번 기능 호환 점검에서 재실행하지 않았다.
+
 ### 원인
 
 - 자동 이관은 시작 전에만 차단 프로세스를 확인했다. 15:20:11에 이관을 시작한 뒤 Gradle 복사 도중 15:20:36에 VS Code가 다시 실행됐고, 항목별 재확인 없이 열린 VS Code DB·캐시 복사를 시작해 실패했다.
@@ -119,7 +127,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-07-30_
 
 - [ ] 자동 이관 스크립트에 각 후속 항목 직전 차단 프로세스 재확인과 `robocopy` 오류 증적을 추가한다.
 - [ ] VS Code·Codex·SourceTree·DBeaver가 종료된 안전한 시점에 불완전한 VS Code D: 복사본을 검증·정리하고 나머지 이관을 재시도한다.
-- [ ] Python 콘솔 실행기 21개의 제거된 C: Python 경로를 D: 호환 포인터 또는 실행기 재생성으로 복구한다.
+- [ ] Python 콘솔 실행기 21개 중 이번에 재설치한 pip·pytest 외 기존 패키지 실행기의 제거된 C: 경로를 필요한 도구부터 D: 실행기로 재생성한다.
 - [ ] 새 VS Code/Codex 세션에서 `CODEX_HOME`, 확장 경로, 사용자 데이터, Git·Gradle·DBeaver·SourceTree 경로를 재검증한다.
 - [ ] 완료 로그 `D:\LOGS\work-tools-d-migration-20260730.log`와 사용자 Run 항목 제거를 확인한다.
 

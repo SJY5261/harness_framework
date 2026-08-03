@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>[문서 제목]</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #e8efed;
+      --surface: #f7f8f4;
+      --surface-soft: #edf2ef;
+      --text: #26343a;
+      --muted: #5d6b70;
+      --line: #bdcbc8;
+      --line-strong: #7e9692;
+      --accent: #356f72;
+      --accent-soft: #dceae7;
+      --code-bg: #ece9e0;
+      --shadow: 0 18px 45px rgba(42, 65, 66, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #182125;
+        --surface: #202b30;
+        --surface-soft: #29363b;
+        --text: #e1e8e5;
+        --muted: #a9b8b5;
+        --line: #526460;
+        --line-strong: #7f9691;
+        --accent: #8fc7c2;
+        --accent-soft: #2a4443;
+        --code-bg: #313b39;
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--page);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--page);
+      font-family: "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.72;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+
+    .document {
+      width: min(1120px, calc(100% - 32px));
+      margin: 38px auto 72px;
+      padding: clamp(28px, 5vw, 60px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    h1, h2, h3, p, li, blockquote, summary, th, td {
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      padding-bottom: 18px;
+      border-bottom: 3px solid var(--accent);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.25;
+      letter-spacing: -0.035em;
+    }
+
+    h2 {
+      margin: 48px 0 16px;
+      padding-left: 12px;
+      border-left: 5px solid var(--accent);
+      font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+      line-height: 1.35;
+    }
+
+    h3 { margin: 30px 0 10px; color: var(--accent); }
+    p, ul, ol, blockquote { margin: 10px 0 16px; }
+    li + li { margin-top: 6px; }
+
+    a { color: var(--accent); text-underline-offset: 3px; }
+
+    code {
+      padding: 0.12em 0.36em;
+      background: var(--code-bg);
+      border-radius: 5px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      padding: 16px;
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      white-space: pre;
+    }
+
+    pre code { padding: 0; background: transparent; white-space: inherit; }
+
+    blockquote {
+      margin-left: 0;
+      padding: 13px 17px;
+      color: var(--muted);
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 9px 9px 0;
+    }
+
+    .table-scroll {
+      width: 100%;
+      margin: 16px 0 26px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--text);
+      background: var(--accent-soft);
+      border-bottom: 2px solid var(--line-strong);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:nth-child(even) td { background: var(--surface-soft); }
+    th:last-child, td:last-child { border-right: 0; }
+    tbody tr:last-child td { border-bottom: 0; }
+    th.nowrap, td.nowrap, .nowrap { width: 1%; white-space: nowrap; }
+
+    details {
+      margin: 24px 0;
+      overflow: hidden;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    summary {
+      padding: 13px 16px;
+      background: var(--accent-soft);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    details > :not(summary) { margin-right: 16px; margin-left: 16px; }
+    details > :last-child { margin-bottom: 18px; }
+
+    @media (max-width: 760px) {
+      .document {
+        width: min(100% - 16px, 1120px);
+        margin-top: 8px;
+        padding: 24px 18px 40px;
+        border-radius: 12px;
+      }
+    }
+
+    @media print {
+      :root { --page: #f4f3ee; --surface: #fdfcf8; --text: #26343a; }
+      body { background: var(--surface); }
+      .document { width: auto; margin: 0; padding: 0; border: 0; box-shadow: none; }
+      details { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="document">
+    <!-- MD 정본을 변환한 본문을 넣는다. 모든 table은 div.table-scroll로 감싼다. -->
+    <h1>[문서 제목]</h1>
+    <p>[문서 본문]</p>
+  </main>
+</body>
+</html>

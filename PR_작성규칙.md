@@ -6,6 +6,7 @@
 - GitHub PR 설명: `templates/pr-description.html`
 - 바탕화면 PR 리뷰: `templates/pr-review.md`
 - 일반 보고서: `templates/general-report.md`
+- 사용자 전달용 자체완결 HTML: `templates/standalone-report.html`
 - DB 변경이 포함된 보고서: `docs/processes/DB_CHANGE_REPORT.md`
 
 ## 1. 공통 강제 규칙
@@ -75,6 +76,16 @@ PR 리뷰는 2절의 헤더 메타와 섹션 순서를 따른다. 표는 HTML이
 
 바탕화면 MD는 VS Code 미리보기를 기준으로 한다. 마크다운 표와 템플릿의 테마 대응형 `<style>`을 사용한다. 항목·비교·범위는 표로, 서술은 짧은 목록이나 문단으로 작성하고 구분에 도움이 되는 아이콘을 적극 사용한다.
 
+### 자체완결 HTML
+
+HTML은 MD의 내용과 문서 구조를 유지하고 `templates/standalone-report.html`의 문서 껍데기와 스타일을 사용한다.
+
+- 본문·목록·표 셀은 단어 중간에서 강제로 줄바꿈하지 않는다. 현재 줄에 단어 전체가 들어가지 않으면 단어 앞에서 다음 줄로 넘긴다.
+- 표 헤더와 `구분`·`상태`·`종류` 같은 짧은 값은 한 글자씩 세로로 쪼개지지 않아야 한다. 폭이 부족하면 셀을 찌그러뜨리지 않고 표 영역을 가로 스크롤한다.
+- 순백색 배경과 순검정 글자의 강한 대비를 피하고, 저채도 배경·본문·강조색을 사용하되 본문과 표의 구분은 선명하게 유지한다.
+- 긴 코드 블록은 내용을 강제로 꺾지 않고 코드 영역에서 가로 스크롤한다.
+- 외부 CSS·폰트·스크립트 없이 열려야 하므로 필요한 스타일은 HTML 안에 포함한다.
+
 ## 4. DB 변경 조건
 
 컬럼·인덱스·제약·프로시저·함수·트리거를 변경했다면 `docs/processes/DB_CHANGE_REPORT.md`를 추가 적용한다. 최소한 다음 항목이 있어야 한다.
@@ -118,5 +129,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pc_profile.ps1 -
 - [ ] 변경 파일·검증 결과·복구 방법이 실제 diff와 일치한다.
 - [ ] DB 변경 시 DB 전용 체크리스트를 적용했다.
 - [ ] MD와 HTML의 내용이 같고 HTML이 자체완결형이다.
+- [ ] HTML에서 단어가 중간에 잘리거나 표의 짧은 값이 세로로 쪼개지지 않는다.
+- [ ] HTML이 공통 저피로 색상과 가로 스크롤 가능한 표 스타일을 사용한다.
 - [ ] 작업 폴더에는 정해진 MD·HTML 두 파일만 있다.
 - [ ] Sites를 요청받지 않았다면 게시하지 않았다.

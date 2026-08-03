@@ -12,6 +12,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-08-03_
 - Playwright·npm·pip·Python 사용자 기반·GitHub CLI·JetBrains·Next.js·Unreal·Gradle 데이터는 D: 이관과 C: 원본 제거를 완료했고, 필요한 C: 기본 경로에는 D: 대상 junction만 남겼다.
 - VS Code 사용자 데이터 자동 복사가 재실행 경쟁 조건으로 실패해 VS Code·Copilot·Codex·SourceTree·DBeaver·Git 후속 이관과 최종 환경 변수 전환은 대기 상태다.
 - PC 환경은 저장소 경로나 junction으로 추정하지 않고 `D:\ToolData\Harness\pc-profile.json`과 `scripts/pc_profile.ps1`로 구분한다. 현재 PC는 `work`, 사용자 전달 산출물 루트는 현재 사용자 바탕화면의 `PR`로 새 프로세스에서 확인했다.
+- `%클라우드`의 `.claude/settings*.json`은 독립 stash `43e0228dbec0782fc9e365429bcf6fb11d8d094f`, `shell/runDev.local.bat`은 독립 stash `ecb530590222131bda5537c751c03b1c3abd366b`로 보관되어 현재 작업트리에는 없다.
 
 이전 전환 경위와 상세 검증 기록은
 [`logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md`](../logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md)에 보존한다.

@@ -4,15 +4,15 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 
 ## 현재 상태
 
-- 사용자가 요청한 1~7단계(DB 구조·시드·백엔드·공통코드 응답·필터·캐시·검증)와 재시작 후 업무 화면 실동작 검증을 완료했다. Site Admin 화면 구현은 이번 범위에 포함하지 않았다.
+- 사용자 요구를 재확인해 현재 범위를 DB 다대다 매핑·기존 공통코드 조회 확장·재질별 D03 화면 필터·구형 캐시 방지로 한정했다. Site Admin 목록·저장 API와 편집 화면은 포함하지 않는다.
 - 요구사항 정본은 `C:\Users\User\Desktop\Downloads\Site Admin 화면설계서_260723.pptx`의 15번 슬라이드다.
 - 개발 DB `smd`에 `TBL_SURFACE_TREAT_MATERIAL_MAP`을 신규 생성하고 `BASIC` D03 51개에 대한 D02 매핑 125건을 반영했다.
-- 개발 DB의 활성 공통코드는 `TBL_CODE(BASIC)` 기준 D02 5개·D03 51개뿐이며 로그인 테넌트 소속 D02·D03 코드는 없다. 저장 API는 요청에 `SYSTEM_ID`가 없으면 `BASIC`을 대상으로 하고, 명시값은 `BASIC` 또는 로그인 테넌트만 허용한다.
+- 개발 DB의 활성 공통코드는 `TBL_CODE(BASIC)` 기준 D02 5개·D03 51개뿐이며 로그인 테넌트 소속 D02·D03 코드는 없다. 애플리케이션은 매핑을 조회만 하며 생성·수정·삭제 API를 제공하지 않는다.
 - 기존 업무 테이블의 재질·표면처리 동시 입력은 19,221건이다. 이 중 18,954건은 구형 `D03Rxx`, 75건은 신형 의미 코드이며, 신형 75건 중 슬라이드 15 매핑과 불일치하는 조합이 13건이다. 기존 업무 데이터는 변경하지 않았다.
-- 제품 저장소는 `feature-materialmap-0803`이며, 2026-08-03에 사용자 지시에 따라 다른 기능 작업만 작업 단위별 stash로 분리했다. 현재 기능 변경은 이번 재질-표면처리 관련 수정 9파일과 신규 SQL 1파일만 남았고, `.claude/settings*.json`과 `shell/runDev.local.bat`은 로컬 환경 파일이라 작업트리에 유지했다. 제품 커밋은 만들지 않았다.
+- 제품 저장소는 `feature-materialmap-0803`이며, 2026-08-03에 사용자 지시에 따라 다른 기능 작업만 작업 단위별 stash로 분리했다. 2026-08-04 관리용 CRUD를 제거한 뒤 현재 tracked 기능 변경은 조회·필터·캐시 관련 5파일 `+60/-10`이고 신규 SQL 1파일은 미추적 `docs/db/`에 있다. `.claude/settings*.json`과 `shell/runDev.local.bat`은 로컬 환경 파일이며 제품 커밋은 만들지 않았다.
 - 2026-08-03 실제 화면에서 소재종류 선택 후 신규 매핑이 아니라 기존 `REF_CD` 매핑이 표시되는 현상을 재현했다. 직접 DB 시드 전 Redis 응답과 브라우저 30분 캐시가 원인이었으며, 서버·브라우저 공통코드 캐시 키를 `surface-material-map-v1`으로 전환하고 전체 빌드를 통과했다. 이후 재시작된 8081 서버의 새 브라우저 세션에서 신규 매핑 응답과 소재별 필터를 확인했다.
-- 2026-08-03 DB 변경을 제외한 코드 9파일의 PR 설명 정본과 자체완결 HTML을 `C:\Users\User\Desktop\PR\[08.03 재질표면처리 코드 변경 PR]`에 생성했다. 제품 변경은 아직 미커밋이고 실제 GitHub PR은 만들지 않았다.
-- 2026-08-04 같은 9파일의 코드 가이드를 사용자 요청에 따라 초보 개발자용으로 전면 개정했다. `SQL Mapper → DAO → DAO 구현체 → DTO 판단 → Service → ServiceImpl → Controller → 화면·캐시` 구현 순서로 설명하고, 파일마다 현재 Git의 전체 변경 hunk를 먼저 제시한 뒤 논리 단위별 해설을 붙였다. 산출물은 `C:\Users\User\Desktop\PR\[08.04 재질표면처리 코드 변경 가이드]`의 MD·자체완결 HTML이다.
+- 2026-08-04 DB를 제외한 최종 5파일의 조회 전용 PR 설명 MD·HTML을 `C:\Users\User\Desktop\PR\[08.03 재질표면처리 코드 변경 PR]`에 갱신했다. 제품 변경은 아직 미커밋이고 실제 GitHub PR은 만들지 않았다.
+- 2026-08-04 초보 개발자용 코드 가이드도 `DB 매핑 → MyBatis 조회 → 서버 캐시 → 공통·페이지·탭 화면` 순서와 최종 5파일의 전체 Git diff로 다시 작성했다. 산출물은 `C:\Users\User\Desktop\PR\[08.04 재질표면처리 코드 변경 가이드]`의 MD·자체완결 HTML이다.
 
 ## 2026-08-03 Git 작업 분리
 
@@ -27,17 +27,17 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 
 - 완료: 슬라이드 15 매트릭스를 정규화된 다대다 테이블과 재현 가능한 SQL로 정의한다.
 - 완료: 개발 DB에 매핑을 반영하고 건수·고아 코드·미매핑 표면처리·재질별 분포를 검증한다.
-- 완료: 매핑 조회·저장 API, 입력 코드 검증, 트랜잭션, 서버·브라우저 공통코드 캐시 무효화를 구현한다.
+- 완료: 기존 공통코드 조회가 D03별 다중 재질 매핑을 반환하고 화면이 선택한 재질에 맞는 D03만 표시한다.
 - 완료: 기존 D03 선택 함수가 `MATERIAL_TYPE_CDS`를 우선 사용하고 구 캐시에는 `REF_CD`로 후퇴하도록 한다.
 - 완료: 재시작된 서버의 새 브라우저 세션에서 업무 화면 공통코드 응답과 소재별 표면처리 필터를 검증한다.
-- 미완료: Site Admin 화면의 적용소재 편집 UI는 8단계 이후 작업이다.
+- 범위 제외: Site Admin 편집 UI와 매핑 목록·저장·수정·삭제 API는 사용자 요구에 포함하지 않는다.
 
 ## 결정
 
 - 별도 `TBL_SURFACE_TREAT_MATERIAL_MAP` 사용 — 표면처리 하나에 여러 재질이 연결되므로 `ETC2` CSV보다 PK·인덱스·검증 가능한 다대다 구조가 적합하다.
 - 슬라이드에 없는 `NA` 계열은 5개 재질 전체 허용으로 시드 — 앞서 사용자에게 제안한 기본값이며, D03 51개 전체가 미매핑 없이 동작하도록 했다.
 - `BASIC` 매핑을 기본값으로 사용하고 같은 표면처리의 테넌트 매핑이 있으면 이를 우선하는 조회 구조를 채택했다.
-- 저장 대상은 `BASIC` 또는 로그인 테넌트로 제한 — 임의 테넌트 쓰기를 막고, 개발 DB의 실제 공통코드 소속이 `BASIC`뿐인 점을 반영했다.
+- 매핑 관리는 SQL로 준비하고 애플리케이션은 조회만 수행 — 현재 요구는 재질 선택 시 연결된 표면처리 표시이며 온라인 편집은 필요하지 않다.
 - 기존 업무 데이터는 자동 이관하지 않음 — 구형 코드 18,954건과 신형 불일치 13건은 업무 의미 확인 없이 변경하면 데이터 의미가 달라질 수 있다.
 - D03 필터는 신규 `MATERIAL_TYPE_CDS` 우선, 값이 없으면 기존 `REF_CD` 사용 — 배포 직후 남아 있는 구 브라우저 캐시와의 호환성을 유지한다.
 
@@ -68,22 +68,22 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 
 ## 구현
 
-- `SystemController`: `/getSurfaceTreatMaterialMapList`, `/saveSurfaceTreatMaterialMap` POST API
-- `SystemServiceImpl`: CSV·배열·컬렉션 입력 정규화, D02·D03 활성 코드 검증, 범위 제한, 삭제 후 재입력 트랜잭션, Redis 공통코드 캐시 전체 무효화
-- `system.xml`: 매핑 CRUD, `selectSessionCodeList.MATERIAL_TYPE_CDS`, `BASIC` 후퇴 조회
+- `SystemServiceImpl`: `MATERIAL_TYPE_CDS` 추가 전 Redis 값을 재사용하지 않도록 `getSessionCodeList` 캐시 키에 `surface-material-map-v1` 적용
+- `system.xml`: 기존 `selectSessionCodeList`에 `MATERIAL_TYPE_CDS` 집계와 테넌트 우선·`BASIC` 후퇴 조회만 추가
 - 공통 D03 선택 함수 3곳: 매핑 기반 필터와 `REF_CD` 호환 후퇴
-- 탭 공통 스크립트: 로컬스토리지·BroadcastChannel뿐 아니라 인메모리 JSON 목록 캐시도 함께 제거
+- 탭 공통 스크립트: 버전 없는 구형 공통코드 localStorage 키를 제거하고 새 키에 동일한 스키마 버전 추가
+- 제거 완료: Controller·Service·DAO 매핑 관리 메서드, 신규 CRUD/검증 MyBatis statement, 저장 이벤트용 인메모리 캐시 강제 삭제
 
 ## 검증
 
 - 개발 DB 매핑 검증 — 통과: 총 125건, 고아 0건, 미매핑 활성 D03 0건
 - 재질별 분포 — 통과: `D02R10=48`, `D02R15=27`, `D02R20=24`, `D02R25=23`, `D02R30=3`
 - 대표값 — 통과: `AN0101=AL`, `PL0101=AL/Steel/SUS/비철`, `CO0101=AL/Steel/SUS`, `CL0101·NA0101=5종 전체`
-- 서비스 임시 단위 테스트 — 통과: 기본 `BASIC` 저장·반복 파라미터 배열 중복 제거, 자기 테넌트 허용, 타 테넌트 거부 3건
-- Spring 컨텍스트·실제 MyBatis 매퍼 로딩 스모크 — 통과
+- 범위 축소 전 저장 서비스 임시 단위 테스트 — 역사 기록이며 해당 저장 코드는 현재 제거됨
+- Spring 컨텍스트·실제 MyBatis 매퍼 로딩 스모크 — 범위 축소 전 통과
 - `system.xml` XML 파싱 — 통과
-- 격리 빌드 디렉터리의 `gradlew build` — 통과
-- 기본 `build/resources`를 사용하는 재검증 — 실패: 실행 중인 8081 개발 서버가 `message-common.properties`를 점유해 Gradle stale output 삭제가 불가능했다. 서버를 강제 종료하지 않고 격리 빌드로 대체했다.
+- 2026-08-04 조회 전용 축소 후 격리 빌드 디렉터리의 `gradlew build` — 통과
+- 2026-08-04 기본 `build/resources`를 사용하는 재검증 — 실패: 실행 중인 개발 서버의 파일 점유로 Gradle stale output 삭제가 불가능했다. 서버를 강제 종료하지 않고 격리 빌드로 대체했다.
 - 임시 테스트·검증 소스와 격리 빌드 산출물 — 제거 완료
 
 ### 2026-08-03 신규 매핑 미반영 진단
@@ -97,10 +97,10 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 
 ### 2026-08-03 캐시 무효화 구현
 
-- `SystemServiceImpl.getSessionCodeList`의 Redis 키 앞에 `surface-material-map-v1` 스키마 버전을 추가했다. 기존 Redis 값은 TTL까지 남더라도 새 서버가 읽지 않으며, 저장 API의 `allEntries=true` 무효화 범위는 그대로 유지된다.
+- `SystemServiceImpl.getSessionCodeList`의 Redis 키 앞에 `surface-material-map-v1` 스키마 버전을 추가했다. 기존 Redis 값은 TTL까지 남더라도 새 서버가 읽지 않는다. 2026-08-04 저장 API와 그 `allEntries=true` 무효화는 범위 밖이라 제거했다.
 - 탭 공통 스크립트의 `systemMapper.selectSessionCodeList` 브라우저 키에도 같은 스키마 버전을 추가하고, 새 스크립트 로드 시 버전 없는 구형 공통코드 `dsCache` 키만 제거하도록 했다.
 - `attr/common`과 `attr/page` 변형은 `dsCache` 대상이 `dataSource.*` 쿼리로 한정되어 세션 공통코드를 브라우저 캐시에 보관하지 않으므로 서버 Redis 키 전환만 적용된다.
-- `git diff --check`, `node --check body-script.js`, `gradlew build -q --no-daemon --max-workers=4`를 통과했다. 빌드된 `SystemServiceImpl.class`에도 새 Redis 키가 포함됐다.
+- `git diff --check`, `node --check body-script.js`, `gradlew build -q --no-daemon --max-workers=4`를 통과했다. 빌드된 `SystemServiceImpl.class`에도 새 Redis 키가 포함됐다. 저장 이벤트에 추가했던 인메모리 JSON 캐시 강제 삭제 두 곳은 2026-08-04 제거했다.
 - 캐시 키 적용 시점에는 8081 JVM이 변경 전인 19:09 시작 프로세스여서 재시작이 필요했다. 이후 사용자가 새 WAR로 서버를 재시작했다.
 
 ### 2026-08-03 서버 재시작 후 실화면 검증
@@ -112,31 +112,37 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 
 ### 2026-08-03 비DB PR 설명과 최신 재검증
 
-- PR 설명은 Java·MyBatis 조회 로직·JSP/JavaScript 9파일, `+266/-10`만 다루며 DB 테이블·DDL·시드·검증 SQL은 제외했다. MD·HTML 두 파일만 있으며 UTF-8 BOM 없음, 외부 자산 참조 0, HTML 렌더링 오류 0을 확인했다.
+- 당시 PR 설명은 코드 9파일 `+266/-10` 기준이었으나, 2026-08-04 사용자 요구에 따라 관리 CRUD를 제거하고 최종 5파일 `+60/-10` 기준으로 MD·HTML을 다시 작성했다.
 - `git diff --check`, 탭 스크립트 `node --check`, `gradlew build -q --no-daemon --max-workers=4`를 다시 통과했다.
 - 첫 Playwright 재검증은 8081 프로세스가 포트를 수신하면서도 HTTP 응답을 주지 않아 45초 탐색 타임아웃이 발생했고 강제 주소 지정 요청도 10초 타임아웃이었다. 서버 조치 없이 HTTP 302 응답이 39ms로 회복됐으며 원인은 확인하지 못했다.
 - 회복 후 같은 검증을 재실행해 매핑 조회 API 125건, D03 51건 중 `MATERIAL_TYPE_CDS` 51건, 소재별 `48/27/24/23/3`, 버전 캐시 존재·구 캐시 부재를 확인했다.
 
 ### 2026-08-04 코드 변경 가이드
 
-- 현재 작업트리의 9파일 `+266/-10`을 다시 측정하고 데이터 계층부터 상위 계층으로 구현하는 순서에 맞춰 재구성했다. 별도 DTO가 없고 기존 `Map` 전달 방식을 사용한다는 점도 독립 단계로 설명했다.
-- 9개 파일마다 생략 없는 전체 Git diff를 설명보다 먼저 배치했으며, 문서의 각 diff가 현재 제품 Git diff와 글자 단위로 일치하는지 파일별로 검증했다.
+- 최종 작업트리의 5파일 `+60/-10`을 다시 측정하고 `DB 매핑 → MyBatis 조회 → 서버 캐시 → 공통·페이지·탭 화면` 순서로 재구성했다. 신규 DAO·DTO·Service·Controller가 필요 없는 이유를 기존 공통코드 경로와 함께 설명했다.
+- 5개 파일마다 생략 없는 전체 Git diff를 설명보다 먼저 배치했으며, 문서의 각 diff가 현재 제품 Git diff와 글자 단위로 일치하는지 파일별로 검증했다.
 - HTML diff에는 GitHub Files changed와 유사한 양쪽 줄 번호, 삭제 빨강·추가 초록·hunk 강조색과 가로 스크롤을 추가했다. 공통 색상·타이포그래피·단어 보존 규칙은 `templates/standalone-report.html` 정본을 그대로 유지했다.
-- 확인된 잠재 문제인 저장 API 역할 제한 부재, 관리 UI 미연결, 빈 매핑 저장 불가와 코드상 추론되는 테넌트 매핑 코드명 `NULL` 가능성을 구현 완료 항목과 분리해 기록했다.
-- 산출물 폴더에는 동일 이름의 MD·HTML 두 파일만 두었다. MD와 HTML은 제목 68개·표 5개·코드 블록 36개·상세 설명 9개가 일치하고, UTF-8 BOM 없음·외부 자산 0·Edge 헤드리스 렌더를 확인했다.
-- 제품 소스는 수정하지 않았으며 전체 빌드·브라우저 기능 검증은 재실행하지 않았다. `git diff --check`는 오류 없이 통과했고 9파일의 LF→CRLF 작업트리 경고는 남아 있다.
+- 저장 API 역할·빈 매핑·테넌트 코드명 문제는 원인이던 관리용 경로 자체를 제거해 현재 범위의 위험에서 제외됐다.
+- 코드 가이드 MD와 HTML은 제목 35개·표 3개·코드 블록 16개·상세 설명 5개가 일치하고, UTF-8 BOM 없음·외부 자산 0·Edge 헤드리스 렌더를 확인했다.
+- `git diff --check`, XML 파싱, JavaScript 문법, 관리용 이름 잔존 0건과 격리 전체 빌드를 확인했다. 제품 5파일의 LF→CRLF 작업트리 경고는 남아 있다.
+
+### 2026-08-04 조회 전용 범위 축소
+
+- 사용자 요구가 “재질 선택 시 매핑 테이블을 통해 연결된 표면처리 표시”까지임을 재확인해 관리용 목록·저장 기능 전체를 제거했다.
+- 제거 대상은 Controller 2개 API, Service 조회·저장 계약과 구현, DAO 5개 메서드와 구현, MyBatis 목록·검증·삭제·삽입 statement 5개다.
+- 저장 이벤트에만 추가했던 `window.__jsonListCacheClear()` 호출 두 곳도 제거하고, 배포 시 구형 응답 방지에 필요한 Redis·localStorage 스키마 버전만 유지했다.
+- 최종 제품 diff는 `SystemServiceImpl.java`, `system.xml`, 공통·페이지 JSP, 탭 JS의 5파일 `+60/-10`이다.
 
 ## 다음 행동
 
 1. 신형 의미 코드 불일치 13건을 새 매핑으로 이관할지, 기존값 예외로 인정할지 결정한다.
 2. 개별 D03 직접 매핑을 유지할지, 대분류 11종 상속 방식으로 전환할지 결정한다. `NA0101` 처리와 개별 예외 필요 여부가 판단 기준이다.
-3. Site Admin 화면이 참조하는 구형 `TBL_BASIC_CODE` D03 29개와 런타임 `TBL_CODE(BASIC)` D03 51개의 정본 불일치를 해소한다.
-4. 8단계로 Site Admin 적용소재 편집 UI를 구현하고 저장 성공 시 브라우저 캐시 무효화를 호출한다.
+3. 향후 관리 화면이 별도로 요청될 때만 구형 `TBL_BASIC_CODE` D03 29개와 런타임 `TBL_CODE(BASIC)` D03 51개의 정본 불일치를 먼저 해소하고 새 작업으로 설계한다.
 
 ## 블로커·위험
 
 - 기존 19,221개 동시 입력 중 대부분이 구형 D03 코드이며, 신형 코드도 13건이 새 매핑과 불일치한다. UI 적용 전에 표시·수정 정책 결정이 필요하다.
-- Site Admin 후보 코드 정본이 런타임 51개와 다르다. 이 상태에서 화면만 구현하면 일부 코드가 누락될 수 있다.
+- Site Admin 후보 코드 정본이 런타임 51개와 다르지만 현재 조회 전용 기능의 블로커는 아니다. 향후 관리 화면을 별도 구현할 때 해결해야 한다.
 - 8081 서버가 문서 작성 중 한 차례 일시적으로 HTTP 무응답 상태가 됐으나 별도 조치 없이 회복됐고 이후 실연동 검증은 통과했다. 같은 현상이 재발하면 서버 로그와 빌드·배포 시점의 상관관계를 진단해야 한다.
 - 배포 환경에서는 애플리케이션보다 DB DDL·시드를 먼저 반영해야 한다. 테이블이 없으면 세션 공통코드 조회가 실패한다.
 - Gradle 9 비호환 예정인 기존 deprecation 경고와 `EmailRequest` Lombok `@Builder` 경고가 남아 있다. 이번 기능과 직접 관련이 없어 수정하지 않았다.
@@ -147,5 +153,5 @@ _최종 갱신: 2026-08-04 / 상태: 진행 중_
 - `Projects/Tomes-Cloud/docs/db/20260731_surface_treat_material_map.sql`
 - `Projects/Tomes-Cloud/src/main/resources/sqlMaps/system.xml`
 - `Projects/Tomes-Cloud/src/main/java/com/tomes/service/impl/SystemServiceImpl.java`
-- `Projects/Tomes-Cloud/src/main/java/com/tomes/controller/SystemController.java`
+- `Projects/Tomes-Cloud/src/main/webapp/WEB-INF/views/attr/common/body-script.jsp`
 - `Projects/Tomes-Cloud/src/main/webapp/resource/modules/attr/tabs/body-script.js`

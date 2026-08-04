@@ -1,67 +1,44 @@
 {
-  "summary": "노트북 수리로 개인 PC에 업무 개발환경(리포 3종·JDK21) 재구축, 노션 자동화 개인PC 임시대응 체계 마련",
+  "summary": "개인 PC의 하네스 실행 명령과 훅을 Windows py 런처로 통일하고 D: 경로 기준을 문서화했다.",
   "tasks": [
     {
       "task_ref": "new",
-      "title": "개인PC 개발환경 구축",
-      "summary": "노트북 수리 기간 개인 PC에 업무용 PC와 동일한 리포·툴체인을 재구축하고 빌드까지 검증함",
-      "detail": "배경·목적 — 노트북 수리로 개인 PC를 업무용 PC와 같은 개발환경으로 세팅할 필요가 발생. 업무용 PC에서 내려받은 가이드 문서(`파일배치_가이드_2026-07-22.md`)와 setup 스크립트를 검토해 동일한 결과를 재현하기로 함.\n\n진행 — 하네스 리포를 `D:\\tomes\\harness-framework`에 clone 후 `feat-code-cache`(a23da2c)로 전환하고 미추적 파일 100개(설정·훅·스킬·handoff·logs·scripts)를 복원. Tomes-Cloud를 `Projects\\Tomes-Cloud`에 clone, `feature-control-0713`(3b52126) 브랜치로 두고 `application-local.yml` 등 미추적 4파일 복원. Test-Automize를 `claude`(44c14cc) 브랜치로 clone. 홈 `~/.claude`에 memory 36개, notify.ps1, 상태줄 스크립트를 복원하고 알림 훅 포함 settings.json을 적용. `E:\\harness_framework` 하드코딩 경로를 `run_worklog.bat`, `daily_worklog.py`, 프로젝트 `.claude/settings.json`, `statusline-dashboard.sh`에서 D: 기준으로 일괄 보정. Python 3.12.10을 PATH에 등록하고 JDK 21(Temurin) 설치 후 JAVA_HOME을 설정.\n\n결과·임팩트 — Tomes-Cloud가 JDK21 기준 gradle build에 성공(`ROOT.war` 252MB 생성, 기존 코드의 Lombok `@Builder` 경고 1건 외 이상 없음). 개인 PC에서 업무용 PC와 동일한 하네스·프로젝트 환경 구축을 완료했으며, 남은 항목은 선택 사항인 NOTION_TOKEN 설정과 사내망 접속이 필요한 dev 서버 기동 확인뿐임.",
+      "title": "하네스 실행환경 정비",
+      "summary": "개인 PC 훅과 하네스 명령을 py 런처로 교체하고 D: 경로 해석 기준을 추가했다.",
+      "detail": "배경·목적 — Windows에서 python 및 python3 명령이 Microsoft Store 스텁으로 연결되는 문제를 방지하고, 개인 PC의 D: 설치 원칙에 맞게 하네스 실행 환경을 정비했다.\n\n설정 변경 — `.claude/settings.json`의 개인 PC 훅과 `.claude/commands/harness.md`의 실행 예시를 py 명령으로 교체했다. `CLAUDE.md`에는 기존 E: 경로를 현재 PC의 D: 경로로 재해석하는 기준을 추가했다.\n\n결과·임팩트 — 2개 커밋으로 3개 파일을 수정해 훅과 수동 실행 문서의 Python 호출 방식을 일치시켰다. Microsoft Store 스텁 오실행 가능성을 제거하고 PC별 드라이브 차이로 인한 경로 혼선을 줄였다.",
       "status": "완료",
       "tech": [
-        "Git — 리포 3종 clone 및 브랜치 전환",
-        "Gradle — Tomes-Cloud 빌드 검증",
-        "JDK 21(Temurin) — Spring Boot 3.5 빌드 요구사항 충족",
-        "PowerShell/Bash — 환경 파일 복사 및 경로 보정"
+        "Python Launcher — Windows에서 하네스와 훅 실행",
+        "Claude Code — 개인 PC 훅 및 명령 문서 관리",
+        "JSON — 훅 실행 명령 설정",
+        "Markdown — 실행 절차와 경로 해석 기준 문서화"
       ],
       "learnings": [
         {
-          "title": "차단 원인은 권한 아닌 분류기",
-          "detail": "홈 설정 변경·스크립트 직접실행 차단은 Windows 관리자 권한이 아니라 Claude Code 자동모드 안전 분류기의 정책이었음."
+          "title": "윈도우 런처 선택",
+          "detail": "Windows에서는 python3가 Microsoft Store 스텁으로 연결될 수 있으므로 설치된 인터프리터를 찾는 py 런처 사용이 안정적이다."
         },
         {
-          "title": "! 프롬프트는 bash 문법",
-          "detail": "`!` 접두 실행은 cmd가 아닌 bash로 처리되어 copy가 아닌 cp 명령을 써야 함."
+          "title": "경로 기준 명문화",
+          "detail": "PC별 드라이브 구성이 다르면 기존 경로의 치환 규칙을 저장소 문서에 명시해야 자동화와 수동 작업의 해석 차이를 줄일 수 있다."
         }
       ],
       "issues": [
         {
-          "problem": "홈 settings.json 적용과 다운로드 스크립트 실행이 자동모드 안전 분류기에 의해 차단됨",
-          "solution": "스크립트 전체를 읽고 검토한 뒤 동일 작업을 개별 명령으로 수행해 대부분 우회, 홈 설정 적용만 사용자에게 명령 실행을 요청"
+          "problem": "하네스 문서의 python3 명령이 Microsoft Store 스텁으로 연결될 가능성이 있었음",
+          "solution": "실행 명령을 Windows Python Launcher인 py로 교체함"
         },
         {
-          "problem": "! 프롬프트에서 copy 명령이 bash에서 인식되지 않음",
-          "solution": "cp 명령과 POSIX 경로(/c/Users/...)로 교체해 재실행, 적용 확인"
+          "problem": "기존 E: 경로와 현재 PC의 D: 설치 경로 사이에 해석 차이가 있었음",
+          "solution": "CLAUDE.md에 E: 경로를 D: 기준으로 재해석하는 규칙을 추가함"
         }
       ],
-      "next": [
-        "NOTION_TOKEN 환경변수 설정(옛 PC 값 확인 필요)",
-        "dev 서버 기동 확인(사내망/VPN 접속 필요)"
-      ],
+      "next": [],
       "tags": [
-        "환경세팅",
-        "빌드",
-        "PC이전"
-      ]
-    },
-    {
-      "task_ref": "t-0002",
-      "title": "노션 작업일지 자동화",
-      "summary": "개인 PC엔 Notion 미설치임을 반영해 자동화를 임시 비활성화하고 이관 대비 체계를 구축함",
-      "detail": "배경·목적 — 개인 PC에는 Notion 연동 및 NOTION_TOKEN이 없어 예약작업 DailyWorklog가 정상 동작할 수 없는 상태. 노트북 수리 기간 동안 작업일지 데이터가 유실되지 않도록 임시 대응 구조가 필요했음.\n\n진행 — daily_worklog.py의 기존 자동화 흐름과 memory 문서를 먼저 파악한 뒤, `--from-json` 옵션과 메인 플로우를 수정해 NOTION_TOKEN 미설정 시 로컬 JSON 생성까지만 수행하고 해당 날짜를 이관 대기 목록에 자동 기록하도록 변경. 절차와 주의사항을 `logs/notion_이관대기.md`로 정리하고, HANDOFF 인덱스에 개인 PC 기간 공통 상태로 기록. 이후 스모크 테스트를 실행해 동작을 확인.\n\n결과·임팩트 — 스크립트 경로가 양쪽 PC에서 호환되도록 유도되어, 업무용 PC 복귀 시 `--from-json`으로 날짜순 백필이 가능한 구조를 확보. 노트북 수리 기간 중 작업일지 공백 없이 데이터를 로컬에 축적할 수 있게 됨.",
-      "status": "진행 중",
-      "tech": [
-        "Python — daily_worklog.py 이관 대기 로직 추가"
-      ],
-      "learnings": [],
-      "issues": [],
-      "next": [
-        "업무용 PC 복귀 후 --from-json으로 이관 대기 날짜 노션 백필",
-        "예약작업 DailyWorklog 재활성화(BIOS 업데이트 간섭 이슈 해소 후)"
-      ],
-      "tags": [
-        "노션",
-        "자동화",
-        "인수인계"
+        "개발환경",
+        "하네스",
+        "Claude Code",
+        "Windows"
       ]
     }
   ]

@@ -49,6 +49,8 @@
       background: var(--page);
       font-family: "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
       font-size: 16px;
+      font-weight: 450;
+      -webkit-text-stroke: 0.1px currentColor;
       line-height: 1.72;
       word-break: keep-all;
       overflow-wrap: normal;
@@ -88,6 +90,7 @@
       line-height: 1.35;
     }
 
+    h1, h2, h3, strong, b { font-weight: 750; }
     h3 { margin: 30px 0 10px; color: var(--accent); }
     p, ul, ol, blockquote { margin: 10px 0 16px; }
     li + li { margin-top: 6px; }
@@ -150,7 +153,7 @@
       color: var(--text);
       background: var(--accent-soft);
       border-bottom: 2px solid var(--line-strong);
-      font-weight: 700;
+      font-weight: 750;
       white-space: nowrap;
     }
 
@@ -171,7 +174,7 @@
       padding: 13px 16px;
       background: var(--accent-soft);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     details > :not(summary) { margin-right: 16px; margin-left: 16px; }

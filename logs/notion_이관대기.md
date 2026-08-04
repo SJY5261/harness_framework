@@ -5,3 +5,4 @@
 
 - [x] 2026-07-27 — `logs/worklog_2026-07-27.json`
 - [x] 2026-07-28 — `logs/worklog_2026-07-28.json`
+- [ ] 2026-08-04 — `logs/worklog_2026-08-04.json`

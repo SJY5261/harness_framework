@@ -1,6 +1,6 @@
 # Site Admin 재질-표면처리 매핑
 
-_최종 갱신: 2026-08-05 / 상태: 진행 중_
+_최종 갱신: 2026-08-06 / 상태: 진행 중_
 
 ## 현재 상태
 
@@ -10,8 +10,9 @@ _최종 갱신: 2026-08-05 / 상태: 진행 중_
 - 개발 DB의 활성 공통코드는 `TBL_CODE(BASIC)` 기준 D02 5개·D03 51개뿐이며 로그인 테넌트 소속 D02·D03 코드는 없다. 애플리케이션은 매핑을 조회만 하며 생성·수정·삭제 API를 제공하지 않는다.
 - 2026-08-05 개발 DB `TBL_CODE(BASIC)`의 활성 D01·D03 중 `ABBR_NM`이 `CODE_CD` 앞 두 자리와 다른 45건을 코드 접두어로 통일했다. D01은 `SR` 29건·`TI` 4건, D03은 `PL` 10건·`CR` 2건이며 변경 전 원본은 `TBL_CODE_ABBR_BAK_20260805_134835`에 보존했다.
 - 2026-08-05 매핑 대분류의 참조 정본을 D03 `CODE_CD` 앞 두 자리에서 `TBL_CODE.ABBR_NM`으로 전환했다. `SURFACE_TREAT_GROUP_CD` 컬럼과 기존 38건 데이터는 유지하고, 실행 조회와 재현 SQL의 시드·검증 JOIN만 `ABBR_NM` 기준으로 변경했다.
+- 2026-08-06 `selectSessionCodeList`의 매핑 선택 기준을 공통코드 행의 `A.SYSTEM_ID`에서 실제 로그인 테넌트 `#{LOGIN_SYSTEM_ID}`로 바로잡았다. 이제 D03 코드가 `BASIC`에만 있어도 대분류별 로그인 테넌트 매핑을 우선하고, 없을 때만 `BASIC`으로 후퇴한다. 결과 필터에 필요 없고 테넌트 매핑에서 정렬 근거도 불완전했던 D02 `TBL_CODE` 조인은 제거했다.
 - 기존 업무 테이블의 재질·표면처리 동시 입력은 현재 19,230건이다. 이 중 18,952건은 구형 `D03Rxx`, 86건은 신형 의미 코드이며, 신형 86건 중 슬라이드 15 매핑과 불일치하는 조합은 13건이다. 기존 업무 데이터는 변경하지 않았다.
-- 제품 저장소는 `feature-materialmap-0803`이며, 2026-08-03에 사용자 지시에 따라 다른 기능 작업만 작업 단위별 stash로 분리했다. 2026-08-05 `ABBR_NM` 참조 전환까지 반영한 현재 기능 변경은 SQL 1파일을 포함해 6파일 `+314/-10`이다. `.claude/settings*.json`과 `shell/runDev.local.bat`은 로컬 환경 파일이며 제품 커밋은 만들지 않았다.
+- 제품 저장소는 `feature-materialmap-0803`이며, 2026-08-03에 사용자 지시에 따라 다른 기능 작업만 작업 단위별 stash로 분리했다. 2026-08-06 로그인 테넌트 분기 정정까지 반영한 현재 기능 변경은 SQL 1파일을 포함해 6파일 `+310/-10`이다. `.claude/settings*.json`과 `shell/runDev.local.bat`은 로컬 환경 파일이며 제품 커밋은 만들지 않았다.
 - 2026-08-03 실제 화면에서 소재종류 선택 후 신규 매핑이 아니라 기존 `REF_CD` 매핑이 표시되는 현상을 재현했다. 직접 DB 시드 전 Redis 응답과 브라우저 30분 캐시가 원인이었으며, 서버·브라우저 공통코드 캐시 키를 `surface-material-map-v1`으로 전환하고 전체 빌드를 통과했다. 이후 재시작된 8081 서버의 새 브라우저 세션에서 신규 매핑 응답과 소재별 필터를 확인했다.
 - 2026-08-04 DB 변경을 포함한 당시 6파일의 대분류 상속 PR 설명 MD·HTML을 `C:\Users\User\Desktop\PR\[08.03 재질표면처리 코드 변경 PR]`에 갱신했다. 2026-08-05 `ABBR_NM` 참조 전환은 아직 반영하지 않았고, 제품 변경도 미커밋이며 실제 GitHub PR은 만들지 않았다.
 - 2026-08-05 현재 저장된 `톰스클라우드_코드변경_최신.xlsx`와 개발 DB 실제 `TBL_CODE(BASIC)` 520건을 다시 비교했다. 코드 집합·정렬·`ABBR_NM` 차이는 0건이고 직접 불일치는 `E12R10` 코드명 1건이며, Excel 내부 표기 문제는 별도로 분리해 `C:\Users\User\Desktop\PR\[08.05 DB-Excel 코드 불일치 현황]`의 MD·자체완결 HTML에 기록했다.
@@ -82,8 +83,8 @@ _최종 갱신: 2026-08-05 / 상태: 진행 중_
 
 ## 구현
 
-- `SystemServiceImpl`: 직접 매핑 Redis 값을 재사용하지 않도록 `getSessionCodeList` 캐시 키에 `surface-material-group-map-v1` 적용
-- `system.xml`: 기존 `selectSessionCodeList`가 D03 `ABBR_NM` 대분류의 `MATERIAL_TYPE_CDS`를 집계하고 테넌트 우선·`BASIC` 후퇴를 대분류 단위로 적용
+- `SystemServiceImpl`: 로그인 테넌트 분기 정정 전 Redis 값을 재사용하지 않도록 `getSessionCodeList` 캐시 키를 `surface-material-group-map-v2`로 갱신
+- `system.xml`: 기존 `selectSessionCodeList`가 D03 `ABBR_NM` 대분류의 `MATERIAL_TYPE_CDS`를 집계하고 `#{LOGIN_SYSTEM_ID}` 테넌트 우선·`BASIC` 후퇴를 대분류 단위로 적용
 - 공통 D03 선택 함수 3곳: 매핑 기반 필터와 `REF_CD` 호환 후퇴
 - 탭 공통 스크립트: 버전 없는 구형 공통코드 localStorage 키를 제거하고 새 키에 동일한 스키마 버전 추가
 - 제거 완료: Controller·Service·DAO 매핑 관리 메서드, 신규 CRUD/검증 MyBatis statement, 저장 이벤트용 인메모리 캐시 강제 삭제
@@ -100,6 +101,9 @@ _최종 갱신: 2026-08-05 / 상태: 진행 중_
 - 범위 축소 전 저장 서비스 임시 단위 테스트 — 역사 기록이며 해당 저장 코드는 현재 제거됨
 - Spring 컨텍스트·실제 MyBatis 매퍼 로딩 스모크 — 범위 축소 전 통과
 - `system.xml` XML 파싱 — 통과
+- 2026-08-06 테넌트 분기 정적 검증 — 통과: 로그인 `SYSTEM_ID`로 `EXISTS`·선택, `BASIC` 후퇴, `A.SYSTEM_ID` 선택 제거, 불필요한 D02 조인 제거, 서버·브라우저 캐시 `v2` 일치
+- 2026-08-06 전체 `gradlew build -q --no-daemon --max-workers=4` — 통과. 기존 deprecated API·unchecked 연산 경고는 남아 있으며 이번 변경과 무관해 수정하지 않았다.
+- 2026-08-06 18081 분리 서버 기동 — 통과: Spring 컨텍스트·MyBatis 매퍼 로딩, 루트 HTTP 200, 비로그인 `/json-list` 보안 리다이렉트 HTTP 302 확인 후 에이전트가 시작한 Java 프로세스만 종료하고 포트 해제 확인
 - 2026-08-04 대분류 상속 전환 후 기본 빌드 디렉터리의 `gradlew build` — 통과
 - 기존 8081을 건드리지 않고 18081에서 새 코드 기동·HTTP 200 확인 후 테스트 서버 종료 — 통과
 - 단일 PK·테이블명 전환 후 8081 새 코드 재기동과 루트 HTTP 200 — 통과. 비로그인 `/json-list` 호출은 보안 정책에 따라 HTTP 302여서 인증 세션 기반 실화면 재검증은 이번 전환에서 생략했다.
@@ -150,7 +154,7 @@ _최종 갱신: 2026-08-05 / 상태: 진행 중_
 - 사용자 요구가 “재질 선택 시 매핑 테이블을 통해 연결된 표면처리 표시”까지임을 재확인해 관리용 목록·저장 기능 전체를 제거했다.
 - 제거 대상은 Controller 2개 API, Service 조회·저장 계약과 구현, DAO 5개 메서드와 구현, MyBatis 목록·검증·삭제·삽입 statement 5개다.
 - 저장 이벤트에만 추가했던 `window.__jsonListCacheClear()` 호출 두 곳도 제거하고, 배포 시 구형 응답 방지에 필요한 Redis·localStorage 스키마 버전만 유지했다.
-- 범위 축소 당시 제품 diff는 `SystemServiceImpl.java`, `system.xml`, 공통·페이지 JSP, 탭 JS의 5파일 `+60/-10`이었다. 이후 대분류 상속 SQL·단일 PK·테이블명·`ABBR_NM` 참조 전환을 포함한 현재 diff는 6파일 `+314/-10`이다.
+- 범위 축소 당시 제품 diff는 `SystemServiceImpl.java`, `system.xml`, 공통·페이지 JSP, 탭 JS의 5파일 `+60/-10`이었다. 이후 대분류 상속 SQL·단일 PK·테이블명·`ABBR_NM` 참조 전환과 로그인 테넌트 분기 정정을 포함한 현재 diff는 6파일 `+310/-10`이다.
 
 ## 다음 행동
 

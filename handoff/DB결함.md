@@ -1,11 +1,11 @@
 # DB결함 — 현재 인수인계
 
-_최종 상태: 2026-08-03 기존 리뷰 정본은 보존하고 `Desktop\PR\[08.03 DB결함 PR 리뷰]`에 간결한 PR 리뷰를, `Desktop\PR\[07.31 DB결함 코드 변경 해설]`에 실제 Git diff와 변경 의도만 담은 MD·HTML을 각각 새로 만들었다. 같은 날 원본 코드 학습 가이드 HTML의 좌측 목차를 제거하고 테마·인쇄 도구는 상단에 유지했다. 원격 브랜치·제품 diff·라이브 DB·테스트는 2026-07-31 재검토 상태를 유지한다. 긴 진행 이력은 [역사 보존본](../logs/handoff/DB결함_2026-07-28_history.md)에 있다._
+_최종 상태: 2026-08-06 사용자 결정에 따라 접수·작업번호 동시발번, 동일 주문 작업지시 이중발행 차단, 바코드 삭제 전파는 유지하고 주문·작업지시 사본 전파 변경은 파기했다. 자동채번은 서비스의 기존 Map 조회를 복원하고 사이트 관리 화면에서 `Y`만 선택·저장하도록 조정했다. 변경은 `feature-control-0713` 작업트리 5파일에 미커밋으로 남아 있으며, 기존 리뷰·해설 문서는 이전 4파일 diff 기준이므로 갱신 전까지 최신 정본이 아니다. 긴 진행 이력은 [역사 보존본](../logs/handoff/DB결함_2026-07-28_history.md)에 있다._
 
 ## 현재 상태
 
-- `%클라우드` 관련 기능 변경은 커밋 `88bf7dc`이며, `feature-control-0713`의 로컬·upstream·실제 원격 HEAD는 모두 `2aad3db`로 일치한다.
-- 현재 PR 비교는 `origin/main` `fb3c240` → `origin/feature-control-0713` `2aad3db`이고 diff는 4파일 `+504/-142`다.
+- `%클라우드`는 `feature-control-0713`에 체크아웃돼 있고 upstream HEAD `2aad3db`와 일치한다. 그 위 작업트리에 이번 재구성 변경 4파일이 미커밋으로 있으며, 최종 PR 기준 diff는 공통 조상 `fb3c240` 대비 5파일 `+360/-140`이다.
+- 현재 `origin/main`은 `f976d87`로 전진했으며 `feature-control-0713`과의 공통 조상은 `fb3c240`이다. 최신 main 병합·제품 커밋·push는 수행하지 않았다.
 - 사용자 지정 폴더 `C:\Users\User\Desktop\PR\[07.28 DB결함 수정 리뷰]`에는 현재 상태를 반영한 MD 정본과 자체완결 HTML 두 파일만 있다.
 - `C:\Users\User\Desktop\PR\[08.03 DB결함 PR 리뷰]`에는 기존 `[07.28 DB결함 수정 리뷰]`를 수정하지 않고 새로 정리한 간결한 MD 정본과 자체완결 HTML 두 파일만 있다. 필수 PR 섹션과 DB 변경·검증·복구 내용은 유지하고, 배경 설명과 중복 이력은 줄였다.
 - `C:\Users\User\Desktop\PR\[07.31 DB결함 코드 학습 가이드]`에는 신입 개발자가 코드·DB를 처음 인수인계받는 기준으로 수주→작업지시 전체 흐름과 번호·내부키·10개 테이블의 핵심 컬럼·실제 FK와 논리 조인·이중발행 방지·사본 동기화·삭제 전파·DB 계약을 대분류한 MD 정본과 자체완결 HTML 두 파일만 있다. 자동발번 화면명·Map 키·`TBL_SYSTEM` 컬럼 차이, 프로시저 실제 추가 블록, `CONTROL_NUM` 백업·백필·`NOT NULL` DDL, 스키마 확인 SQL도 포함한다. HTML은 좌측 목차를 제거하고 테마·인쇄 도구만 상단에 유지한다.
@@ -14,7 +14,7 @@ _최종 상태: 2026-08-03 기존 리뷰 정본은 보존하고 `Desktop\PR\[08.
 - `C:\Users\User\Desktop\PR\[07.29 DB결함 코드 이해 리뷰]`는 2026-07-31 사용자 판단에 따라 AI 슬롭으로 폐기했다. 해당 산출물은 정본·참고자료로 재사용하지 않는다.
 - 리뷰 범위는 사용자가 직접 변경한 `CONTROL_NUM` 백업·백필·`NOT NULL` DDL과 `smd.SP_CONTROL_BATCH` 가드·검증·선택적 복구 SQL이다.
 - 외부 협력자의 KAN-64/STP 변경과 다른 후속 변경은 리뷰에서 제외했다.
-- 제품 GitHub PR과 PR 기반 check run은 아직 없다.
+- 제품 GitHub PR과 PR 기반 check run은 아직 없다. `[08.03 DB결함 PR 리뷰]`와 `[07.31 DB결함 코드 변경 해설]`은 사용자 결정 전 `4파일 +504/-142` 기준이라 현재 코드와 불일치한다.
 - Sites는 이번 내용으로 재게시하지 않았다.
 
 ## 확정 결정
@@ -24,6 +24,22 @@ _최종 상태: 2026-08-03 기존 리뷰 정본은 보존하고 `Desktop\PR\[08.
 - 프로시저 복구는 전체 백업 덮어쓰기보다 이번 잠금·오류·`NOT EXISTS` 블록만 선택적으로 제거해 범위 밖 변경을 보존한다.
 - 실제 실행 원문이 보존되지 않은 SQL은 실행문으로 단정하지 않고, 기록 기반 재현 SQL과 라이브 `SHOW FULL COLUMNS`·`SHOW CREATE PROCEDURE` 근거를 구분한다.
 - Claude 또는 별도 리뷰어를 자동 호출하지 않는다. 추가 독립 검토는 사용자가 명시적으로 요청하거나 새 고위험 판단이 생겼을 때만 진행한다.
+- 2026-08-06 대분류 결정:
+  1. 접수·작업번호 동시발번 방지 변경은 유지한다.
+  2. 동일 주문 작업지시 이중발행 차단 변경은 유지한다.
+  3. 주문·작업지시 사본 전파 변경은 파기하고 기존 납기·접수번호 전파만 남긴다.
+  4. 작업지시 삭제 시 바코드 삭제 전파 변경은 유지한다.
+  5. `OrderServiceImpl`의 자동채번 판단은 `map.get("AUTO_NUM_CREATE_YN")`을 유지하고 사이트 관리 화면은 기존 DB 값과 무관하게 `Y`만 선택·저장한다.
+
+## 2026-08-06 재구성 검증
+
+- 변경 파일: `OrderServiceImpl.java`, `order.xml`, `bottom2.jsp`, `site-master.jsp`; `EstimateServiceImpl.java`의 동시발번 변경은 수정 없이 유지했다.
+- 사본 전파 신규 호출·매퍼 5개와 납품일·품명 추가 전파는 참조 0건으로 제거했다. 기존 `updateControlPartOrderFromOrderManage`의 납기·접수번호 전파는 유지했다.
+- 네임드락 채번, 생존 작업지시 조회, 컨트롤 단위 두 바코드 테이블 소프트 삭제 호출·매퍼가 남아 있음을 확인했다.
+- `compileJava` PASS, 격리 출력 경로 전체 `gradlew build -q --max-workers=4 --no-daemon` PASS, `order.xml` 파싱 PASS, statement id 203개 중 중복 0, `git diff --check` PASS.
+- 일반 전체 빌드는 실행 중인 8081 개발 서버가 `build/resources/main`을 점유해 `processResources: Failed to clean up stale outputs`로 1회 실패했다. 서버를 종료하지 않고 D: 임시 출력 경로에서 재검증했으며 임시 파일은 제거했다.
+- 기존 빌드 경고 `EmailRequest.advertising`의 Lombok `@Builder` 기본값 무시 가능성 1건과 deprecation/unchecked 안내는 이번 범위 밖이라 수정하지 않았다.
+- 실행 중 8081은 변경 전 클래스·리소스를 사용하므로 Java·XML 변경의 실서버 반영 검증은 재시작 후 수행해야 한다.
 
 ## 최종 검증
 

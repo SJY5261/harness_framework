@@ -163,6 +163,14 @@ _최종 갱신: 2026-08-07 / 상태: 진행 중_
 - 저장 이벤트에만 추가했던 `window.__jsonListCacheClear()` 호출 두 곳도 제거하고, 배포 시 구형 응답 방지에 필요한 Redis·localStorage 스키마 버전만 유지했다.
 - 범위 축소 당시 제품 diff는 `SystemServiceImpl.java`, `system.xml`, 공통·페이지 JSP, 탭 JS의 5파일 `+60/-10`이었다. 이후 대분류 상속 SQL·단일 PK·테이블명·`ABBR_NM` 참조 전환과 환경별 `SYSTEM_ID` 조회·캐시 `v3` 전환을 포함한 현재 diff는 6파일 `+302/-10`이다.
 
+## 2026-08-11 테넌트 기준코드 캐시 단순화
+
+- 사용자 지시에 따라 신규 `clearQuery` 탭 전파와 queryId별 generation·부분 삭제 로직을 제거하고 기존 `fnClearDataSourceCache()`의 `clearAll`·`BroadcastChannel('dsCache')` 경로를 그대로 재사용했다.
+- 탭 공통 스크립트에는 기존 무효화가 `json-list-cache.js`의 메모리 캐시도 함께 비우도록 호출 연결 9줄만 추가했다. `json-list-cache.js` 자체는 HEAD blob `3d593a570063f704a2f69f7053223852631ad2f2`와 같아 작업트리 변경에서 제외됐다.
+- 서버는 신규 저장 API가 기존 `modifyGrid(systemType='CODE')` 경로를 통과하지 않으므로 `SystemServiceImpl`에서 동일한 `getSessionCodeList` Redis 캐시 전체 clear를 저장 성공 후 호출한다. 테넌트별 키 열거와 트랜잭션 동기화 코드는 제거했다.
+- 제품 변경은 tracked 8파일 `+321/-11`과 신규 SQL 1파일이다. `node --check`, `git diff --check`, `gradlew build -q`를 통과했으며 빌드에는 기존 deprecation·unchecked 안내만 남았다.
+- 전체 Redis 캐시 clear는 테넌트별 선택 무효화보다 캐시 재적재 범위가 넓지만, 드문 관리 토글 저장에 기존 공통코드 저장 정책을 재사용해 코드 경로와 복잡도를 줄이는 선택이다.
+
 ## 다음 행동
 
 1. 사용자가 2026-08-07 `refCd` 분기 구조를 최종 확인하면 제품 커밋 여부를 결정한다.

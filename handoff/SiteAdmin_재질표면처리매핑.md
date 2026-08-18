@@ -4,6 +4,7 @@ _최종 갱신: 2026-08-07 / 상태: 진행 중_
 
 ## 현재 상태
 
+- 2026-08-18 `sunPro/common-code-master`의 `/commonCodeMasterV2` 소재 목업 표를 ParamQuery Grid 11로 교체하고 `systemMapper.selectMaterialCodeGridList`를 통해 활성 D01을 원격 조회하도록 연결했다. 개발 DB SMD 기준 78건이며 소재코드·D01 약어·한국어 소재명·D02 재질명·비고를 표시한다. `TBL_TENANT_CODE_USE`는 기본값·행 생성 정책 결정 전이므로 이번 단계에서는 사용하지 않고 활성 D01을 읽기 전용 ON으로 표시한다. XML·인라인 JavaScript 문법, 동일 SQL 실조회, 격리 Gradle 전체 빌드를 통과했으며 기존 8081 서버는 중단하지 않았다.
 - 사용자 요구를 재확인해 매핑 정책을 `재질 ↔ 개별 D03` 직접 매핑에서 `재질 ↔ 표면처리 대분류` 상속으로 확정했다. 같은 대분류의 모든 하위 D03은 동일한 재질 규칙을 상속하며 개별 예외는 허용하지 않는다. Site Admin 목록·저장 API와 편집 화면은 포함하지 않는다.
 - 요구사항 정본은 `C:\Users\User\Desktop\Downloads\Site Admin 화면설계서_260723.pptx`의 15번 슬라이드다.
 - 2026-08-18 별도 화면 작업으로 같은 PPTX의 11~14번을 기준으로 소재·표면처리 목록, 등록 모달 2종, 사용 중 삭제 불가 모달을 신규 구현했다. 공통 셸은 변경하지 않았으며 콘텐츠 JSP는 `/static/admin/site-admin-reference-master` 경로로 기존 탭 셸에 삽입된다. 현재는 프런트 목업으로 필터·검색·초기화·탭·POOL 토글·모달 동작만 포함하고 DB 조회·저장 API는 연결하지 않았다. 1600×1000 Edge 렌더와 Playwright 상호작용, JavaScript 문법, 전체 Gradle 빌드를 통과했다.

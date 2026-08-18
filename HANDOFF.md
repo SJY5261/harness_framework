@@ -1,6 +1,6 @@
 # HANDOFF — 활성 작업 인덱스
 
-_최종 갱신: 2026-08-12_
+_최종 갱신: 2026-08-18_
 
 이 파일은 현재 작업을 찾기 위한 인덱스다. 운영 규칙은 `AGENTS.md`, 제품·안전 규칙은 `PROJECT_RULES.md`, 조건부 절차는 `docs/processes/`, 세부 경위는 연결된 `handoff/`, 완료 이력과 증적은 `logs/`에서 확인한다. 오래된 git·서버·DB 상태는 기록을 믿지 말고 다시 측정한다.
 
@@ -13,6 +13,7 @@ _최종 갱신: 2026-08-12_
 
 - [노션작업일지자동화] **과거 누락분 백필·예약 경로 복구 완료 / 8/4 최종본 로컬 준비·인증 후 전송 대기** — 오전 백필은 실제 Notion 재조회까지 확인했다. 8/4 최종 작업 4건은 17:41 로컬 JSON으로 다시 생성해 이관 대기 목록에 보존했으며, 공식 Integration 토큰·DB ID가 없어 외부 전송은 하지 않았다. 사용자 계획에 따라 8/5 인증 복구 후 `--from-json` 전송과 재조회 검증을 진행한다 — [상세](handoff/토큰절감.md)
 - [SiteAdmin_재질표면처리매핑] **환경별 매핑 조회·D03 REF_CD 후퇴 제거·대분류 상속 구현 커밋 완료 / refCd 분기 가독성 변경 미커밋·최신 v3 인증 세션 확인 대기** — 원격 `feature-materialmap-0803`의 `43690a0`은 코드 5파일 `+48/-10`이며, D03은 `MATERIAL_TYPE_CDS`, 다른 기준코드는 기존 `REF_CD`를 사용한다. 2026-08-07에는 별도 worktree에서 동일 함수 3곳을 기본 `refCd`·D03 `mapCd` 명시 분기로 정리해 문법·분기 단위 검증·전체 빌드를 통과했다. 재현 SQL은 원격 커밋에 포함되지 않은 미추적 파일이라 별도 결정이 필요하다 — [상세](handoff/SiteAdmin_재질표면처리매핑.md)
+- [SiteAdmin_화면설계서11~14] **소재·표면처리 콘텐츠 목업 완료 / 백엔드 연동 대기** — 공통 셸 변경 없이 신규 JSP·전용 CSS·JavaScript로 목록, 필터, 등록 모달, 사용 중 삭제 제한을 구현해 Edge 렌더·Playwright 상호작용·전체 빌드를 통과했다 — [상세](handoff/SiteAdmin_재질표면처리매핑.md)
 - [Codex주에이전트전환] **현재 PC `work` 프로필·핵심 개발·테스트 기능 호환 완료 / GUI 도구 데이터 이관 대기** — 저장소 밖 로컬 마커와 `scripts/pc_profile.ps1`로 PC를 구분하며, `%클라우드`의 Claude 로컬 설정과 개발 실행 배치는 기능 stash에서 제외해 작업트리에 유지한다. 프로필 테스트 4 PASS, 하네스 76 PASS이며 기존 개발·테스트 기능과 Git 원격·Gradle도 정상이다. VS Code·Codex 개인 홈·SourceTree·DBeaver·Git 전역 데이터 이관은 별도 대기 — [상세](handoff/Codex주에이전트전환.md)
 - [업무PC복귀인계] **주요 복구·Codex 훅·실화면 재검증 완료 / 개발 DB TLS 결정·미전달 원본 대기·POP 실기기 보류** — 개발 런타임·경로·Windows `workspace` 샌드박스 복구와 Codex 훅 상태 전이 검증을 완료했다. 개발 DB 서버는 TLS가 비활성이고 Connector/J도 기본 비SSL 연결이며, 로컬 MariaDB 설정에는 존재하지 않는 `E:` 플러그인 경로가 남아 있어 적용 방침 결정이 필요하다. POP 바코드 스캐너 실기기 검증은 2026-07-29 사용자 결정으로 보류했다. 하네스 60 PASS, 제품 빌드 PASS, `%테스트` 191 PASS/기존 계획 불일치 3 FAIL — [상세](handoff/업무PC복귀인계.md)
 - [%테스트현대화] **전체 205 PASS·OSR-173 실동작 PASS / GWS OAuth 인증 대기** — 결정론 우선 정책에 맞춰 자동 Stage4 heal을 제거하고 batch를 최대 20으로 제한했으며, 선택적 AI 설정·제품 경로·GWS 실행 경로를 중앙화했다. OSR-173은 현재 제품의 실제 SIZE_TYPE 옵션과 W/H/T/D/L 표시 계약으로 Stage4·시드·Sheet 쓰기 없이 PASS했다. GWS 0.22.5는 D:에 설치했지만 OAuth client/login이 없어 최신 Sheet 확인과 row 899 menu2 불일치 정정은 대기한다 — [상세](handoff/테스트현대화.md)

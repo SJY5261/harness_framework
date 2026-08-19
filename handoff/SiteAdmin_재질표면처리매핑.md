@@ -1,9 +1,10 @@
 # Site Admin 재질-표면처리 매핑
 
-_최종 갱신: 2026-08-19 / 상태: 진행 중_
+_최종 갱신: 2026-08-20 / 상태: 진행 중_
 
 ## 현재 상태
 
+- 2026-08-20 KAN-46 부서 삭제의 신규 `deleteDepartmentCode`·`deleteDepartmentCodeLang` queryId를 제거하고 기존 `deleteCommonCodeAdmin`·`deleteCommonCodeLangAdmin`을 재사용하도록 정리했다. 서비스가 `HIGH_CD=E04`, `SEL_SYSTEM_ID=LOGIN_SYSTEM_ID`를 강제하고 `TBL_USER.DEPARTMENT` 참조 건수 0건을 확인한 뒤 두 기존 쿼리를 트랜잭션으로 실행한다. 조작된 요청값 `HIGH_CD=D01`, `SEL_SYSTEM_ID=BASIC`으로도 경영지원 12건과 BASIC 행 삭제가 차단됐으며, 임시 SMD `E04R21`을 실제 추가·삭제해 최종 E04가 BASIC 11건으로 복구됨을 인증 브라우저에서 확인했다. 실행 중 서버의 파일 잠금으로 첫 빌드가 `processResources` 정리 단계에서 실패했지만 해당 개발 서버만 재시작한 뒤 전체 Gradle 빌드를 통과했다.
 - 2026-08-19 KAN-46 부서 종류의 추가·삭제를 DB에 연결했다. 추가는 기존 `insertCommonCode`·`insertCommonLangCode`를 재사용하면서 `TBL_CODE.SYSTEM_ID`를 클라이언트 값이 아닌 세션 `LOGIN_SYSTEM_ID`로 저장하고, 숫자 `SORT_NUM`도 처리하도록 공통코드 addList 파싱을 보정했다. E04 조회는 로그인 테넌트의 `TBL_USER.DEPARTMENT` 참조 건수를 `USAGE_COUNT`로 반환하며, 삭제는 BASIC을 제외한 로그인 테넌트 E04 코드에 대해 참조 0건을 DB에서 다시 확인한 뒤 코드·언어 행을 트랜잭션으로 단일 삭제한다. BASIC 11행의 체크박스·사용여부 비활성화, 직접추가 행 단일 체크 전환, 전체 헤더 가운데 정렬을 외부 Chrome 디버깅에서 확인했다. SMD에 `E04R21·E04R22`를 실제 추가해 `SYSTEM_ID=SMD`를 확인하고 각각 팝업 삭제한 뒤 `TBL_CODE`·`TBL_CODE_LANG` 잔존 0건을 확인했다. 경영지원 12건·생산관리 1건 참조와 기본값 삭제 차단도 유지되며 JavaScript 문법·전체 Gradle 빌드를 통과했다. 사용여부는 계속 목업 ON/OFF만 동작하고 DB에는 저장하지 않는다.
 - 2026-08-19 KAN-46 부서 종류 그리드의 사용여부 목업 액션을 구현했다. `DEL_YN` 컬럼을 클릭하면 행 메모리 값만 `N↔Y`로 전환하고 `is-on`을 즉시 새로고침하며, DB·API 요청은 하지 않는다. 외부 Chrome 디버깅의 3번 모니터 `1920×1080`·브라우저 100%에서 `E04R10` ON→OFF, 다른 탭 왕복 후 OFF 유지, OFF→ON 복귀와 추가 네트워크 요청 0건을 확인했다.
 - 2026-08-19 라벨프린터 정본이 구 공통코드 `E03`이 아니라 `TBL_SITE_PRINTER`로 이관됐음을 개발 DB에서 재확인했다. 활성 데이터는 검사실·포장/출하 사이트 각 1건이며, 포장/출하 프린터의 접속값은 구 `TBL_CODE_BAK.E03R10`과 일치한다. 현재 제품의 `/barcodePrint` 경로는 여전히 `TBL_CODE.E03`을 조회하고 V2 라벨프린터 화면은 정적 목업이지만, 사용자가 추가 팝업 설계 미제공을 이유로 구현을 보류했다. 이 결정이 아래의 임시 하드코딩 검토보다 우선하며, 팝업 정본과 사이트 선택·DPI 정책이 확정되기 전에는 `TBL_SITE_PRINTER` 조회·CRUD, 출력 경로, 구 `USER_PRINTER/E03` 참조를 변경하지 않는다.

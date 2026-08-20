@@ -1,6 +1,6 @@
 # Codex 주 에이전트 전환
 
-_시작: 2026-07-24 / 최종 갱신: 2026-08-03_
+_시작: 2026-07-24 / 최종 갱신: 2026-08-20_
 
 ## 현재 상태
 
@@ -13,6 +13,7 @@ _시작: 2026-07-24 / 최종 갱신: 2026-08-03_
 - VS Code 사용자 데이터 자동 복사가 재실행 경쟁 조건으로 실패해 VS Code·Copilot·Codex·SourceTree·DBeaver·Git 후속 이관과 최종 환경 변수 전환은 대기 상태다.
 - PC 환경은 저장소 경로나 junction으로 추정하지 않고 `D:\ToolData\Harness\pc-profile.json`과 `scripts/pc_profile.ps1`로 구분한다. 현재 PC는 `work`, 사용자 전달 산출물 루트는 현재 사용자 바탕화면의 `PR`로 새 프로세스에서 확인했다.
 - `%클라우드`의 `.claude/settings*.json`과 `shell/runDev.local.bat`은 기능 작업 stash 대상에서 제외하고 원래 미추적 작업트리에 유지한다.
+- Windows 네이티브 인자 인용 오류를 막기 위해 JavaScript·SQL을 UTF-8 파일로 전달하는 `native_job.py`·`cdp_eval.py`·`sqlite_query.py`를 추가했다. 실행 중인 Chrome History는 잠금 감지 시 원본과 sidecar를 임시 스냅샷으로 복사해 읽기 전용 조회하고 자동 삭제하며, `text_eol.py`가 변경 파일의 Git EOL 정책을 검사·보정한다. 전용 회귀 테스트 7건과 실제 CDP 따옴표 보존, 잠긴 History의 KAN-48 첨부 조회를 통과했다.
 
 이전 전환 경위와 상세 검증 기록은
 [`logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md`](../logs/handoff/Codex주에이전트전환-20260730-작업도구이관전.md)에 보존한다.
